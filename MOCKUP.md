@@ -1,5 +1,7 @@
 # Triple Sale — Mockup (ข้อมูลเป็นไฟล์ · Storage · สิทธิ์ตาม role)
 
+> **repo นี้ (`crm_triplesale`) รัน Datasource บนเครื่องตัวเอง:** `npm run mockup` เปิด file server เล็ก ๆ ที่ `127.0.0.1:4310` เก็บข้อมูลใน `.mockup-data/` (ไม่ขึ้น git) ไม่ต่อเซิร์ฟเวอร์ไหนเลย ไม่ต้องมี token · รันครั้งแรกระบบสร้างบัญชีทดลองให้ — รหัสกลุ่ม `sun` · `admin` / `admin` หรือ `demo` / `demo` · แก้ไฟล์ใน `.mockup-data/Datasource/` ได้โดยตรง (`users.json` `groups.json` `branches.json` `roles.json`) · ลบโฟลเดอร์ `.mockup-data/` เพื่อเริ่มใหม่ · ถ้าอยากใช้ file server ที่แชร์กับทีมจริง ๆ ให้ตั้ง `MOCKUP_REMOTE_URL` + `MOCKUP_TOKEN` ใน `.env.mockup.local` (ส่วนด้านล่างที่พูดถึงเซิร์ฟเวอร์กลางใช้เฉพาะกรณีนี้)
+
 โฟลเดอร์นี้คือสำเนาของ `GIT\triple_sales_web` ที่รันเป็น **mockup**: ไม่ต่อ backend ใด ๆ หน้าจอทำงานจากข้อมูลจำลอง
 แต่ข้อมูลที่เพิ่ม/แก้ไข/ลบ **ถูกเก็บเป็นไฟล์** ใน `Datasource\` และไฟล์ที่อัปโหลดเก็บใน `Storage\` — เปิดใหม่แล้วข้อมูลยังอยู่
 (เมนูแชทไม่ได้แตะ ; **AI HUB เรียก service ai-hub จริง** ผ่าน dev proxy — ดูหัวข้อ "AI HUB ↔ service ai-hub")

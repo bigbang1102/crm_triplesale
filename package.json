@@ -13,7 +13,7 @@
     "mockup:export-seed": "node tools/mockup-export-seed.mjs",
     "mockup:users-doc": "node tools/mockup-users-doc.mjs",
     "mockup:import-workbook": "node tools/mockup-import-workbook.mjs",
-    "mockup:test": "node --test tools/mockup-server.test.mjs tools/mockup-idp.test.mjs tools/mockup-remote-proxy.test.cjs tools/mockup-sync-seed.test.mjs",
+    "mockup:test": "node --test tools/mockup-server.test.mjs tools/mockup-idp.test.mjs tools/mockup-remote-proxy.test.cjs tools/mockup-sync-seed.test.mjs tools/mockup-local-data.test.mjs",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
