@@ -1,0 +1,409 @@
+@let cfg = store.cfgFor();
+@let allP = store.pipe() === 'all';
+
+<div class="ph">
+  <div>
+    <h1>Adjustment<ts-forecast-tip k="pg_adjust" /></h1>
+    <p>{{ t('app.forecast.adjust.sub') }}</p>
+  </div>
+  <div class="r">
+    <div class="seg" role="tablist">
+      @for (tab of l3Tabs; track tab.id) {
+        <button type="button" role="tab" [class.on]="store.l3() === tab.id" [attr.aria-selected]="store.l3() === tab.id" (click)="store.setL3(tab.id)">{{ tab.label }}</button>
+      }
+    </div>
+  </div>
+</div>
+
+@if (ban(); as b) {
+  <div [class]="b.cls">{{ b.text }}</div>
+}
+@if (store.periodClosed(store.month())) {
+  <div class="lockban">🔒 {{ t('app.forecast.adjust.closed', store.mName(store.month())) }}</div>
+}
+
+<div class="card adjtop">
+  <div class="adjbar">
+    <ts-forecast-filters [show]="filters" />
+    <span class="grow"></span>
+    @if (store.periodOpen()) {
+      <span class="chip c-good">{{ t('app.forecast.adjust.open') }}</span>
+    } @else {
+      <span class="chip c-bad">{{ t('app.forecast.readonly') }}</span>
+    }
+  </div>
+
+  @if (store.summaryPreview(); as s) {
+    @let unsaved = store.changes().length > 0;
+    @let savedFinal = store.summarySaved()?.totals?.final ?? 0;
+    <div class="eq">
+      <div class="eqc">
+        <div class="l">{{ t('app.forecast.before') }}<ts-forecast-tip k="adj_base" /></div>
+        <div class="v">{{ B(s.totals.base) }}</div>
+      </div>
+      <span class="op">+</span>
+      <div class="eqc">
+        <div class="l">Judgment<ts-forecast-tip k="adj_judg" /></div>
+        <div class="v"><span [class]="dcls(s.totals.judgmentDelta)">{{ sgn(s.totals.judgmentDelta) }}</span></div>
+      </div>
+      <span class="op">+</span>
+      <div class="eqc">
+        <div class="l">Manager Adj.<ts-forecast-tip k="adj_mgr" /></div>
+        <div class="v"><span [class]="dcls(s.totals.managerDelta)">{{ sgn(s.totals.managerDelta) }}</span></div>
+      </div>
+      <span class="op">=</span>
+      <div class="eqc fin">
+        <div class="l">Final Forecast<ts-forecast-tip k="adj_final" /></div>
+        <div class="v">{{ B(s.totals.final) }}</div>
+        <div class="s">
+          <span [class]="dcls(s.totals.final - s.totals.base)">{{ sgn(s.totals.final - s.totals.base) }}</span>
+          {{ t('app.forecast.fromBefore') }}
+          @if (unsaved && round(s.totals.final) !== round(savedFinal)) {
+            · {{ t('app.forecast.adjust.savedIs', B(savedFinal)) }}
+          }
+        </div>
+      </div>
+      <div class="eqst">
+        @if (unsaved) {
+          <span class="chip c-warn">{{ t('app.forecast.adjust.preview') }}</span>
+        } @else {
+          <span class="chip c-good">{{ t('app.forecast.adjust.matches') }}</span>
+        }
+        <span class="sub">{{ t('app.forecast.adjust.formula', cfg.openFormula === 'weighted' ? 'Amount × %' : 'Full Amount') }}</span>
+      </div>
+    </div>
+    <div class="catline">
+      <span class="sub">{{ t('app.forecast.byCategory') }}<ts-forecast-tip k="adj_cat" /></span>
+      @for (c of s.categories; track c.category) {
+        <span class="ci">
+          <i [style.background]="CATEGORY_COLOR[c.category]"></i>{{ CATEGORY_LABEL[c.category] }}
+          @if (round(c.after - c.before)) {
+            <s class="sub">{{ B(c.before) }}</s> → <b>{{ B(c.after) }}</b>&ngsp;<span [class]="dcls(c.after - c.before)">{{ sgn(c.after - c.before) }}</span>
+          } @else {
+            <b>{{ B(c.after) }}</b>
+          }
+        </span>
+      }
+    </div>
+  }
+</div>
+
+@if (store.l3() === 'judgment') {
+  <!-- Opportunity Judgment -->
+  @let can = store.canJudge();
+  <div class="card">
+    <div class="card-h">
+      <h3>Opportunity Judgment<ts-forecast-tip k="j_tab" /></h3>
+      <span class="grow"></span>
+      @if (can) {
+        <button type="button" class="btn btn-g btn-s" (click)="bulk('out')">{{ t('app.forecast.judg.bulkOut') }}</button>
+        <button type="button" class="btn btn-g btn-s" (click)="bulk('in')">{{ t('app.forecast.judg.bulkIn') }}</button>
+        <ts-forecast-tip k="j_sel" />
+      } @else {
+        <span class="chip c-grey">{{ t(cfg.allowJudgment ? 'app.forecast.judg.viewOnly' : 'app.forecast.judg.disabled') }}</span>
+      }
+    </div>
+    <div class="card-b col">
+      <div class="empchips">
+        <button type="button" [class.on]="store.emp() === 'all'" (click)="store.setEmp('all')">{{ t('app.forecast.filter.allEmps') }}</button>
+        @for (e of chipEmps(); track e.id) {
+          <button type="button" [class.on]="store.emp() === e.id" (click)="store.setEmp(e.id)">
+            {{ e.name }}<span class="sub">{{ B(store.empRow(e.id).judged) }}</span>
+          </button>
+        }
+      </div>
+
+      @if (store.opps().length) {
+        <div class="tw">
+          <table>
+            <thead>
+              <tr>
+                @if (can) {
+                  <th><input type="checkbox" [attr.aria-label]="t('app.forecast.judg.selectAll')" [checked]="allPicked()" (change)="pickAll($any($event.target).checked)" /></th>
+                }
+                <th>Opportunity / Owner</th>
+                <th>{{ t('app.forecast.judg.catOrig') }}<ts-forecast-tip k="j_catorig" /></th>
+                <th class="n">{{ t('app.forecast.judg.probOrig') }}<ts-forecast-tip k="j_porig" /></th>
+                <th class="n">{{ t('app.forecast.judg.amountOrig') }}<ts-forecast-tip k="j_aorig" /></th>
+                <th>IN / OUT<ts-forecast-tip k="j_in" /></th>
+                @if (cfg.allowCategoryOverride) {
+                  <th>Forecast Category<ts-forecast-tip k="j_fcat" /></th>
+                }
+                <th>Forecast Prob. %<ts-forecast-tip k="j_fprob" /></th>
+                <th>Forecast Amount<ts-forecast-tip k="j_famt" /></th>
+                <th class="n">Forecast Value<ts-forecast-tip k="j_val" /><br /><span class="sub">{{ t('app.forecast.judg.beforeAfter') }}</span></th>
+                <th>{{ t('app.forecast.reason') }}<ts-forecast-tip k="j_reason" /></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (d of store.opps(); track d.id) {
+                @let e = store.jEff(d);
+                @let open = d.status === 'open';
+                @let ed = can && open && d.editable;
+                @let has = store.jHas(d.id);
+                @let after = store.jAfter(d);
+                <tr [class.dirty]="store.jDirty(d.id)">
+                  @if (can) {
+                    <td>
+                      @if (open) {
+                        <input type="checkbox" [attr.aria-label]="t('app.forecast.judg.select', d.txno)" [checked]="picked().has(d.id)" (change)="pick(d.id, $any($event.target).checked)" />
+                      }
+                    </td>
+                  }
+                  <td>
+                    <b>{{ d.txno }}</b>&ngsp;
+                    @if (d.overdue; as od) {
+                      <span class="chip c-warn">{{ t(od.rule === 'separate' ? 'app.forecast.judg.overdueOut' : 'app.forecast.judg.overdueIn', store.mName(od.targetMonth)) }}</span>
+                    }
+                    <div class="sub">{{ d.customer }} · {{ d.owner.name }} · {{ d.owner.teamName }} · {{ d.pipeline.name }}</div>
+                  </td>
+                  <td>
+                    <span class="chip" [class]="CATEGORY_CHIP[d.original.category]">{{ CATEGORY_LABEL[d.original.category] }}</span>
+                    <div class="sub">{{ d.stage }}</div>
+                  </td>
+                  <td class="n">{{ d.original.probability }}%</td>
+                  <td class="n">{{ B(d.original.amount) }}</td>
+                  <td>
+                    @if (open) {
+                      <span class="fc-sel">
+                        <select class="mini w70" data-ods-nosearch="1" [class.chg]="!e.in" [attr.aria-label]="'IN / OUT ' + d.txno" [disabled]="!ed" [tsFcValue]="e.in ? '1' : '0'" (tsFcChange)="store.setJ(d.id, 'in', $event)">
+                          <option value="1">IN</option>
+                          <option value="0">OUT</option>
+                        </select>
+                      </span>
+                    } @else {
+                      <span class="chip" [class]="d.status === 'won' ? 'c-good' : 'c-bad'">{{ d.status === 'won' ? 'Closed' : 'Omitted' }}</span>
+                    }
+                  </td>
+                  @if (cfg.allowCategoryOverride) {
+                    <td>
+                      @if (open) {
+                        <span class="fc-sel">
+                          <select class="mini w95" data-ods-nosearch="1" [class.chg]="e.cat !== d.original.category" [attr.aria-label]="'Forecast Category ' + d.txno" [disabled]="!ed" [tsFcValue]="e.cat" (tsFcChange)="store.setJ(d.id, 'cat', $event)">
+                            <option value="committed">Committed</option>
+                            <option value="bestcase">Best Case</option>
+                            <option value="pipeline">Pipeline</option>
+                          </select>
+                        </span>
+                      } @else {
+                        —
+                      }
+                    </td>
+                  }
+                  <td>
+                    @if (open) {
+                      <input
+                        class="mini num w70"
+                        type="number"
+                        min="0"
+                        max="100"
+                        [class.chg]="e.prob !== d.original.probability"
+                        [class.err]="e.prob === '' || +e.prob < 0 || +e.prob > 100"
+                        [attr.aria-label]="'Forecast Prob. ' + d.txno"
+                        [tsFcVal]="e.prob"
+                        [disabled]="!ed"
+                        (input)="store.setJ(d.id, 'prob', $any($event.target).value)"
+                      />
+                    } @else {
+                      {{ d.original.probability }}%
+                    }
+                  </td>
+                  <td>
+                    @if (open) {
+                      <input
+                        class="mini num"
+                        type="number"
+                        min="0"
+                        step="1000"
+                        [class.chg]="e.amount !== d.original.amount"
+                        [class.err]="e.amount === '' || +e.amount < 0"
+                        [attr.aria-label]="'Forecast Amount ' + d.txno"
+                        [tsFcVal]="e.amount"
+                        [disabled]="!ed"
+                        (input)="store.setJ(d.id, 'amount', $any($event.target).value)"
+                      />
+                    } @else {
+                      {{ B(d.original.amount) }}
+                    }
+                  </td>
+                  <td class="n">
+                    @if (round(after) === round(d.valueBefore)) {
+                      <b>{{ B(after) }}</b>
+                    } @else {
+                      <span class="sub strike">{{ B(d.valueBefore) }}</span><br /><b>{{ B(after) }}</b>&ngsp;
+                      <span class="delta" [class]="dcls(after - d.valueBefore)">{{ sgn(after - d.valueBefore) }}</span>
+                    }
+                  </td>
+                  <td>
+                    @if (open) {
+                      <input
+                        class="mini w150"
+                        [attr.aria-label]="t('app.forecast.reason') + ' ' + d.txno"
+                        [placeholder]="t(has ? 'app.forecast.judg.reasonRequired' : 'app.forecast.judg.reasonOverride')"
+                        [value]="e.reason"
+                        [disabled]="!ed"
+                        (input)="store.setJ(d.id, 'reason', $any($event.target).value)"
+                      />
+                    } @else {
+                      —
+                    }
+                  </td>
+                  <td>
+                    @if (ed && has) {
+                      <button type="button" class="btn btn-g btn-s" [title]="t('app.forecast.judg.resetHint')" (click)="store.jReset(d.id)">{{ t('app.forecast.judg.reset') }}</button>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      } @else {
+        <div class="empty">{{ t('app.forecast.judg.empty') }}</div>
+      }
+    </div>
+  </div>
+} @else {
+  <!-- Manager Adjustment -->
+  <div class="card">
+    <div class="card-h">
+      <h3>Manager Adjustment{{ allP ? '' : ' · ' + store.pipeName(store.pipe()) }}<ts-forecast-tip k="m_tab" /></h3>
+      <span class="grow"></span>
+      @if (!cfg.allowManagerAdjustment) {
+        <span class="chip c-grey">{{ t('app.forecast.mgr.disabled') }}</span>
+      }
+    </div>
+    @if (allP && cfg.allowManagerAdjustment) {
+      <div class="note inset">{{ t('app.forecast.mgr.pickPipe') }}</div>
+    }
+    <div class="card-b">
+      <div class="tw">
+        <table>
+          <thead>
+            <tr>
+              <th>{{ t('app.forecast.col.empTeam') }}</th>
+              <th class="n">Target<ts-forecast-tip k="m_tgt" /></th>
+              <th class="n">{{ t('app.forecast.before') }}<ts-forecast-tip k="m_base" /></th>
+              <th class="n">{{ t('app.forecast.mgr.judged') }}<ts-forecast-tip k="m_judged" /></th>
+              <th class="n">{{ t('app.forecast.mgr.judgDelta') }}<ts-forecast-tip k="m_jd" /></th>
+              <th>{{ t('app.forecast.mgr.delta') }}<ts-forecast-tip k="m_delta" /></th>
+              <th class="n">Final<ts-forecast-tip k="m_final" /></th>
+              <th class="n">Gap<ts-forecast-tip k="m_gap" /></th>
+              <th>{{ t('app.forecast.reason') }}<ts-forecast-tip k="m_reason" /></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (team of mgrTeams(); track team.id) {
+              @for (e of team.emps; track e.id) {
+                @let c = store.empRow(e.id);
+                @let k = store.adjKey(e.id);
+                @let dj = store.adjDraft()[k];
+                @let canAdj = store.canAdjEmp(e.id) && !allP;
+                <tr [class.dirty]="adjDirty(k)">
+                  <td>
+                    <b>{{ e.name }}</b>
+                    <div class="sub">{{ e.teamName }}</div>
+                  </td>
+                  <td class="n">{{ B(c.target) }}</td>
+                  <td class="n">{{ B(c.base) }}</td>
+                  <td class="n">{{ B(c.judged) }}</td>
+                  <td class="n">
+                    <span [class]="dcls(c.jd)">{{ sgn(c.jd) }}</span>&ngsp;
+                    @if (round(c.jd)) {
+                      <button type="button" class="btn btn-g btn-s" (click)="store.seeJudgment(e.id)">{{ t('app.forecast.mgr.see') }}</button>
+                    }
+                  </td>
+                  <td>
+                    @if (allP) {
+                      <span [class]="dcls(c.adj)">{{ sgn(c.adj) }}</span>&ngsp;<span class="sub">{{ t('app.forecast.mgr.allPipes') }}</span>
+                    } @else {
+                      <div class="pair">
+                        <input
+                          class="mini num"
+                          type="number"
+                          step="1000"
+                          [class.chg]="!!dj?.delta"
+                          [attr.aria-label]="'Delta ' + e.name"
+                          [tsFcVal]="dj?.delta || 0"
+                          [disabled]="!canAdj"
+                          (input)="store.setAdj(k, 'delta', $any($event.target).value)"
+                        />
+                        <input
+                          class="mini num"
+                          type="number"
+                          step="1000"
+                          [placeholder]="t('app.forecast.mgr.setFinal')"
+                          [attr.aria-label]="t('app.forecast.mgr.setFinal') + ' ' + e.name"
+                          [disabled]="!canAdj"
+                          (input)="store.setAdj(k, 'final', $any($event.target).value, c.judged)"
+                          (change)="$any($event.target).value = ''"
+                        />
+                      </div>
+                    }
+                  </td>
+                  <td class="n">
+                    <b>{{ B(c.final) }}</b>
+                    @if (round(c.final) !== round(c.base)) {
+                      <div class="delta" [class]="dcls(c.final - c.base)">{{ sgn(c.final - c.base) }}</div>
+                    }
+                  </td>
+                  <td class="n" [class]="dcls(c.final - c.target)">{{ sgn(c.final - c.target) }}</td>
+                  <td>
+                    @if (!allP) {
+                      <input
+                        class="mini w150"
+                        [attr.aria-label]="t('app.forecast.reason') + ' ' + e.name"
+                        [value]="dj?.reason || ''"
+                        [placeholder]="t(dj?.delta ? 'app.forecast.judg.reasonRequired' : 'app.forecast.reason')"
+                        [disabled]="!canAdj"
+                        (input)="store.setAdj(k, 'reason', $any($event.target).value)"
+                      />
+                    }
+                  </td>
+                  <td>
+                    @if (canAdj && dj) {
+                      <button type="button" class="btn btn-g btn-s" (click)="store.aReset(k)">{{ t('app.forecast.mgr.clear') }}</button>
+                    }
+                  </td>
+                </tr>
+              }
+              @if (store.emp() === 'all') {
+                @let tc = store.sumRows(team.all);
+                <tr class="grp">
+                  <td>
+                    {{ t('app.forecast.sumOf', team.name) }}
+                    <div class="sub">{{ team.manager }}</div>
+                  </td>
+                  <td class="n">{{ B(tc.target) }}</td>
+                  <td class="n">{{ B(tc.base) }}</td>
+                  <td class="n">{{ B(tc.judged) }}</td>
+                  <td class="n">{{ sgn(tc.jd) }}</td>
+                  <td class="n">{{ sgn(tc.adj) }}</td>
+                  <td class="n"><b>{{ B(tc.final) }}</b></td>
+                  <td class="n" [class]="dcls(tc.final - tc.target)">{{ sgn(tc.final - tc.target) }}</td>
+                  <td colspan="2"></td>
+                </tr>
+              }
+            }
+            @if (store.emp() === 'all' && mgrTeams().length > 1) {
+              @let all = store.sumRows(scopeIds());
+              <tr class="tot">
+                <td>{{ t('app.forecast.total') }}</td>
+                <td class="n">{{ B(all.target) }}</td>
+                <td class="n">{{ B(all.base) }}</td>
+                <td class="n">{{ B(all.judged) }}</td>
+                <td class="n">{{ sgn(all.jd) }}</td>
+                <td class="n">{{ sgn(all.adj) }}</td>
+                <td class="n">{{ B(all.final) }}</td>
+                <td class="n" [class]="dcls(all.final - all.target)">{{ sgn(all.final - all.target) }}</td>
+                <td colspan="2"></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+}

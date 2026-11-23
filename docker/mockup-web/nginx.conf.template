@@ -1,0 +1,37 @@
+# nginx ของ container mockup-web : static ของ Angular (SPA) + reverse proxy ไปเซิร์ฟเวอร์ไฟล์ mockup (container mockup-data)
+# ไม่เปิดพอร์ตออกโฮสต์ — ประตู https ของ mockup (triple-sales-mockup-gateway, พอร์ต 7331) เป็นทางเข้าเดียว
+server {
+    listen       80;
+    server_name  _;
+    root         /usr/share/nginx/html;
+    index        index.html;
+
+    gzip            on;
+    gzip_min_length 1024;
+    gzip_types      text/css application/javascript application/json image/svg+xml;
+    client_max_body_size 60m;
+
+    # Datasource + Storage + IdP จำลอง ; กุญแจ (และ workspace ถ้ามี) ใส่ที่นี่ เหมือน proxy ของ dev server (tools/mockup-remote-proxy.cjs)
+    location ~ ^/(mockup-api|mockup-idp|mockup-tps)(/|$) {
+        proxy_pass          http://mockup-data:4310;
+        proxy_http_version  1.1;
+        proxy_set_header    Host              $http_host;
+        proxy_set_header    X-Real-IP         $remote_addr;
+        proxy_set_header    X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header    X-Forwarded-Proto $http_x_forwarded_proto;
+        proxy_set_header    x-mockup-token     "${MOCKUP_TOKEN}";
+        proxy_set_header    x-mockup-workspace "${MOCKUP_WORKSPACE}";
+        proxy_request_buffering off;
+        proxy_read_timeout  60;
+        proxy_send_timeout  60;
+    }
+
+    location = /index.html { add_header Cache-Control "no-store"; }
+    location /config/      { add_header Cache-Control "no-store"; try_files $uri =404; }
+    location ~* \.(?:js|css)$ {
+        add_header Cache-Control "public, max-age=31536000, immutable";
+        try_files $uri =404;
+    }
+    location ~ \.[A-Za-z0-9]+$ { try_files $uri =404; }
+    location / { try_files $uri $uri/ /index.html; }
+}

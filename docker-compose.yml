@@ -1,0 +1,30 @@
+# Triple Sales web (Angular) บน Docker
+#
+#   docker compose up -d --build      สร้าง image แล้วเปิดที่ http://localhost:4200
+#   docker compose logs -f web        ดู log
+#   docker compose down               ปิด
+#
+# - config/docker/app-config.json ถูก mount ทับ /config/app-config.json ใน container
+#   แก้ไฟล์แล้ว refresh หน้าเว็บได้เลย ไม่ต้อง build ใหม่ (ถ้าไม่เห็นผล: docker compose restart web)
+# - พอร์ต 4200 ต้องตรงกับ redirect URI ที่ลงทะเบียนใน Keycloak (http://localhost:4200/auth/callback)
+name: triple_sales_web
+services:
+  web:
+    build:
+      context: .
+      args:
+        NG_CONFIG: docker
+    image: triple-sales-web:develop-v3
+    container_name: triple-sales-web
+    restart: unless-stopped
+    ports:
+      - "4200:80"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./config/docker/app-config.json:/usr/share/nginx/html/config/app-config.json:ro
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3

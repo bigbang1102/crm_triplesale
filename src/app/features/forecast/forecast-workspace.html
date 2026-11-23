@@ -1,0 +1,60 @@
+@if (cfg(); as c) {
+  <div class="ws-head">
+    <div class="wsbar">
+      @if (isNew()) {
+        <b>{{ t('app.forecast.ws.newTitle', store.year(c.year)) }}</b>
+        <span class="chip c-warn">{{ t('app.forecast.ws.unsaved') }}</span>
+      } @else {
+        <span class="fc-sel">
+          <select class="sel sm" data-ods-nosearch="1" [attr.aria-label]="t('app.forecast.ws.switch')" [tsFcValue]="store.cfgId() ?? ''" (tsFcChange)="store.switchCfg($event)">
+            @for (x of list(); track x.id) {
+              <option [value]="x.id">{{ x.code }} · {{ t('app.forecast.yearN', store.year(x.year)) }} · {{ STATUS_LABEL[x.status] }}</option>
+            }
+          </select>
+        </span>
+        <ts-forecast-tip k="ws_switch" />
+        <span class="chip" [class]="STATUS_CHIP[c.status]">{{ STATUS_LABEL[c.status] }}</span>
+        <span class="chip c-grey">v{{ c.versionNo }}</span>
+        <ts-forecast-tip k="cfg_ver" />
+      }
+      <span class="grow"></span>
+      @if (parts().length) {
+        <span class="wsdirty"><span class="dot"></span>{{ t('app.forecast.ws.pending') }} {{ parts().join(' · ') }}</span>
+      }
+      @if (canSave()) {
+        @if (isNew()) {
+          <button type="button" class="btn btn-g" (click)="store.wsDiscard()">{{ t('app.common.cancel') }}</button>
+        } @else if (parts().length) {
+          <button type="button" class="btn btn-g" (click)="store.wsDiscard()">{{ t('app.forecast.ws.discard') }}</button>
+        }
+        <button type="button" class="btn btn-p" [disabled]="!parts().length" (click)="store.wsSave()">{{ saveLabel() }}</button>
+        <ts-forecast-tip k="ws_save" />
+      }
+    </div>
+    <nav class="l2">
+      @for (tab of tabs; track tab.id) {
+        <button type="button" [class.on]="store.l2() === tab.id" (click)="store.setL2(tab.id)">
+          {{ tab.label }}
+          @if (dirty(tab.id)) {
+            <span class="dot"></span>
+          }
+        </button>
+      }
+    </nav>
+  </div>
+
+  @switch (store.l2()) {
+    @case ('setup') {
+      <ts-forecast-config-form />
+    }
+    @case ('target') {
+      <ts-forecast-target />
+    }
+    @case ('adjust') {
+      <ts-forecast-adjust />
+    }
+    @case ('close') {
+      <ts-forecast-close />
+    }
+  }
+}

@@ -1,0 +1,388 @@
+/* The Log window. The rules from ".alg-overlay" down to "@media" are the <style> of web/WEB-INF/pages/api_log.xhtml (Log UI v4, 28/08/2026)
+   of the Java app, verbatim. ViewEncapsulation.None on purpose: every class starts with `alg-` (as in Java), and `body.alg-dragging`
+   sits outside the component. */
+
+/* ───── Angular adaptation (not part of the Java file) ─────────────────────────────────────────────
+   The Java page had the browser's default for what it does not set: `<i>` is italic there too, but the Java template's global CSS
+   (primeflex / pandora) resets it, and the shell's base.scss hands buttons / selects their own font — the Log window sets its own
+   everywhere it matters, only the method badge (`<i class="alg-m">`) needs to be upright. */
+.alg-m {
+  font-style: normal;
+}
+/* ───── end of Angular adaptation ──────────────────────────────────────────────────────────────── */
+
+.alg-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 20000;
+  background: rgba(0, 0, 0, 0.62); /* พื้นหลังดำตามที่ต้องการ */
+  align-items: center;
+  justify-content: center;
+  font-family: 'NotoSansThai', 'Inter', system-ui, sans-serif;
+}
+.alg-overlay.show {
+  display: flex;
+}
+.alg-panel {
+  width: min(1180px, 94vw);
+  height: min(84vh, 900px);
+  background: #fff;
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
+.alg-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 12px 16px;
+  background: #35236a;
+  color: #fff;
+  cursor: move; /* ★ 18/08 — ลากที่แถบหัวเพื่อย้ายหน้าต่าง */
+  touch-action: none; /* กันเบราว์เซอร์มือถือแย่งไปทำ scroll ระหว่างลาก */
+}
+.alg-head .t {
+  user-select: none;
+}
+/* ระหว่างลาก: ห้ามเลือกข้อความทั้งหน้า ไม่งั้นลากแล้วได้ selection สีฟ้าเลอะ */
+body.alg-dragging {
+  user-select: none;
+}
+.alg-head .t {
+  font-size: 15px;
+  font-weight: 700;
+  margin-right: 2px;
+}
+.alg-head .n {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  padding: 2px 10px;
+  font-size: 12px;
+}
+.alg-head .sp {
+  flex: 1;
+}
+.alg-in {
+  height: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border-radius: 7px;
+  padding: 0 9px;
+  font-size: 12.5px;
+  font-family: inherit;
+  outline: none;
+}
+.alg-in::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+.alg-in option {
+  color: #111827;
+}
+.alg-btn {
+  height: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border-radius: 7px;
+  padding: 0 11px;
+  font-size: 12.5px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.alg-btn:hover {
+  background: rgba(255, 255, 255, 0.24);
+}
+.alg-btn.on {
+  background: #00c08b;
+  border-color: #00c08b;
+}
+.alg-body {
+  flex: 1;
+  overflow: auto;
+  background: #f7f8fc;
+  padding: 10px 12px 16px;
+}
+
+.alg-pagehd {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  margin: 10px 0 6px;
+  background: #eef0fa;
+  border-left: 3px solid #6043b6;
+  border-radius: 0 7px 7px 0;
+  padding: 6px 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #35236a;
+}
+.alg-row {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 9px;
+  margin-bottom: 6px;
+  padding: 8px 10px;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: 44px 84px 62px minmax(0, 1fr) 62px 62px;
+  gap: 9px;
+  align-items: center;
+  font-size: 12.5px;
+}
+.alg-row:hover {
+  border-color: #b7a4ef;
+  background: #fcfbff;
+}
+.alg-row .seq {
+  color: #9ca3af;
+}
+.alg-row .at {
+  color: #6b7280;
+  font-family: Consolas, monospace;
+  font-size: 11.5px;
+}
+.alg-row .path {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: Consolas, monospace;
+}
+.alg-row .ms {
+  text-align: right;
+  color: #6b7280;
+}
+.alg-m {
+  display: inline-block;
+  min-width: 56px;
+  text-align: center;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 2px 5px;
+  font-family: Consolas, monospace;
+}
+.alg-m.GET {
+  background: #0d61cf;
+}
+.alg-m.POST {
+  background: #0c8e6a;
+}
+.alg-m.PATCH {
+  background: #b45309;
+}
+.alg-m.PUT {
+  background: #7f63d2;
+}
+.alg-m.DELETE {
+  background: #b91c1c;
+}
+.alg-st {
+  font-weight: 700;
+  text-align: center;
+  font-family: Consolas, monospace;
+}
+.alg-st.ok {
+  color: #0c8e6a;
+}
+.alg-st.warn {
+  color: #b45309;
+}
+.alg-st.err {
+  color: #b91c1c;
+}
+
+.alg-detail {
+  display: none;
+  padding: 2px 2px 10px;
+}
+.alg-detail.show {
+  display: block;
+}
+.alg-dbox {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 9px;
+  padding: 10px 12px;
+  margin-bottom: 6px;
+}
+.alg-dlbl {
+  font-size: 11.5px;
+  color: #6b7280;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.alg-pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-all;
+  font-family: Consolas, 'Courier New', monospace;
+  font-size: 11.5px;
+  color: #111827;
+  max-height: 220px;
+  overflow: auto;
+}
+/* ★ 18/08 — กล่อง curl พื้นดำจริง (เดิม #111827 ติดโทนน้ำเงิน / #17181B ยังเทาไป)
+   ★ ใส่ !important เพราะกล่องนี้ใช้คลาส .alg-dbox ร่วมด้วย (พื้นขาว) — บาง deployment
+     โหลด CSS คนละลำดับ ถ้าไม่ย้ำจะโดนพื้นขาวทับ
+   ★ ต้องทับ border ของ .alg-dbox ด้วย ไม่งั้นขอบขาว #E5E7EB ลอยรอบกล่องดำ */
+.alg-curl,
+.alg-curl .alg-pre {
+  background-color: #000 !important;
+  background-image: none !important;
+}
+.alg-curl {
+  border-color: #333 !important;
+  color: #e5e7eb;
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.alg-curl .alg-pre {
+  color: #d1fae5;
+}
+.alg-copy {
+  background: #00c08b;
+  color: #fff;
+  border: 0;
+  border-radius: 6px;
+  padding: 4px 12px;
+  font-size: 11.5px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.alg-copy:hover {
+  filter: brightness(1.06);
+}
+.alg-empty {
+  text-align: center;
+  color: #9ca3af;
+  padding: 40px 10px;
+  font-size: 13px;
+}
+
+/* ★ 28/08/2026 — แท็บ API / สิทธิ์ */
+.alg-tabs {
+  display: flex;
+  gap: 2px;
+  padding: 0 16px;
+  background: #2c1c58;
+}
+.alg-tab {
+  border: 0;
+  background: transparent;
+  color: #c7bee4;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12.5px;
+  padding: 9px 16px;
+  border-bottom: 2px solid transparent;
+}
+.alg-tab:hover {
+  color: #fff;
+}
+.alg-tab.on {
+  color: #fff;
+  border-bottom-color: #00c08b;
+  font-weight: 600;
+}
+.alg-roles {
+  padding: 16px;
+  overflow: auto;
+  flex: 1;
+}
+.alg-rsum {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  background: #f7f7fb;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+}
+.alg-rsum .k {
+  color: #6b7280;
+  font-size: 12px;
+}
+.alg-rsum .v {
+  color: #191919;
+  font-size: 13px;
+  font-weight: 600;
+}
+.alg-badge {
+  border-radius: 20px;
+  padding: 3px 12px;
+  font-size: 11.5px;
+  font-weight: 600;
+}
+.alg-badge.yes {
+  background: #dcfce7;
+  color: #008b5a;
+}
+.alg-badge.no {
+  background: #f3f4f6;
+  color: #8a92a6;
+}
+.alg-rlist {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 6px;
+}
+.alg-role {
+  border: 1px solid #e5e7eb;
+  border-radius: 7px;
+  padding: 7px 11px;
+  font-size: 12px;
+  color: #191919;
+  font-family: 'Consolas', 'Menlo', monospace;
+  word-break: break-all;
+  background: #fff;
+}
+.alg-role.hit {
+  border-color: #00c08b;
+  background: #f0fdf8;
+}
+
+/* ★ 28/08/2026 — role ที่ทำให้ผู้ใช้เป็น super admin
+   ★ 28/08 (รอบ 2, ตามที่ user สั่ง): ใช้พื้นที่เท่า role ปกติทุกประการ — ขนาดกล่อง
+   ขนาดฟอนต์ และตำแหน่งในกริดเหมือนตัวอื่น ต่างกันแค่ "สีพื้นหลัง + สีตัวอักษร"
+   และมีบรรทัดอธิบายเล็ก ๆ ว่าผ่านทุกด่าน (ไม่กินเต็มแถว ไม่ขยายตัวอักษรอีกแล้ว) */
+.alg-role.super {
+  background: #35236a;
+  border-color: #35236a;
+  color: #ffd666;
+}
+.alg-role.super .why {
+  display: block;
+  margin-top: 3px;
+  font-family: 'NotoSansThai', 'Inter', system-ui, sans-serif;
+  font-size: 11px;
+  color: #d9ceff;
+}
+.alg-role.super.hit {
+  border-color: #00c08b;
+}
+.alg-foot {
+  padding: 7px 16px;
+  background: #fff;
+  border-top: 1px solid #e5e7eb;
+  color: #9ca3af;
+  font-size: 11.5px;
+}
+@media (max-width: 820px) {
+  .alg-row {
+    grid-template-columns: 36px 70px 56px minmax(0, 1fr);
+  }
+  .alg-row .st,
+  .alg-row .ms {
+    display: none;
+  }
+}

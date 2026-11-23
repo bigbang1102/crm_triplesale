@@ -1,0 +1,579 @@
+<title>แผนที่ระบบ ACE · GGW · Triple Sales</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: เอกสารยาวอ่านไล่ลง + สารบัญติดซ้ายบนจอกว้าง ; สีประจำตระกูลระบบ 3 สี (CRM ฟ้าเขียว · Gold ทองแดง · ERP ม่วงคราม) ใช้ซ้ำในแผนภาพ ป้าย และหัวข้อ */
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --sunken: #eef0f4;
+  --fg: #1c2230;
+  --muted: #5a6476;
+  --line: #d9dde5;
+  --accent: #2f5bd3;
+  --crm: #0f7c78;
+  --crm-soft: #dff2f0;
+  --gold: #a5631a;
+  --gold-soft: #f7ebdc;
+  --erp: #5b3fb0;
+  --erp-soft: #ebe6f8;
+  --plat: #4b5566;
+  --plat-soft: #e7eaef;
+  --warn: #b0430f;
+  --warn-soft: #fbe9df;
+  --ok: #2c7a3f;
+  --ok-soft: #e1f2e5;
+  --font-display: 'Anuphan', 'IBM Plex Sans Thai', 'Noto Sans Thai', system-ui, sans-serif;
+  --font-body: 'IBM Plex Sans Thai', 'Noto Sans Thai', 'Leelawadee UI', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12151c; --surface: #1a1f29; --sunken: #222835; --fg: #e6e9f0; --muted: #9aa3b5; --line: #2e3545;
+    --accent: #7d9cff; --crm: #4fc3bc; --crm-soft: #173331; --gold: #e0a35e; --gold-soft: #362a1b;
+    --erp: #a891f0; --erp-soft: #2a2442; --plat: #a4adbd; --plat-soft: #262c38;
+    --warn: #f08a5d; --warn-soft: #3a2419; --ok: #6cc884; --ok-soft: #1b3122;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12151c; --surface: #1a1f29; --sunken: #222835; --fg: #e6e9f0; --muted: #9aa3b5; --line: #2e3545;
+  --accent: #7d9cff; --crm: #4fc3bc; --crm-soft: #173331; --gold: #e0a35e; --gold-soft: #362a1b;
+  --erp: #a891f0; --erp-soft: #2a2442; --plat: #a4adbd; --plat-soft: #262c38;
+  --warn: #f08a5d; --warn-soft: #3a2419; --ok: #6cc884; --ok-soft: #1b3122;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15.5px; line-height: 1.7; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-block: 32px 80px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 40px; }
+@media (max-width: 960px) { .wrap { grid-template-columns: minmax(0, 1fr); } .toc { display: none; } }
+.toc { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 24px); align-self: start; font-size: 14px; }
+.toc b { display: block; font-family: var(--font-display); font-size: 12px; letter-spacing: .08em; color: var(--muted); margin-bottom: 8px; }
+.toc a { display: block; color: var(--muted); text-decoration: none; padding: 4px 0 4px 12px; border-left: 2px solid var(--line); }
+.toc a:hover, .toc a:focus-visible { color: var(--fg); border-left-color: var(--accent); outline: none; }
+.toc a.sub { padding-left: 24px; font-size: 13px; }
+main { min-width: 0; }
+h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.3; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(28px, 4vw, 40px); font-weight: 700; }
+h2 { font-size: 26px; font-weight: 700; margin-top: 56px; padding-top: 8px; }
+h3 { font-size: 19px; font-weight: 600; margin-top: 28px; }
+h4 { font-size: 16px; font-weight: 600; margin-top: 18px; }
+p { margin: 10px 0; max-width: 72ch; }
+a { color: var(--accent); }
+code, .mono { font-family: var(--font-mono); font-size: .86em; background: var(--sunken); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+.lede { font-size: 17px; color: var(--muted); max-width: 70ch; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 13.5px; color: var(--muted); margin-top: 14px; }
+.eyebrow { font-family: var(--font-display); font-size: 12.5px; letter-spacing: .1em; font-weight: 600; text-transform: uppercase; }
+.crm { --c: var(--crm); --cs: var(--crm-soft); }
+.gold { --c: var(--gold); --cs: var(--gold-soft); }
+.erp { --c: var(--erp); --cs: var(--erp-soft); }
+.plat { --c: var(--plat); --cs: var(--plat-soft); }
+.eyebrow.crm, .eyebrow.gold, .eyebrow.erp, .eyebrow.plat { color: var(--c); }
+.family-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; border-bottom: 3px solid var(--c); padding-bottom: 8px; }
+.family-head .tag { font-size: 13px; color: var(--c); background: var(--cs); padding: 2px 10px; border-radius: 99px; font-weight: 600; }
+.figure { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; margin: 18px 0; overflow-x: auto; }
+.figure svg { display: block; width: 100%; min-width: 820px; height: auto; }
+.figcap { font-size: 13px; color: var(--muted); margin-top: 8px; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin: 16px 0; }
+.card { background: var(--surface); border: 1px solid var(--line); border-top: 4px solid var(--c, var(--line)); border-radius: 8px; padding: 14px 16px; min-width: 0; }
+.card h4 { margin: 0 0 4px; }
+.card p { margin: 4px 0; font-size: 14.5px; }
+.card .stack { font-size: 13px; color: var(--muted); }
+.card .repo { font-family: var(--font-mono); font-size: 12.5px; color: var(--c); }
+.tbl { overflow-x: auto; margin: 14px 0; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { background: var(--sunken); font-family: var(--font-display); font-weight: 600; font-size: 13.5px; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+td code { white-space: nowrap; }
+.pill { display: inline-block; font-size: 12px; font-weight: 600; padding: 1px 8px; border-radius: 99px; white-space: nowrap; color: var(--c); background: var(--cs); }
+.st-ok { --c: var(--ok); --cs: var(--ok-soft); }
+.st-warn { --c: var(--warn); --cs: var(--warn-soft); }
+.st-plat { --c: var(--plat); --cs: var(--plat-soft); }
+.flow { display: flex; flex-wrap: wrap; align-items: stretch; gap: 8px; margin: 14px 0; list-style: none; padding: 0; counter-reset: step; }
+.flow li { counter-increment: step; flex: 1 1 170px; background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--c); border-radius: 6px; padding: 10px 12px; font-size: 14px; min-width: 0; }
+.flow li::before { content: counter(step); display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: var(--cs); color: var(--c); font-weight: 700; font-size: 12px; margin-right: 6px; }
+.note { background: var(--sunken); border-radius: 8px; padding: 12px 16px; margin: 14px 0; font-size: 14.5px; }
+.note.warn { background: var(--warn-soft); }
+.note b:first-child { font-family: var(--font-display); }
+ul.tight { margin: 8px 0; padding-left: 20px; }
+ul.tight li { margin: 3px 0; }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; }
+.two > * { min-width: 0; }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 13px; color: var(--muted); margin-top: 10px; }
+.legend span::before { content: ""; display: inline-block; width: 12px; height: 12px; border-radius: 3px; background: var(--c); margin-right: 6px; vertical-align: -1px; }
+footer { margin-top: 64px; font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 16px; }
+/* SVG uses tokens so both themes read */
+svg text { font-family: var(--font-body); fill: var(--fg); }
+svg .t-muted { fill: var(--muted); }
+svg .t-crm { fill: var(--crm); } svg .t-gold { fill: var(--gold); } svg .t-erp { fill: var(--erp); } svg .t-plat { fill: var(--plat); }
+svg .zone-crm { fill: var(--crm-soft); stroke: var(--crm); }
+svg .zone-gold { fill: var(--gold-soft); stroke: var(--gold); }
+svg .zone-erp { fill: var(--erp-soft); stroke: var(--erp); }
+svg .box { fill: var(--surface); stroke: var(--line); }
+svg .box-ext { fill: var(--sunken); stroke: var(--muted); stroke-dasharray: 4 3; }
+svg .edge { stroke: var(--muted); fill: none; stroke-width: 1.4; }
+svg .edge-x { stroke: var(--warn); fill: none; stroke-width: 1.6; stroke-dasharray: 6 4; }
+svg .arrow { fill: var(--muted); }
+svg .arrow-x { fill: var(--warn); }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+
+<div class="wrap">
+<nav class="toc" aria-label="สารบัญ">
+  <b>สารบัญ</b>
+  <a href="#overview">ภาพรวมทั้งหมด</a>
+  <a href="#repos">ทะเบียนโปรเจกต์ใน C:\git</a>
+  <a href="#crm">Triple Sales CRM</a>
+  <a class="sub" href="#crm-web">เว็บ Angular</a>
+  <a class="sub" href="#crm-api">triplesales-api</a>
+  <a class="sub" href="#crm-mobile">แอปมือถือ</a>
+  <a href="#gold">Gold Gateway (GoldX)</a>
+  <a class="sub" href="#gold-mobile">แอป GoldX / Gold Plus</a>
+  <a class="sub" href="#gold-backend">Microservices หลังบ้าน</a>
+  <a class="sub" href="#gold-realtime">Realtime / Socket</a>
+  <a href="#erp">Red ERP / POS</a>
+  <a class="sub" href="#erp-flow">ฟอร์ม · รายงาน · redTools</a>
+  <a class="sub" href="#erp-modules">รหัสโมดูล ERP</a>
+  <a href="#compare">เปรียบเทียบข้ามระบบ</a>
+  <a href="#risks">ความเสี่ยงและเรื่องค้าง</a>
+  <a href="#docs">อ่านต่อที่ไหน</a>
+</nav>
+
+<main>
+<header>
+  <div class="eyebrow plat">เอกสารสื่อสารภายใน · ภาพรวมสถาปัตยกรรม</div>
+  <h1>แผนที่ระบบทั้งหมดที่ทีมดูแล</h1>
+  <p class="lede">สรุปโครงสร้างของทุกระบบที่อยู่ใน <code>C:\git</code> ได้แก่ Red ERP / POS, แอปซื้อขายและออมทองคำ GoldX / Gold Plus พร้อม microservices หลังบ้าน, และระบบ CRM Triple Sales (เว็บ มือถือ API) เพื่อให้คนในทีมและผู้เกี่ยวข้องเห็นภาพเดียวกันว่าอะไรอยู่ตรงไหน คุยกับอะไร และสถานะตอนนี้เป็นอย่างไร</p>
+  <div class="meta">
+    <span>ข้อมูล ณ 21 พ.ย. 2026</span>
+    <span>ที่มา: อ่านโค้ด, pom/pubspec/package, config (ไม่รวมค่าลับ), README, CLAUDE.md, เอกสารใน docs/ และบันทึก Oracle</span>
+    <span>ไม่มีรหัสผ่าน กุญแจ หรือ IP ในเอกสารนี้</span>
+  </div>
+</header>
+
+<!-- ============ OVERVIEW ============ -->
+<section id="overview">
+<h2>ภาพรวมทั้งหมด</h2>
+<p>โปรเจกต์ทั้งหมดแบ่งได้เป็น <b>3 ตระกูลระบบ</b> ที่มีผู้ใช้ เทคโนโลยี และวิธี deploy ต่างกันชัดเจน แต่ละตระกูลมีหน้าบ้าน (เว็บหรือแอป) และหลังบ้านของตัวเอง ใช้ร่วมกันน้อยมาก</p>
+
+<div class="cards">
+  <div class="card crm"><div class="eyebrow crm">ตระกูลที่ 1</div><h4>Triple Sales CRM</h4><p>ระบบบริหารงานขาย: Lead → ลูกค้าเป้าหมาย → โอกาสขาย → กิจกรรม → เอกสารขาย → Forecast</p><p class="stack">Angular 21 · Flutter · Spring Boot 4 / Java 25 · PostgreSQL 17 · Keycloak · GitLab</p></div>
+  <div class="card gold"><div class="eyebrow gold">ตระกูลที่ 2</div><h4>Gold Gateway (GoldX / Gold Plus)</h4><p>แอปซื้อขาย ออม ฝาก ถอน โอน และรับทองคำของลูกค้ารายย่อย + ระบบหลังบ้านและ backoffice</p><p class="stack">Flutter / GetX · Spring Boot 3.5 / Java 24 microservices · Kafka · Redis · Hazelcast · Vault · Kubernetes · Azure DevOps</p></div>
+  <div class="card erp"><div class="eyebrow erp">ตระกูลที่ 3</div><h4>Red ERP / POS</h4><p>ERP เต็มรูปแบบ (บัญชี จัดซื้อ ขาย คลัง สินทรัพย์) + POS Gold / POS Retail / Shopfloor สำหรับหน้าร้าน</p><p class="stack">WildFly 30 · Jakarta EE 10 · JDK 21 · JSP · JasperReports 7 · MySQL · redTools · GitLab + SVN</p></div>
+</div>
+
+<div class="figure">
+<svg viewBox="0 0 1000 600" role="img" aria-labelledby="ov-title">
+  <title id="ov-title">แผนภาพภาพรวม 3 ตระกูลระบบ และจุดที่เชื่อมกัน</title>
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="arrow"/></marker>
+    <marker id="arx" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="arrow-x"/></marker>
+  </defs>
+  <!-- zones -->
+  <rect x="10" y="10" width="310" height="580" rx="12" class="zone-crm" stroke-width="1.5"/>
+  <rect x="345" y="10" width="310" height="580" rx="12" class="zone-gold" stroke-width="1.5"/>
+  <rect x="680" y="10" width="310" height="580" rx="12" class="zone-erp" stroke-width="1.5"/>
+  <text x="26" y="38" font-size="17" font-weight="700" class="t-crm">Triple Sales CRM</text>
+  <text x="361" y="38" font-size="17" font-weight="700" class="t-gold">Gold Gateway</text>
+  <text x="696" y="38" font-size="17" font-weight="700" class="t-erp">Red ERP / POS</text>
+
+  <!-- CRM column -->
+  <rect x="26" y="56" width="134" height="56" rx="7" class="box"/><text x="36" y="79" font-size="13" font-weight="600">เว็บ Angular 21</text><text x="36" y="99" font-size="11.5" class="t-muted">triple_sales_web</text>
+  <rect x="170" y="56" width="134" height="56" rx="7" class="box"/><text x="180" y="79" font-size="13" font-weight="600">แอป Flutter</text><text x="180" y="99" font-size="11.5" class="t-muted">triple_sales_mobile</text>
+  <rect x="26" y="146" width="278" height="44" rx="7" class="box"/><text x="36" y="166" font-size="13" font-weight="600">nginx / gateway (origin เดียว)</text><text x="36" y="182" font-size="11.5" class="t-muted">/tps-api · /master-service · /triplesale-auth</text>
+  <rect x="26" y="222" width="134" height="56" rx="7" class="box"/><text x="36" y="245" font-size="13" font-weight="600">Keycloak 26</text><text x="36" y="265" font-size="11.5" class="t-muted">PKCE · realm ต่อระบบ</text>
+  <rect x="170" y="222" width="134" height="56" rx="7" class="box"/><text x="180" y="245" font-size="13" font-weight="600">triplesales-api</text><text x="180" y="265" font-size="11.5" class="t-muted">Spring Boot 4 · Java 25</text>
+  <rect x="26" y="310" width="134" height="56" rx="7" class="box"/><text x="36" y="333" font-size="13" font-weight="600">configmaster</text><text x="36" y="353" font-size="11.5" class="t-muted">master data / ตั้งค่า</text>
+  <rect x="170" y="310" width="134" height="56" rx="7" class="box"/><text x="180" y="333" font-size="13" font-weight="600">PostgreSQL 17</text><text x="180" y="353" font-size="11.5" class="t-muted">dbmate migrations</text>
+  <rect x="26" y="398" width="278" height="56" rx="7" class="box-ext"/><text x="36" y="421" font-size="13" font-weight="600">บริการรุ่นเดิม (legacy)</text><text x="36" y="441" font-size="11.5" class="t-muted">triplesale-auth · triplesale-service · chat · ai-hub</text>
+  <rect x="26" y="486" width="278" height="56" rx="7" class="box-ext"/><text x="36" y="509" font-size="13" font-weight="600">Java/JSF เดิม (triple_sale_main)</text><text x="36" y="529" font-size="11.5" class="t-muted">ต้นฉบับที่กำลังย้าย · ไม่อยู่ในเครื่องนี้</text>
+  <path d="M93,112 V146" class="edge" marker-end="url(#ar)"/>
+  <path d="M237,112 C237,130 200,130 200,146" class="edge" marker-end="url(#ar)"/>
+  <path d="M237,190 V222" class="edge" marker-end="url(#ar)"/>
+  <path d="M93,190 V222" class="edge" marker-end="url(#ar)"/>
+  <path d="M120,190 C120,290 93,280 93,310" class="edge" marker-end="url(#ar)"/>
+  <path d="M237,278 V310" class="edge" marker-end="url(#ar)"/>
+  <path d="M290,112 C318,160 318,380 290,398" class="edge" stroke-dasharray="3 3" marker-end="url(#ar)"/>
+  <text x="250" y="390" font-size="10.5" class="t-muted">มือถือยังเรียกตัวเดิม</text>
+
+  <!-- GOLD column -->
+  <rect x="361" y="56" width="134" height="56" rx="7" class="box"/><text x="371" y="79" font-size="13" font-weight="600">GoldX · VH Gold</text><text x="371" y="99" font-size="11.5" class="t-muted">GoldX-Mobile</text>
+  <rect x="505" y="56" width="134" height="56" rx="7" class="box"/><text x="515" y="79" font-size="13" font-weight="600">Gold Plus (CAPP)</text><text x="515" y="99" font-size="11.5" class="t-muted">Gold-Plus-Mobile</text>
+  <rect x="361" y="122" width="278" height="28" rx="6" class="box"/><text x="371" y="141" font-size="11.5" class="t-muted">ใช้แพ็กเกจกลาง gold_x_core (v1.0.76)</text>
+  <rect x="361" y="172" width="170" height="44" rx="7" class="box"/><text x="371" y="192" font-size="13" font-weight="600">API gateway / Ingress</text><text x="371" y="208" font-size="11.5" class="t-muted">/oauth /managetrade …</text>
+  <rect x="541" y="172" width="98" height="44" rx="7" class="box"/><text x="549" y="192" font-size="12.5" font-weight="600">Socket</text><text x="549" y="208" font-size="11" class="t-muted">Node · STOMP</text>
+  <rect x="361" y="240" width="278" height="112" rx="7" class="box"/>
+  <text x="371" y="262" font-size="13" font-weight="600">Spring Boot microservices (k8s)</text>
+  <text x="371" y="284" font-size="11.5" class="t-muted">auth · trading (+backoffice API) · gold-wallet</text>
+  <text x="371" y="302" font-size="11.5" class="t-muted">wallet-portfolio · moneywallet · master</text>
+  <text x="371" y="320" font-size="11.5" class="t-muted">standarddata · document-process · member</text>
+  <text x="371" y="338" font-size="11.5" class="t-muted">delivery · ใช้ micro-lib ร่วมกัน</text>
+  <rect x="361" y="374" width="278" height="44" rx="7" class="box"/><text x="371" y="394" font-size="13" font-weight="600">Kafka · Redis · Hazelcast · Vault</text><text x="371" y="410" font-size="11.5" class="t-muted">PostgreSQL ต่อบริการ · ELK log</text>
+  <rect x="361" y="440" width="134" height="56" rx="7" class="box"/><text x="371" y="463" font-size="13" font-weight="600">Backoffice UI</text><text x="371" y="483" font-size="11.5" class="t-muted">Thymeleaf (เก่า)</text>
+  <rect x="505" y="440" width="134" height="56" rx="7" class="box-ext"/><text x="515" y="463" font-size="13" font-weight="600">ACE core ภายนอก</text><text x="515" y="483" font-size="11.5" class="t-muted">ATS · TradeX · margin</text>
+  <rect x="361" y="518" width="278" height="56" rx="7" class="box"/><text x="371" y="541" font-size="13" font-weight="600">Next-pipeline · ggw-config</text><text x="371" y="561" font-size="11.5" class="t-muted">Azure Pipelines · Kustomize · config/กุญแจ</text>
+  <path d="M428,150 V172" class="edge" marker-end="url(#ar)"/>
+  <path d="M590,150 V172" class="edge" marker-end="url(#ar)"/>
+  <path d="M446,216 V240" class="edge" marker-end="url(#ar)"/>
+  <path d="M590,216 V240" class="edge" marker-end="url(#ar)"/>
+  <path d="M500,352 V374" class="edge" marker-end="url(#ar)"/>
+  <path d="M428,440 C410,420 410,370 400,352" class="edge" marker-end="url(#ar)"/>
+  <path d="M572,440 C600,420 620,380 620,352" class="edge" marker-end="url(#ar)"/>
+
+  <!-- ERP column -->
+  <rect x="696" y="56" width="278" height="56" rx="7" class="box"/><text x="706" y="79" font-size="13" font-weight="600">ผู้ใช้ผ่านเบราว์เซอร์</text><text x="706" y="99" font-size="11.5" class="t-muted">ERP · POS Gold · POS Retail · Shopfloor · CRM</text>
+  <rect x="696" y="140" width="278" height="150" rx="7" class="box"/>
+  <text x="706" y="162" font-size="13" font-weight="600">WildFly 30 · redjaka.ear</text>
+  <text x="706" y="184" font-size="11.5" class="t-muted">red.war (/red) — JSP ~800 เอกสาร</text>
+  <text x="706" y="202" font-size="11.5" class="t-muted">EJB: red-kernel · red-wf · red-security</text>
+  <text x="706" y="220" font-size="11.5" class="t-muted">red-&lt;doc&gt;.jar ต่อเอกสาร (สร้างโดย redTools)</text>
+  <text x="706" y="238" font-size="11.5" class="t-muted">JasperReports 7 (/rpt) · Quartz jobs</text>
+  <text x="706" y="256" font-size="11.5" class="t-muted">acedrilldown.war (/api — Spring 6)</text>
+  <text x="706" y="274" font-size="11.5" class="t-muted">JDK 21</text>
+  <rect x="696" y="318" width="278" height="56" rx="7" class="box"/><text x="706" y="341" font-size="13" font-weight="600">MySQL</text><text x="706" y="361" font-size="11.5" class="t-muted">red2 · goldcenter · btnccenter · plusconf</text>
+  <rect x="696" y="402" width="278" height="56" rx="7" class="box"/><text x="706" y="425" font-size="13" font-weight="600">redTools (Tomcat) + MySQL ของตัวเอง</text><text x="706" y="445" font-size="11.5" class="t-muted">Excel usecase → Java/XML/wfdisplay</text>
+  <rect x="696" y="486" width="278" height="56" rx="7" class="box"/><text x="706" y="509" font-size="13" font-weight="600">wildfly2 (source) → deploy tree</text><text x="706" y="529" font-size="11.5" class="t-muted">red-erp-wildfly · new-template · sourcetree</text>
+  <path d="M835,112 V140" class="edge" marker-end="url(#ar)"/>
+  <path d="M835,290 V318" class="edge" marker-end="url(#ar)"/>
+  <path d="M960,402 C990,380 990,260 974,240" class="edge" marker-end="url(#ar)"/>
+  <path d="M835,486 V458" class="edge" stroke-dasharray="3 3"/>
+
+  <!-- cross-family links (business, unverified detail) -->
+  <path d="M639,300 C665,300 670,350 696,350" class="edge-x" marker-end="url(#arx)"/>
+  <text x="643" y="290" font-size="10.5" class="t-muted">?</text>
+</svg>
+<div class="legend">
+  <span class="crm">Triple Sales CRM</span><span class="gold">Gold Gateway</span><span class="erp">Red ERP / POS</span>
+  <span class="st-warn">เส้นประสีส้ม = เชื่อมกันทางธุรกิจ (รายละเอียดยังไม่ยืนยัน)</span>
+</div>
+<p class="figcap">กล่องเส้นประ = ระบบภายนอกหรือระบบรุ่นเดิม ; ลูกศร = ทิศทางการเรียก ; ฝั่ง ERP มีโมดูล GOLD / GX / GGW, ฐานข้อมูล goldcenter และ moneywallet มี callback สถานะเอกสาร ERP จึงเชื่อว่ามีการเชื่อมกับฝั่ง Gold แต่ยังไม่ได้ตามดูว่าเชื่อมผ่านช่องทางไหน</p>
+</div>
+
+<div class="note"><b>โปรเจกต์ที่ไม่อยู่ใน 3 ตระกูลนี้:</b> <code>supermux</code> เป็นระบบบัญชีขายลอตเตอรี่ (Next.js + Supabase) ไม่เกี่ยวกับระบบอื่น ; <code>propertycrm-service</code> เป็น CRM อสังหาฯ ที่ใช้โครงเดียวกับฝั่ง Gold แต่คนละโดเมน (ไม่ใช่ Triple Sales)</div>
+</section>
+
+<!-- ============ REPOS ============ -->
+<section id="repos">
+<h2>ทะเบียนโปรเจกต์ใน C:\git</h2>
+<p>ทุกโฟลเดอร์ใน <code>C:\git</code> จัดเข้าตระกูลระบบ พร้อมบทบาทของแต่ละตัว</p>
+<div class="tbl"><table>
+<thead><tr><th>โฟลเดอร์</th><th>ตระกูล</th><th>บทบาท</th><th>เทคโนโลยีหลัก</th><th>Repo</th></tr></thead>
+<tbody>
+<tr><td><code>triple_sales_web</code></td><td><span class="pill crm">CRM</span></td><td>เว็บ Angular ตัวหลัก (git) branch <code>develop-v3</code> มี Lead แบบเรียก API จริงแล้ว</td><td>Angular 21.2 · TS 5.9</td><td>GitLab</td></tr>
+<tr><td><code>triple_sales_impact/triple_sales_web</code></td><td><span class="pill crm">CRM</span></td><td>สำเนาโหมด mockup (ไม่มี .git) เพิ่มดีไซน์ใหม่ของ BA/Figma: Smart Doc, แดชบอร์ดใหม่, Forecast, Role สิทธิ์ + เซิร์ฟเวอร์ข้อมูลกลางของทีม</td><td>Angular 21.2 · Node mockup-server</td><td>สำเนา</td></tr>
+<tr><td><code>triplesales-api</code></td><td><span class="pill crm">CRM</span></td><td>Backend ใหม่ "Triple Sales for Enterprise" แบบ modular monolith</td><td>Spring Boot 4.1 · Java 25 · PostgreSQL 17</td><td>GitLab</td></tr>
+<tr><td><code>triple_sales_mobile</code></td><td><span class="pill crm">CRM</span></td><td>แอปพนักงานขาย (check-in, ลูกค้า, โอกาสขาย, แชท)</td><td>Flutter 3.27 · GetX</td><td>GitLab</td></tr>
+<tr><td><code>GoldX-Mobile</code></td><td><span class="pill gold">Gold</span></td><td>แอป GoldX และ white-label VH Gold</td><td>Flutter 3.27 · GetX · Retrofit</td><td>Azure DevOps</td></tr>
+<tr><td><code>Gold-Plus-Mobile</code></td><td><span class="pill gold">Gold</span></td><td>แอป Gold Plus (CAPP) — โค้ดชุดเดียวกับ GoldX + ฝากขาย/สินเชื่อ</td><td>Flutter 3.27</td><td>Azure DevOps</td></tr>
+<tr><td><code>gold_x_core</code></td><td><span class="pill gold">Gold</span></td><td>แพ็กเกจ Flutter กลางของสองแอป (token, theme, widget, model)</td><td>Dart package</td><td>Azure DevOps</td></tr>
+<tr><td><code>ggw.capp.socket</code></td><td><span class="pill gold">Gold</span></td><td>Socket.IO server ส่งพอร์ต/สถานะตลาด/ค่าธรรมเนียมให้แอป (พอร์ต 3579)</td><td>Node 18 · Express · socket.io</td><td>Azure DevOps</td></tr>
+<tr><td><code>ggw.margin.socket</code></td><td><span class="pill gold">Gold</span></td><td>Socket ของผลิตภัณฑ์ Trade X (margin) — ต้นแบบของ capp socket</td><td>Node · socket.io</td><td>Azure DevOps</td></tr>
+<tr><td><code>auth-service</code> … <code>delivery</code> (13 ตัว)</td><td><span class="pill gold">Gold</span></td><td>Microservices หลังบ้าน (ดูตารางในหัวข้อ Gold)</td><td>Spring Boot 3.5 · Java 24</td><td>Azure DevOps</td></tr>
+<tr><td><code>payment</code> · <code>priceprocess</code> · <code>shopping</code> · <code>webmessage-service</code></td><td><span class="pill gold">Gold</span></td><td>มีแค่ README ในเครื่องนี้ (โค้ดไม่ได้ clone)</td><td>—</td><td>Azure DevOps</td></tr>
+<tr><td><code>micro-lib</code> · <code>config-server</code> · <code>ggw-config</code> · <code>Next-pipeline</code></td><td><span class="pill plat">แพลตฟอร์ม Gold</span></td><td>ไลบรารีกลาง JWT/Hazelcast/DTO · Config Server · ไฟล์ config และกุญแจ · CI/CD + Kubernetes manifest</td><td>Java · Kustomize · Azure Pipelines</td><td>Azure DevOps</td></tr>
+<tr><td><code>propertycrm-service</code></td><td><span class="pill plat">อื่น</span></td><td>CRM อสังหาฯ (ประกาศขาย, lead ขายทรัพย์)</td><td>Spring Boot 3.5 · Java 21</td><td>Azure DevOps</td></tr>
+<tr><td><code>wildfly2</code></td><td><span class="pill erp">ERP</span></td><td><b>ซอร์ส</b>ของเว็บแอป red.war (JSP, JS, jrxml)</td><td>JSP · Jasper</td><td>GitLab / SVN</td></tr>
+<tr><td><code>red-erp-wildfly</code></td><td><span class="pill erp">ERP</span></td><td>WildFly 30 พร้อมแอปที่ deploy แล้ว (ตัวที่รันจริง) branch <code>develop-v2</code></td><td>WildFly 30 · JDK 21</td><td>GitLab</td></tr>
+<tr><td><code>new-template</code></td><td><span class="pill erp">ERP</span></td><td>WildFly 30 template ใหม่ (red.war เป็น SVN) เป้าหมาย JasperReports 7</td><td>WildFly 30</td><td>SVN</td></tr>
+<tr><td><code>sourcetree</code></td><td><span class="pill erp">ERP</span></td><td>clone ที่สองของ red-erp-wildfly (branch <code>develop</code>) ใช้ merge ผ่าน SourceTree</td><td>—</td><td>git</td></tr>
+<tr><td><code>red-erp-excel-gen</code></td><td><span class="pill erp">ERP</span></td><td>ไฟล์ Excel usecase สำหรับ redTools สร้างเอกสาร (Master 270, Transaction 105)</td><td>.xls</td><td>GitLab</td></tr>
+<tr><td><code>tomcat</code></td><td><span class="pill erp">ERP</span></td><td>Tomcat 9 + JDK 8 (น่าจะเป็น runtime ของ redTools)</td><td>Tomcat 9.0.8</td><td>—</td></tr>
+<tr><td><code>supermux</code></td><td><span class="pill plat">อื่น</span></td><td>บัญชีขายลอตเตอรี่ ไม่เกี่ยวกับระบบอื่น</td><td>Next.js 16 · Supabase</td><td>—</td></tr>
+</tbody></table></div>
+</section>
+
+<!-- ============ CRM ============ -->
+<section id="crm">
+<div class="family-head crm"><h2>Triple Sales CRM</h2><span class="tag">ย้ายจาก Java/JSF มาเป็น Angular + API ใหม่</span></div>
+<p>ระบบ CRM สำหรับทีมขาย เดิมเป็นเว็บ Java EE (JSF + PrimeFaces + servlet ประมาณ 100 ตัวทำหน้าที่ BFF) กำลังย้ายเป็น <b>เว็บ Angular ที่เรียก API ตรง</b> โดยไม่มี BFF/Tomcat คั่นกลาง (ตัดสินใจ 20 ต.ค. 2026, ADR-001) และมี backend ใหม่ <code>triplesales-api</code> มาแทนบริการรุ่นเดิมทีละส่วน</p>
+
+<h3 id="crm-web">เว็บ Angular (triple_sales_web)</h3>
+<div class="two">
+<div>
+<h4>เมนูหลักในแถบซ้าย</h4>
+<ul class="tight">
+<li><b>Dashboard</b> (ดีไซน์ใหม่) · <b>CRM</b>: หน้าแรก, Lead, Wait List, ลูกค้าเป้าหมาย, โอกาสขาย, กิจกรรม, ตารางนัด, ข้อมูลประกอบ, DrillDown</li>
+<li><b>Forecast</b>: Listing, Configuration, Overview, Dashboard, Change History</li>
+<li><b>งานขาย</b>: Smart Doc ใบเสนอราคา / ใบจอง / ใบส่งสินค้า / ใบรับเงิน (QT · SO · DO · RV)</li>
+<li><b>รายงาน</b> · <b>AI HUB</b> (13 เครื่องมือ + แปลเอกสาร + ปุ่ม AI ลอย) · <b>แชท</b> (+ แชทย่อยทุกหน้า)</li>
+<li><b>ตั้งค่า</b> v2: องค์กรและคน, Role สิทธิ์, ขั้นตอนขาย, ลูกค้า, การเงิน</li>
+<li>ยังไม่ทำ (เฟส 7): คะแนน, โปรโมชัน, แผนการตลาด, คำร้อง · Inventory / Marketing อยู่ระหว่างสร้าง</li>
+</ul>
+</div>
+<div>
+<h4>หลักการพอร์ตหน้าจาก Java</h4>
+<ul class="tight">
+<li>หน้าที่มีอยู่ใน Java สร้างด้วย <b>generator</b> (<code>tools/sync-&lt;หน้า&gt;.mjs</code>) จากไฟล์ xhtml/js จริง ห้ามแก้ไฟล์ที่สร้างด้วยมือ</li>
+<li>ตรวจด้วย <b>ตัวเทียบ</b> <code>tools/compare</code>: Chrome headless เทียบ DOM, ข้อความ, style, ตำแหน่ง กับหน้า Java ต้องตรงทุก scenario</li>
+<li><b>เฟส A</b> = ข้อมูล mock · <b>เฟส B</b> = live adapter (<code>*.live.ts</code>) ย้ายตรรกะ servlet มาเป็น TypeScript บน REST</li>
+<li>หน้าดีไซน์ใหม่ (Lead, Forecast, Prospect detail) เขียนด้วยมือจาก Figma / ต้นแบบของ BA</li>
+<li>ทะเบียนหน้า <code>page-registry.json</code> = แหล่งความจริงของ route / สิทธิ์ / เฟส (40 หน้า, เฟส 0–7)</li>
+</ul>
+</div>
+</div>
+
+<h4>สถานะการย้ายแต่ละกลุ่มหน้า</h4>
+<div class="tbl"><table>
+<thead><tr><th>กลุ่มหน้า</th><th>ที่มา</th><th>สถานะ</th></tr></thead>
+<tbody>
+<tr><td>Login, shell, หน้าแรก CRM, ลูกค้าเป้าหมาย, โอกาสขาย, กิจกรรม, ตารางนัด, DrillDown, รายงาน, ใบรับเงิน, ข้อมูลประกอบ</td><td>พอร์ตจาก Java</td><td><span class="pill st-ok">live adapter แล้ว</span> ยกเว้น PDF ที่ไม่มี REST</td></tr>
+<tr><td>AI HUB, แชท, แปลเอกสาร</td><td>พอร์ตจาก Java</td><td><span class="pill st-ok">live</span></td></tr>
+<tr><td>ตั้งค่า (Configuration &amp; Master data)</td><td>เขียนใหม่</td><td><span class="pill st-ok">live กับ configmaster</span></td></tr>
+<tr><td>Lead / Wait List / ถังขยะ</td><td>Figma</td><td><span class="pill st-ok">live ใน repo git</span> · mock ในสำเนา mockup</td></tr>
+<tr><td>Forecast</td><td>ต้นแบบ v19</td><td><span class="pill st-warn">เรียก API ก่อน ล้มแล้วใช้ mock</span> ยังไม่เคยต่อ backend จริง</td></tr>
+<tr><td>Smart Doc QT/SO/DO/RV</td><td>Mockup BA v14 / BRD-SD v0.4</td><td><span class="pill st-warn">mock</span> backend โมดูล quotation กำลังทำ</td></tr>
+<tr><td>เอกสารขายเดิม QT/BK/OB/AQ/AD</td><td>พอร์ตจาก Java</td><td><span class="pill st-warn">กำลังทำ live</span></td></tr>
+</tbody></table></div>
+<div class="note"><b>ข้อจำกัดที่ต้องรู้:</b> live adapter ทั้งหมดพิสูจน์ได้เพียงว่า "ทำเหมือน servlet Java บนข้อมูลทดสอบที่เขียนจากโค้ด Java" เพราะยังไม่มีบัญชีทดสอบของ UAT ต้องทดสอบกับข้อมูลจริงอีกรอบ</div>
+
+<h4>เซิร์ฟเวอร์ข้อมูล mockup ของทีม</h4>
+<p>สำเนา mockup ใช้ <code>tools/mockup-server.mjs</code> เป็น Datasource/Storage กลางที่ทั้งทีมใช้ร่วมกันผ่าน https (container แยก มี token ต่อคน) ข้อมูลของคนหนึ่งเห็นที่คนอื่นทันที มี Keycloak และ triplesales-api จำลองในตัวเพื่อทดสอบล็อกอินหลายบริษัท (<code>npm run mockup:tenant</code>) ข้อมูลตั้งต้นคือลูกค้า 180 ราย + โอกาสขาย 240 รายการ</p>
+
+<h3 id="crm-api">triplesales-api (backend ใหม่)</h3>
+<div class="two">
+<div>
+<ul class="tight">
+<li><b>รูปแบบ:</b> modular monolith แพ็กเกจ <code>com.triplesales.enterprise</code></li>
+<li><b>โมดูล:</b> account (session, สิทธิ์), organization, masterdata, notification, util (idempotency, เลขเอกสาร), common (audit, file storage, trace) และ <b>pipeline</b> = lead, prospect, opportunity, contact activity, schedule, dashboard, forecast, quotation</li>
+<li><b>ฐานข้อมูล:</b> PostgreSQL 17 + dbmate (migration 113 ไฟล์) · ไฟล์บน S3</li>
+<li><b>สังเกตการณ์:</b> Actuator + Prometheus + OpenTelemetry</li>
+</ul>
+</div>
+<div>
+<ul class="tight">
+<li><b>กติกาข้อมูล:</b> ทุก query กรองด้วยบริษัทจาก token ; record ที่มองไม่เห็นตอบ 404</li>
+<li><b>สิทธิ์:</b> action code (<code>@RequiresAction</code>) + ซ่อนฟิลด์รายตัว (field masking)</li>
+<li><b>Deploy:</b> GitLab CI → registry → job <code>deploy-dev</code> รัน migration ; profile local/dev/uat/prd ; secret อยู่ใน Vault</li>
+<li><b>โหมดเร่ง:</b> branch <code>develop-urgent</code> ทำงานแบบ "IMPACT fast mode" ติดป้าย FAST-DEBT + spec ใน <code>docs/fast-specs/</code></li>
+</ul>
+</div>
+</div>
+
+<h4>ลำดับการล็อกอิน (แบบใหม่ ผ่าน Keycloak)</h4>
+<ol class="flow crm">
+<li>กรอก<b>รหัสกลุ่ม</b> ตรวจด้วย <code>GET /auth/groups/{code}</code></li>
+<li>Keycloak Authorization Code + <b>PKCE</b> (ชื่อผู้ใช้มี prefix ของกลุ่ม)</li>
+<li><code>POST /me/session</code> ได้ข้อมูลผู้ใช้และรายชื่อบริษัท</li>
+<li>เลือกบริษัท <code>PUT /me/session/company/{id}</code> (เก็บฝั่ง server, ล็อกอินได้ที่เดียว)</li>
+<li>ทุก call แนบ <code>Bearer</code> อัตโนมัติ ; 401 = session จบ ; มี refresh token</li>
+</ol>
+
+<h3 id="crm-mobile">แอปมือถือ (triple_sales_mobile)</h3>
+<p>Flutter 3.27 + GetX มีโมดูล login (รวม biometric), หน้าแรก, โอกาสขาย, ลูกค้าเป้าหมาย (สร้าง/แก้/ค้นหา), check-in/out พร้อมแผนที่, กล้อง, QR/LINE, คลังสินค้า, แชท ตอนนี้<b>ยังเรียกบริการรุ่นเดิม</b> (<code>triplesale-auth</code> / <code>triplesale-service</code>) ยังไม่ย้ายมา triplesales-api และ Keycloak ถึง API จะรองรับ client ของมือถือแล้วก็ตาม</p>
+
+<h4>configmaster (หลังบ้านของหน้าตั้งค่า)</h4>
+<p>Java 25 / Spring Boot 4.1 อยู่ในเครื่องของนักพัฒนาอีกคน (ไม่อยู่ใน <code>C:\git</code> ของเครื่องนี้) ให้บริการ <code>/api/v1/master-setup/*</code> และ <code>/api/v1/master-tables/*</code> ; เว็บเรียกผ่าน <code>/master-service/api/v1</code> ; ตอนนี้ตรวจสิทธิ์จาก header <code>X-Roles</code> / <code>X-Entity-Ids</code> เท่านั้น ยังไม่ตรวจ Bearer token</p>
+</section>
+
+<!-- ============ GOLD ============ -->
+<section id="gold">
+<div class="family-head gold"><h2>Gold Gateway (GoldX / Gold Plus)</h2><span class="tag">GGW = Gold Gateway Company Limited</span></div>
+<p>ระบบซื้อขายและออมทองคำสำหรับลูกค้ารายย่อย ประกอบด้วยแอปมือถือ 2 ตัวที่ใช้โค้ดโครงเดียวกัน, Socket server สำหรับข้อมูลเรียลไทม์, microservices Spring Boot บน Kubernetes และหน้าเว็บ backoffice ของพนักงาน โค้ดทั้งหมดอยู่บน Azure DevOps (โปรเจกต์ "Next Project" / "Mobile-App")</p>
+
+<h3 id="gold-mobile">แอป GoldX / Gold Plus</h3>
+<div class="cards">
+  <div class="card gold"><h4>GoldX-Mobile</h4><p class="repo">GoldX-Mobile · v1.0.7+165</p><p>flavor <code>goldx</code>, <code>goldxDev</code>, <code>goldxUat</code> และ white-label <code>vhgold</code> ; สร้างได้ Android, iOS, web, Windows</p></div>
+  <div class="card gold"><h4>Gold-Plus-Mobile (CAPP)</h4><p class="repo">Gold-Plus-Mobile · v0.0.2+111</p><p>โค้ดเหมือน GoldX เกือบทุกโมดูล + ฝากขาย, สถานะสินเชื่อ/ขายฝาก, ค้นหาทรัพย์, socket แชท ; Android และ iOS ; merge โค้ดจาก GoldX มาเป็นระยะ</p></div>
+  <div class="card gold"><h4>gold_x_core</h4><p class="repo">gold_x_core · tag v1.0.76</p><p>แพ็กเกจกลาง: token, secure storage, theme, model, widget, ตัวจัดรูปเลขบัตรประชาชน ; สองแอปแยกพฤติกรรมด้วย <code>THIS_GOLD_PLUS</code></p></div>
+</div>
+<div class="two">
+<div>
+<h4>ฟีเจอร์หลัก</h4>
+<ul class="tight">
+<li><b>บัญชี:</b> สมัคร + KYC (OCR บัตร, ตรวจใบหน้า liveness), OTP, PIN, biometric, หลายบัญชี, ผูกบัญชีธนาคาร</li>
+<li><b>ซื้อขาย:</b> ราคาเรียลไทม์, กราฟ, พอร์ตทอง, ตั้งราคา (limit), ออมทอง, ผ่อนทอง, ทองพิเศษ</li>
+<li><b>เงินและทอง:</b> เติมเงิน, ถอนเงิน, โอนทองระหว่างบัญชี/ให้คนอื่น, ฝากทอง, ถอน/รับทอง (จัดส่งหรือรับที่ร้าน)</li>
+<li><b>อื่น ๆ:</b> ร้านค้าออนไลน์, คะแนน/คูปอง, ข่าว, แจ้งเตือน, แชท, สแกน QR</li>
+</ul>
+</div>
+<div>
+<h4>โครงโค้ดและ environment</h4>
+<ul class="tight">
+<li>รูปแบบ GetX: ทุกโมดูลมี <code>binding/</code> <code>controller/</code> <code>view/</code> ; Retrofit service ~50 ตัว, repository ~45 ตัว</li>
+<li>ความปลอดภัยแอป: freeRASP, ตรวจเครื่อง root/jailbreak, กันจับภาพหน้าจอ</li>
+<li>เลือก environment ด้วยไฟล์ entrypoint (<code>main_uat.dart</code>, <code>main_production.dart</code> …) ไม่ใช่ flavor ; ค่าอยู่ใน <code>.env.*</code> ผ่าน envied</li>
+<li>เอกสารดีที่สุดคือ <code>GoldX-Mobile/SETUP.md</code> (ภาษาไทย)</li>
+</ul>
+</div>
+</div>
+
+<h3 id="gold-backend">Microservices หลังบ้าน</h3>
+<p>ค่าเริ่มต้นของทุกบริการ: Spring Boot 3.5.3, Java 24, Spring Cloud 2025, PostgreSQL, Vault, Kafka, Hazelcast และใช้ <code>micro-lib</code> ตรวจ JWT ร่วมกัน (ยกเว้นที่ระบุ)</p>
+<div class="tbl"><table>
+<thead><tr><th>บริการ</th><th>หน้าที่</th><th>Path หลัก</th><th>หมายเหตุ</th></tr></thead>
+<tbody>
+<tr><td><code>auth-service</code></td><td>ล็อกอินลูกค้า ออก JWT (RSA), OTP, PIN, สมัคร/KYC, ผูกบัญชี, force logout</td><td><code>/oauth</code> <code>/otp</code> <code>/security</code> <code>/customer</code></td><td>Redis blacklist token, Firebase</td></tr>
+<tr><td><code>trading-service</code></td><td>แกนซื้อขายทอง ค่าธรรมเนียม จับคู่คำสั่ง แผนออม และ <b>API ของ backoffice ทั้งหมด</b></td><td><code>/backoffice-service</code> <code>/fee-service</code></td><td>ใหญ่สุด (72 controller), STOMP กำไรขาดทุน</td></tr>
+<tr><td><code>gold-wallet-service</code></td><td>เติม/ถอน/โอนทอง, บัตรกำนัลทองรูปพรรณ, จัดส่งสินค้า</td><td><code>/topupgold-service</code> <code>/withdrawgold-service</code> <code>/transfergold-service</code></td><td>Kafka หัวข้อ <code>Gw-*</code></td></tr>
+<tr><td><code>wallet-portfolio-service</code></td><td>พอร์ตลูกค้า, บัญชี, ผูกธนาคาร/หักบัญชี, โปรโมชันราคา, ค้นหาสินค้า</td><td><code>/portfolio-service</code> <code>/pricingpromotion</code> <code>/managetrade</code></td><td>Elasticsearch, เรียก ACE core ภายนอกเยอะ</td></tr>
+<tr><td><code>moneywallet</code></td><td>กระเป๋าเงินสด เติม/ถอน, แจ้งเตือนเกินวงเงิน, callback สถานะเอกสาร ERP</td><td><code>/moneywallet</code></td><td>dependency เก่า, ไม่ใช้ micro-lib</td></tr>
+<tr><td><code>master-service</code></td><td>ข้อมูลอ้างอิง: จังหวัด, สินค้า, สาขา, วันหยุด, อัตราหน่วย, ค่าระบบ</td><td><code>/master-service</code></td><td>คนละตัวกับ configmaster ของ CRM</td></tr>
+<tr><td><code>standarddata</code></td><td>เครื่องมือ query/update ข้อมูลมาตรฐาน, ข้อมูล marketplace, เช็กสต็อก, barcode</td><td><code>/standarddata</code> <code>/mkpstandarddata</code></td><td>แอปดึง config ปุ่มตามสิทธิ์จากที่นี่</td></tr>
+<tr><td><code>document-process</code></td><td>สถานะเอกสาร, แจ้งเตือน push/email (template), session มือถือ</td><td><code>/notification-service</code> <code>/status</code> <code>/detail</code></td><td>Firebase, SendGrid/SMTP</td></tr>
+<tr><td><code>member</code></td><td>สมาชิก, เหรียญ/คะแนน, คูปอง, รางวัล, ระดับสมาชิก (เขียนผ่าน Kafka)</td><td><code>/member</code></td><td>เอกสารครบที่สุด (PROJECT_SUMMARY.md)</td></tr>
+<tr><td><code>delivery</code></td><td>เชื่อมขนส่ง: ติดตามพัสดุ, webhook ผู้ให้บริการ, รายงาน</td><td><code>/shipping</code></td><td>Quartz, ไม่ใช้ micro-lib</td></tr>
+<tr><td><code>backofficeui-service</code></td><td>หน้าเว็บพนักงาน (จับคู่คำสั่ง, พอร์ต, ค่าธรรมเนียม, สิทธิ์, เติม/ถอนทอง)</td><td><code>/ui/*</code></td><td>Boot 2.3 / Java 11 (เก่าสุด)</td></tr>
+<tr><td><code>config-server</code></td><td>Spring Cloud Config (Vault + git) พอร์ต 9200</td><td>—</td><td>ใช้จริงแค่ backofficeui</td></tr>
+<tr><td><code>micro-lib</code></td><td>ไลบรารีกลาง: DTO ของ ACE core, ตรวจ JWT, Hazelcast, utils</td><td>—</td><td>jar ธรรมดา</td></tr>
+</tbody></table></div>
+
+<h4>สิ่งที่ใช้ร่วมกันทั้งตระกูล</h4>
+<div class="cards">
+  <div class="card plat"><h4>Config และ secret</h4><p>Vault เป็นแหล่งหลัก ; โฟลเดอร์ <code>ggw-config</code> ถูกคัดลอกเข้า image ที่ <code>/config</code> (กุญแจ JWT, template อีเมล ~107 ไฟล์, ใบรับรองธนาคาร)</p></div>
+  <div class="card plat"><h4>การยืนยันตัวตน</h4><p>auth-service ออก JWT เอง (RSA) ; บริการอื่นตรวจด้วย public key ผ่าน micro-lib ; ไม่ได้ใช้ Keycloak</p></div>
+  <div class="card plat"><h4>การสื่อสาร</h4><p>Feign + Kubernetes discovery ; Kafka แบ่งหัวข้อตามโดเมน ; Hazelcast/Redis เป็น cache ; log ไป ELK</p></div>
+  <div class="card plat"><h4>Deploy</h4><p>Azure Pipelines (<code>Next-pipeline</code>) build micro-lib + บริการ → Docker → ACR → Kubernetes ผ่าน Kustomize overlay dev / uat / prod ; Ingress nginx แทน gateway</p></div>
+</div>
+
+<h3 id="gold-realtime">Realtime / Socket</h3>
+<p>แอปเปิด socket 3–4 ช่องพร้อมกัน แต่ละช่องมีหน้าที่ต่างกัน</p>
+<div class="tbl"><table>
+<thead><tr><th>ช่อง</th><th>เทคโนโลยี</th><th>ข้อมูลที่ได้</th></tr></thead>
+<tbody>
+<tr><td>ราคาเรียลไทม์</td><td>STOMP / SockJS <code>/tradingwebsocket/realtime-push</code></td><td>ราคาทองตามสาขาและกลุ่มลูกค้า</td></tr>
+<tr><td>Force logout</td><td>STOMP <code>/tradingwebsocket/security/forceLogout</code></td><td>บังคับออกเมื่อล็อกอินเครื่องอื่น (1 เครื่องต่อ session)</td></tr>
+<tr><td>สถานะ/พอร์ต/ค่าธรรมเนียม</td><td>Socket.IO → <code>ggw.capp.socket</code> (พอร์ต 3579)</td><td>มูลค่าพอร์ต, สถานะตลาด/ระบบ, ตารางค่าธรรมเนียม, สั่งโหลด config ปุ่มใหม่</td></tr>
+<tr><td>แชท</td><td>Socket.IO แยกอีกช่อง</td><td>ข้อความ, จำนวนที่ยังไม่อ่าน, สถานะออนไลน์</td></tr>
+</tbody></table></div>
+<ol class="flow gold">
+<li>บริการหลังบ้าน (เช่น trading) ยิง HTTP <code>/trigger-refresh</code> หรือ <code>/broadcast-capp-fee</code> ไปที่ socket server</li>
+<li>socket server ตรวจ token ผ่าน <code>/managemst/verify-token</code> และจัดห้องตามสาขา/ลูกค้า/แอดมิน/guest</li>
+<li>ส่ง event ให้ห้องที่เกี่ยวข้อง (แอดมินรวมเป็นชุดทุก 100 ms, เก็บย้อนหลังให้ขอซ้ำได้)</li>
+<li>แอปอัปเดตสถานะทันทีผ่าน GetX Rx</li>
+</ol>
+</section>
+
+<!-- ============ ERP ============ -->
+<section id="erp">
+<div class="family-head erp"><h2>Red ERP / POS</h2><span class="tag">REDJAKA SYSTEM · เวอร์ชัน 2.3.0.0</span></div>
+<p>ERP แบบเว็บที่รันบน WildFly 30 ขายเป็นหลายสายผลิตภัณฑ์จากโค้ดชุดเดียว: <b>ERP</b>, <b>POS Gold</b> (ร้านทอง + ออมทอง), <b>POS Retail</b>, <b>Shopfloor</b>, <b>CRM</b> หน้าจอเป็น JSP ที่ขับด้วย XML ต่อเอกสาร (~800 เอกสาร) รายงานใช้ JasperReports และเอกสารใหม่สร้างด้วยเครื่องมือ <b>redTools</b> จาก Excel</p>
+
+<div class="cards">
+  <div class="card erp"><h4>ซอร์ส vs ที่รันจริง</h4><p>แก้โค้ดที่ <code>wildfly2</code> แล้วคัดลอกไป deploy tree (<code>red-erp-wildfly</code> หรือ <code>new-template</code>) — ตัวที่ WildFly อ่านคือ deploy tree ไม่ใช่ wildfly2</p></div>
+  <div class="card erp"><h4>แอปใน redjaka.ear</h4><p><code>red.war</code> (หน้าหลัก /red), EJB ของ kernel/workflow/security, jar ต่อเอกสาร ~1,400 ไฟล์, <code>acedrilldown.war</code> (REST สำหรับ drilldown)</p></div>
+  <div class="card erp"><h4>ฐานข้อมูล MySQL</h4><p><code>red2</code> (หลัก), <code>goldcenter</code>, <code>btnccenter</code>, <code>plusconf</code>, <code>quickconf</code> ผ่าน JNDI <code>java:/REDDS</code> ฯลฯ</p></div>
+</div>
+
+<h3 id="erp-flow">ฟอร์ม · รายงาน · redTools ทำงานอย่างไร</h3>
+<h4>ฟอร์มบันทึกรายการ (transaction)</h4>
+<ol class="flow erp">
+<li>เมนู (ตาราง <code>usermenu</code>) เปิด <code>/red/control/…</code></li>
+<li><code>MainServlet</code> วาดหน้ากลาง wfgui3 ตาม <code>&lt;doc&gt;-webinterface.xml</code></li>
+<li>การแสดงผลฟิลด์มาจากตาราง <code>wfdisplay_*</code> ; ป้ายข้อความอยู่ใน XML</li>
+<li>บันทึก → <code>SavehandlerServlet</code> → EJB ใน <code>red-&lt;doc&gt;.jar</code> → MySQL</li>
+<li>อนุมัติ/ลงบัญชีตาม <code>conf/red/workflow/*</code> ; พิมพ์ฟอร์มจาก <code>form/&lt;module&gt;/*.jasper</code></li>
+</ol>
+<h4>รายงาน</h4>
+<ol class="flow erp">
+<li>เมนูเปิด <code>reportdefault/&lt;MOD&gt;/…/filter_*.jsp</code> (หน้าเลือกเงื่อนไข)</li>
+<li><b>ดู/พิมพ์</b>: post ไป <code>/rpt/jasperReport</code> เติม <code>.jasper</code> (SQL อยู่ใน jrxml) → PDF</li>
+<li><b>Excel</b>: SQL จากตาราง <code>wfdownloadexcel</code></li>
+<li><b>Drilldown</b>: <code>acedrilldown</code> อ่าน SQL จาก <code>wfdownloadexcel</code> + <code>wfdrilldownreport</code> (ใน DB ไม่อยู่ใน version control)</li>
+</ol>
+<div class="note warn"><b>ระวัง:</b> SQL ของทางพิมพ์ (jrxml) กับทาง drilldown (DB) เป็นคนละที่ ต้องแก้ให้ตรงกันด้วยมือ ; แก้ jrxml แล้วต้อง compile เป็น .jasper ด้วย JasperReports 7.0.3 บน JDK 21 เท่านั้น (compile ด้วย JDK 25 หรือ JR 6 จะเปิดไม่ได้)</div>
+<h4>สร้างเอกสารใหม่ด้วย redTools</h4>
+<ol class="flow erp">
+<li>BA เขียน layout spec → dev จัดลำดับฟิลด์ใน Excel usecase (<code>red-erp-excel-gen</code>)</li>
+<li>อัปโหลดเข้า redTools (Tomcat + MySQL ของตัวเอง) แล้วกด Generate</li>
+<li>ได้ Java → <code>red-&lt;doc&gt;.jar</code>, XML documenttype/businessdocument, webinterface.xml และแถวใน <code>wfdisplay_*</code></li>
+<li>คัดลอกขึ้น WildFly UAT → <b>redeploy/restart</b> (XML ถูก cache ตอน deploy) → แปลข้อความ</li>
+</ol>
+
+<h4>Environment (ระบุแค่บทบาท)</h4>
+<ul class="tight">
+<li><b>เครื่อง dev:</b> แก้ใน wildfly2 → คัดลอกไป deploy tree ในเครื่อง</li>
+<li><b>UAT:</b> Windows + WildFly 30 (deploy folder เป็น SVN working copy ด้วย) ; เข้าแบบอ่านอย่างเดียวผ่าน SSH</li>
+<li><b>DB server:</b> MySQL ; <b>gen server:</b> Tomcat + redTools (ต้องใช้ MySQL connector 5.1) ; <b>เครื่อง JBoss 3 เก่า:</b> Business Document Management</li>
+<li><b>Production:</b> แยกจาก UAT ; ยืนยันการ deploy ด้วย hash ของไฟล์และ log <code>WFLYSRV0010 Deployed "redjaka.ear"</code> ไม่ใช่เวลาแก้ไฟล์</li>
+</ul>
+
+<h3 id="erp-modules">รหัสโมดูล ERP</h3>
+<p>รหัสรายงานมีรูป <code>MODULE-&lt;กลุ่ม&gt;&lt;เลข&gt;-&lt;แบบ&gt;</code> เช่นโฟลเดอร์ <code>AC/B/11/0</code> = รายงาน <code>AC-B11-0</code> ; ไฟล์ Excel ขึ้นต้น <code>M-</code> Master, <code>T-</code> Transaction, <code>C-</code> Config ; ความหมายที่มี (?) เป็นการอนุมานจากชื่อ</p>
+<div class="tbl"><table>
+<thead><tr><th>รหัส</th><th>ความหมาย</th><th>รหัส</th><th>ความหมาย</th></tr></thead>
+<tbody>
+<tr><td><code>AC</code></td><td>บัญชีแยกประเภท / ภาษี</td><td><code>POS</code></td><td>เอกสารขายหน้าร้าน (ส่งออก/รับเข้า, ปิดวัน)</td></tr>
+<tr><td><code>AP</code></td><td>เจ้าหนี้</td><td><code>POSG</code></td><td>รายงาน POS Gold (87 รายงาน)</td></tr>
+<tr><td><code>AR</code></td><td>ลูกหนี้</td><td><code>POSR</code> / <code>POSS</code></td><td>รายงาน POS Retail / Shopfloor (?)</td></tr>
+<tr><td><code>FI</code></td><td>การเงิน (PV/RV, clearing)</td><td><code>CR</code></td><td>ทะเบียนลูกค้า/ค่าระบบ, KYC, PDPA (?)</td></tr>
+<tr><td><code>CO</code></td><td>ควบคุม (ศูนย์ต้นทุน, งบประมาณ, กระทบยอดธนาคาร)</td><td><code>AD</code> / <code>CRM</code></td><td>Auto Dealer / CRM (Lead, กิจกรรม, แคมเปญ)</td></tr>
+<tr><td><code>AS</code></td><td>สินทรัพย์ (ค่าเสื่อม)</td><td><code>HR</code> / <code>PM</code></td><td>บุคคล / บริหารโครงการ</td></tr>
+<tr><td><code>MM</code></td><td>คลังสินค้า (รับ/จ่าย/โอน/ปรับ)</td><td><code>GOLD</code> / <code>GX</code> / <code>GGW</code></td><td>ทอง, เชื่อม GoldX, ฟีเจอร์ลูกค้าเทรดทอง (?)</td></tr>
+<tr><td><code>PC</code></td><td>จัดซื้อ (PR, PO)</td><td><code>SUN</code> <code>MAE</code> <code>TTN</code></td><td>ของเฉพาะลูกค้าบางราย (?)</td></tr>
+<tr><td><code>SD</code></td><td>ขายและจัดส่ง (ใบเสนอราคา, SO, ใบกำกับ)</td><td><code>UTIL</code> / <code>CM</code></td><td>เครื่องมือ / ขั้นตอนคำนวณราคา</td></tr>
+</tbody></table></div>
+</section>
+
+<!-- ============ COMPARE ============ -->
+<section id="compare">
+<h2>เปรียบเทียบข้ามระบบ</h2>
+<p>สามตระกูลเลือกเทคโนโลยีต่างกันเกือบทุกชั้น ตารางนี้ช่วยให้คนที่ย้ายระหว่างทีมรู้ว่าต้องเปลี่ยนความคิดตรงไหน</p>
+<div class="tbl"><table>
+<thead><tr><th>ด้าน</th><th><span class="pill crm">Triple Sales CRM</span></th><th><span class="pill gold">Gold Gateway</span></th><th><span class="pill erp">Red ERP / POS</span></th></tr></thead>
+<tbody>
+<tr><td>หน้าบ้าน</td><td>Angular 21 SPA + Flutter</td><td>Flutter (2 แอป) + Thymeleaf backoffice</td><td>JSP บน server (wfgui3), jQuery, Nitobi grid</td></tr>
+<tr><td>หลังบ้าน</td><td>Modular monolith (Spring Boot 4, Java 25)</td><td>Microservices ~17 ตัว (Spring Boot 3.5, Java 24)</td><td>Monolith EAR (Jakarta EE 10, JDK 21)</td></tr>
+<tr><td>ฐานข้อมูล</td><td>PostgreSQL 17</td><td>PostgreSQL ต่อบริการ + Redis + Elasticsearch</td><td>MySQL (red2 และ schema ย่อย)</td></tr>
+<tr><td>ยืนยันตัวตน</td><td>Keycloak (PKCE) + session บริษัทฝั่ง server</td><td>JWT ที่ auth-service ออกเอง (RSA)</td><td>session ของ WildFly ; เมนูสร้างตอนล็อกอิน</td></tr>
+<tr><td>สิทธิ์</td><td>action code + ซ่อนฟิลด์ ; เว็บใช้ <code>ROLE.*</code></td><td>role/ปุ่มจาก standarddata</td><td>security config ใน <code>conf/red/security</code></td></tr>
+<tr><td>Messaging</td><td>—</td><td>Kafka, Hazelcast</td><td>Quartz jobs</td></tr>
+<tr><td>Realtime</td><td>Socket.IO (แชท)</td><td>STOMP + Socket.IO (ราคา, พอร์ต, ค่าธรรมเนียม)</td><td>—</td></tr>
+<tr><td>รายงาน</td><td>หน้าเว็บ + ECharts</td><td>—</td><td>JasperReports 7 + drilldown</td></tr>
+<tr><td>Repo / CI</td><td>GitLab + GitLab CI</td><td>Azure DevOps + Azure Pipelines</td><td>GitLab + SVN, deploy ด้วยมือ</td></tr>
+<tr><td>Deploy</td><td>Docker (nginx) + dbmate</td><td>Docker → Kubernetes (Kustomize)</td><td>WildFly บน Windows server</td></tr>
+</tbody></table></div>
+</section>
+
+<!-- ============ RISKS ============ -->
+<section id="risks">
+<h2>ความเสี่ยงและเรื่องค้าง</h2>
+<div class="two">
+<div>
+<h3>ด้านความปลอดภัย (ต้องตัดสินใจ)</h3>
+<ul class="tight">
+<li><b>ERP:</b> ไฟล์ skill ของ excel-gen มีรหัสผ่าน DB และบัญชี redTools เป็นข้อความธรรมดา ควรย้ายไปไฟล์ environment ส่วนตัวแล้วเปลี่ยนรหัส</li>
+<li><b>ERP:</b> repo <code>red-erp-wildfly</code> track โฟลเดอร์ conf ที่มีไฟล์ค่าเชื่อมต่อ DB ควรตรวจว่ารหัสผ่านขึ้น GitLab หรือไม่</li>
+<li><b>Gold:</b> <code>ggw-config</code> เก็บกุญแจส่วนตัว keystore และใบรับรองธนาคารไว้ใน git ; <code>config-server</code> มีชื่อผู้ใช้ git ฝังใน config</li>
+<li><b>CRM:</b> configmaster ยังไม่ตรวจ Bearer token (เชื่อ header จาก proxy) ; กุญแจ AI HUB บน production ต้องย้ายไปให้ gateway ถือ (ADR-001) ยังไม่ได้ทำ</li>
+</ul>
+</div>
+<div>
+<h3>ด้านเทคนิค</h3>
+<ul class="tight">
+<li><b>CRM:</b> live adapter ยังไม่เคยทดสอบกับข้อมูลจริง (ไม่มีบัญชี UAT) ; Forecast และ Smart Doc ยังไม่มี backend จริง ; แอปมือถือยังอยู่บนบริการรุ่นเดิม</li>
+<li><b>CRM:</b> สำเนา mockup กับ repo git แยกกันมาไกล (~150 ไฟล์ต่างกัน) ต้องวางแผน merge</li>
+<li><b>Gold:</b> backofficeui ยังเป็น Boot 2.3 / Java 11 ; moneywallet ใช้ dependency เก่า ; Feign URL ฝังในโค้ดหลายจุด ; บริการ 2 ตัวใช้พอร์ต 3006 ซ้ำ (ชนเมื่อรันในเครื่อง)</li>
+<li><b>Gold:</b> README แทบทุก repo เป็น template ว่าง</li>
+<li><b>ERP:</b> config drilldown อยู่ใน DB ไม่มี version control ; ยังมี JasperReports 6 ค้างใน ear/lib ; มีไฟล์ backup จากเหตุ encoding เพี้ยนค้างในโฟลเดอร์รายงาน</li>
+</ul>
+</div>
+</div>
+</section>
+
+<!-- ============ DOCS ============ -->
+<section id="docs">
+<h2>อ่านต่อที่ไหน</h2>
+<div class="tbl"><table>
+<thead><tr><th>ระบบ</th><th>เอกสาร</th><th>มีอะไร</th></tr></thead>
+<tbody>
+<tr><td><span class="pill crm">CRM เว็บ</span></td><td><code>triple_sales_web/manual/index.html</code></td><td>คู่มือ 38 หัวข้อ: สถาปัตยกรรม, ทะเบียนหน้า, ADR, แผนเฟส, ความเสี่ยง</td></tr>
+<tr><td><span class="pill crm">CRM เว็บ</span></td><td><code>CLAUDE.md</code> · <code>MOCKUP.md</code> · <code>docs/porting-guide.md</code> · <code>docs/integration/*.md</code></td><td>กติกา, เซิร์ฟเวอร์ mockup, วิธีพอร์ต, บันทึกส่งต่อรายหน้า</td></tr>
+<tr><td><span class="pill crm">CRM เว็บ</span></td><td><code>docs/analysis/01–04*.md</code></td><td>วิเคราะห์ระบบ Java เดิม (ต้นฉบับไม่อยู่ในเครื่องนี้)</td></tr>
+<tr><td><span class="pill crm">CRM API</span></td><td><code>triplesales-api/CLAUDE.md</code> · <code>docs/standards</code> · <code>docs/guide</code> · <code>docs/openapi</code></td><td>มาตรฐาน API, สิทธิ์ระดับแถว/ฟิลด์, action/error code, OpenAPI, Postman</td></tr>
+<tr><td><span class="pill crm">CRM มือถือ</span></td><td><code>triple_sales_mobile/SETUP.md</code></td><td>ตั้งเครื่องและรัน</td></tr>
+<tr><td><span class="pill gold">Gold แอป</span></td><td><code>GoldX-Mobile/SETUP.md</code></td><td>ภาษาไทย: FVM, ตาราง flavor/entrypoint, build release, แก้ปัญหา</td></tr>
+<tr><td><span class="pill gold">Gold socket</span></td><td><code>ggw.capp.socket/README.md</code></td><td>โปรโตคอล socket ครบ</td></tr>
+<tr><td><span class="pill gold">Gold หลังบ้าน</span></td><td><code>member/PROJECT_SUMMARY.md</code> · <code>Next-pipeline/</code></td><td>สรุปสถาปัตยกรรมที่ดีที่สุดของฝั่งนี้ · template ของ pipeline และ Kustomize</td></tr>
+<tr><td><span class="pill erp">ERP</span></td><td>skill <code>awaken-report</code> · <code>awaken-form</code> · <code>awaken-excelgen</code> · <code>red-erp-environment</code></td><td>playbook + casebook ของรายงาน ฟอร์ม redTools และ environment (เอกสารจริงของ ERP อยู่ที่นี่ README ใน repo ว่าง)</td></tr>
+<tr><td><span class="pill erp">ERP</span></td><td><code>~/oracle/ψ/memory/learnings/</code> (~80 เรื่อง)</td><td>บทเรียน drilldown, JR6→JR7, การยืนยัน deploy, redTools</td></tr>
+</tbody></table></div>
+</section>
+
+<footer>
+  <p>จัดทำจากการสำรวจโค้ดใน <code>C:\git</code> เมื่อ 21 พ.ย. 2026 (อ่านอย่างเดียว ไม่ได้รันระบบ) — ข้อที่ทำเครื่องหมาย (?) หรือ "ยังไม่ยืนยัน" เป็นการอนุมานจากชื่อและโครงโค้ด ควรยืนยันกับเจ้าของระบบก่อนใช้ตัดสินใจ ; บริการที่มีแค่ README (payment, priceprocess, shopping, webmessage) และ configmaster ไม่ได้อ่านโค้ด</p>
+</footer>
+</main>
+</div>

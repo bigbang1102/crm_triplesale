@@ -1,0 +1,503 @@
+// ฟอร์ม สร้าง / แก้ไข / ดู ของ Master — เป็น "หน้าเต็ม" (ไม่ใช่ popup) ตาม mockup v28 (11-11-2026) ; ใช้ token --ts-* เท่านั้น
+@use '../settings-controls';
+
+:host {
+  display: block;
+}
+.mf-page {
+  color: var(--ts-text);
+  font-size: var(--ts-fs-0);
+}
+// breadcrumb : ← กลับไปหน้ารายการ / ขั้นตอน / ตาราง / สร้างใหม่
+.pg-crumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 2px 0 12px;
+  color: var(--ts-text-disabled);
+  font-size: calc(11.8px + var(--ts-fs-adj));
+
+  b {
+    color: var(--ts-text);
+    font-weight: 600;
+  }
+}
+.pg-back {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ts-selected-text);
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    text-decoration: underline;
+  }
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+.mf-dialog {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border: 1px solid var(--ts-line);
+  border-radius: 12px;
+  background: var(--ts-surface);
+  color: var(--ts-text);
+  font-size: var(--ts-fs-0);
+
+  &[hidden] {
+    display: none;
+  }
+}
+// หัวการ์ด : ชื่อ + ป้ายรหัสตาราง ทางซ้าย · ปุ่มทำงาน ทางขวา ; ติดใต้แถบบนเมื่อเลื่อนหน้าฟอร์มยาว (mockup v30)
+.mf-head {
+  position: sticky;
+  top: var(--ts-topbar-h);
+  z-index: 2;
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--ts-line);
+  border-radius: 12px 12px 0 0;
+  background: var(--ts-surface);
+}
+.mf-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+
+  h2 {
+    margin: 0;
+    color: var(--ts-text);
+    font-size: calc(16.8px + var(--ts-fs-adj));
+    font-weight: 600;
+    line-height: 1.35;
+  }
+}
+.mf-ttl {
+  min-width: 0;
+}
+// บรรทัดใต้ชื่อฟอร์ม (คัดลอกจาก …) — mockup v33 : .modal.pg .m-h p
+.mf-sub {
+  margin: 4px 0 0;
+  color: var(--ts-muted);
+  font-size: calc(12.3px + var(--ts-fs-adj));
+}
+// หมายเหตุใต้ช่อง (เช่น เปลี่ยนเป็น block แล้วถูกใช้อยู่) — mockup v33 : .fnote
+.fnote {
+  margin-top: 6px;
+  color: var(--ts-amber-ink);
+  font-size: calc(12px + var(--ts-fs-adj));
+  line-height: 1.45;
+}
+// แท็บ "ใช้อยู่ใน" — mockup v33 : .used
+.used {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
+
+  span {
+    padding: 7px 10px;
+    border-radius: 8px;
+    background: var(--ts-surface-2);
+    font-size: calc(12.6px + var(--ts-fs-adj));
+  }
+}
+.del-no {
+  color: var(--ts-pink-ink);
+  font-weight: 500;
+}
+.used-empty {
+  color: var(--ts-faint);
+  font-size: calc(12.9px + var(--ts-fs-adj));
+}
+.tcode {
+  padding: 2px 8px;
+  border: 1px solid var(--ts-line);
+  border-radius: 6px;
+  background: var(--ts-surface-2);
+  color: var(--ts-muted);
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: calc(10.6px + var(--ts-fs-adj));
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+.mf-act {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-left: auto;
+}
+.mf-mode {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 12px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--ts-blue-soft);
+  color: var(--ts-blue-ink);
+  font-size: calc(11px + var(--ts-fs-adj));
+  font-weight: 500;
+}
+.mf-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 18px;
+  min-height: 0;
+  padding: 16px 24px;
+  border-radius: 0 0 12px 12px;
+  background: var(--ts-content-bg);
+}
+// "ทิ้งการแก้ไข" (ปุ่มอันตราย)
+.mf-danger {
+  background: var(--ts-pink-soft);
+  color: var(--ts-pink-ink);
+}
+
+// การ์ดของแท็บ : แถบแท็บ (ข้อมูลหลัก · ตารางลูก) + เนื้อหา
+.mf-sec {
+  overflow: hidden;
+  border: 1px solid var(--ts-border-strong);
+  border-radius: 8px;
+  background: var(--ts-surface);
+}
+.mf-tabs {
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+  padding: 0 8px;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--ts-line);
+  background: var(--ts-surface-2);
+}
+.mtab {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 14px;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: none;
+  color: var(--ts-muted);
+  font: inherit;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--ts-text);
+  }
+  &[aria-selected='true'] {
+    border-bottom-color: var(--ts-selected-bar);
+    color: var(--ts-selected-text);
+  }
+  // แท็บที่มีช่องผิด : ชื่อแดง + จุดแดง
+  &.bad span {
+    color: var(--ts-pink-ink);
+  }
+  &.bad::after {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--ts-pink-ink);
+  }
+}
+.mf-pane {
+  padding: 16px;
+
+  &[hidden] {
+    display: none;
+  }
+}
+.mf-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px 16px;
+}
+// ทุกช่องกิน 1 คอลัมน์ของกริด รวมช่องข้อความยาว (mockup v33 : .modal .fld.full { grid-column: auto })
+.mf-cell {
+  min-width: 0;
+}
+
+// กลุ่มข้อมูล (section ในแท็บหลัก) แบบ A กรอบการ์ด (ค่าเริ่มต้นของ spec F31) : กรอบ 1px · มุม 10px · ห่างกัน 16px
+.mf-grp {
+  overflow: hidden;
+  border: 1px solid var(--ts-line);
+  border-radius: 10px;
+  background: var(--ts-surface);
+
+  & + & {
+    margin-top: 16px;
+  }
+  // กลุ่มที่มีแต่ฟิลด์ระบบ : กรอบเส้นประ + "· ระบบใส่ให้"
+  &.sys {
+    border-style: dashed;
+  }
+  .mf-grid {
+    padding: 14px 16px 16px;
+  }
+}
+.mf-grp-h {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--ts-line);
+  background: var(--ts-surface-2);
+
+  b {
+    color: var(--ts-text);
+    font-size: calc(13.3px + var(--ts-fs-adj));
+    font-weight: 600;
+  }
+  .gn {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    background: var(--ts-violet-soft);
+    color: var(--ts-selected-text);
+    font-size: calc(10.5px + var(--ts-fs-adj));
+    font-weight: 600;
+  }
+  .gc {
+    margin-left: auto;
+    color: var(--ts-text-disabled);
+    font-size: calc(10.6px + var(--ts-fs-adj));
+    font-weight: 400;
+  }
+}
+// ใต้ช่องเลือกที่ Master ปลายทางยังไม่มีแถว release
+.fhint {
+  display: block;
+  margin-top: 4px;
+  color: var(--ts-amber-ink);
+  font-size: var(--ts-fs-small);
+
+  button {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    font-weight: 500;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}
+
+// แท็บตารางลูก (หลายแถว)
+.mf-itb-h {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+
+  b {
+    font-size: var(--ts-fs-0);
+    font-weight: 600;
+  }
+  .ts-btn {
+    margin-left: auto;
+  }
+}
+.mf-it {
+  display: inline-block;
+  max-width: 100%;
+  overflow-x: auto;
+  vertical-align: top;
+  border: 1px solid var(--ts-border-strong);
+  border-radius: 12px;
+
+  table {
+    width: auto;
+    border-collapse: collapse;
+    font-size: calc(13px + var(--ts-fs-adj));
+  }
+  th {
+    height: 44px;
+    padding: 0 8px;
+    min-width: 264px;
+    background: var(--ts-th);
+    color: var(--ts-text);
+    font-size: var(--ts-fs-0);
+    font-weight: 500;
+    text-align: left;
+    white-space: nowrap;
+  }
+  td {
+    min-width: 264px;
+    padding: 6px 8px;
+    border-top: 1px solid var(--ts-line);
+    vertical-align: top;
+  }
+  tbody tr:first-child td {
+    border-top: 0;
+  }
+  .rn {
+    width: 48px;
+    min-width: 48px;
+    color: var(--ts-text-disabled);
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+  }
+  td.rn {
+    padding-top: 16px;
+  }
+  .rm {
+    width: 52px;
+    min-width: 52px;
+  }
+  .rq {
+    color: var(--ts-req);
+  }
+  .it-empty {
+    min-width: 0;
+    padding: 16px;
+    color: var(--ts-muted);
+    text-align: center;
+  }
+}
+.mf-rm {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--ts-muted);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--ts-pink-soft);
+    color: var(--ts-pink-ink);
+  }
+}
+
+// แบนเนอร์ข้อความ (ผิดพลาด / เตือน) : วงกลมไอคอน + ข้อความหัวหนา + คำอธิบายรอง — ตาม mockup v28
+.mf-note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 8px 12px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: var(--ts-surface);
+  font-size: var(--ts-fs-0);
+  line-height: 1.5;
+
+  .bi {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 11px;
+    background: var(--ts-pink-ink);
+
+    i {
+      color: var(--ds-on-color);
+      font-size: calc(13px + var(--ts-fs-adj));
+      font-style: normal;
+      font-weight: 700;
+    }
+  }
+  .mb-t {
+    flex: 1;
+    min-width: 0;
+
+    b {
+      display: block;
+      font-weight: 600;
+    }
+  }
+  .mb-s {
+    display: block;
+    font-size: calc(12.5px + var(--ts-fs-adj));
+    opacity: 0.9;
+  }
+  &.warn {
+    background: var(--ts-amber-soft);
+    color: var(--ts-amber-ink);
+
+    .bi {
+      background: var(--ts-amber);
+
+      i {
+        color: var(--ts-on-amber);
+      }
+    }
+  }
+  &.err {
+    background: var(--ts-pink-soft);
+    color: var(--ts-pink-ink);
+  }
+  &.info {
+    background: var(--ts-blue-soft);
+    color: var(--ts-blue-ink);
+
+    .bi {
+      background: var(--ts-blue-ink);
+
+      i {
+        color: var(--ts-blue-soft);
+      }
+    }
+  }
+}
+.go-i {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--ts-amber-soft);
+  color: var(--ts-amber-ink);
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+}
+.mf-empty {
+  padding: 34px 16px;
+  color: var(--ts-muted);
+  text-align: center;
+}
+
+@media (max-width: 1000px) {
+  .mf-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 560px) {
+  .mf-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .mf-head {
+    flex-wrap: wrap;
+  }
+}

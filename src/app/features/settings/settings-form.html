@@ -1,0 +1,117 @@
+<div class="backdrop">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="sf-title">
+    <header class="mh">
+      <div class="ttl">
+        <div>
+          <h2 id="sf-title">{{ heading() }}</h2>
+          <p class="sub">{{ subtitle() }}</p>
+        </div>
+        @if (locked()) {
+          <span class="mode"><ts-icon name="eye" [size]="14" />{{ t('app.settings.form.viewOnly') }}</span>
+        }
+      </div>
+      <button type="button" class="x" [attr.aria-label]="t('app.common.close')" (click)="closed.emit()">
+        <ts-icon name="x" [size]="14" />
+      </button>
+    </header>
+
+    <div class="mb">
+      <div class="card">
+        <div class="tabs" role="tablist">
+          @for (tab of table().tabs; track tab.id) {
+            <button type="button" class="tab" role="tab" [attr.aria-selected]="active()?.id === tab.id" (click)="select(tab.id)">
+              <ts-icon [name]="tab.kind === 'form' ? 'pencil' : 'database'" [size]="15" />
+              {{ text(tab.name) }}
+              @if (tabErrors(tab); as n) {
+                <span class="dot" [attr.aria-label]="n">{{ n }}</span>
+              }
+            </button>
+          }
+        </div>
+
+        <div class="pane" role="tabpanel">
+          @if (active(); as tab) {
+            @if (tab.kind === 'form') {
+              <div class="grid">
+                @for (f of tab.fields; track f.name) {
+                  <div class="fld">
+                    <span class="lb">{{ text(f.label) }} @if (f.required) { <i class="rq">*</i> }</span>
+                    <ts-settings-field
+                      [field]="f"
+                      [locked]="locked()"
+                      [value]="value(tab.id, f.name)"
+                      [invalid]="bad(tab.id, f.name)"
+                      [refOptions]="refOptions()"
+                      (valueChange)="setValue(tab.id, f.name, $event)"
+                    />
+                  </div>
+                }
+              </div>
+            } @else {
+              <div class="rh">
+                <h3>{{ text(tab.name) }}</h3>
+                @if (!locked()) {
+                  <button type="button" class="ts-btn ts-btn--ghost" (click)="addRow(tab)"><ts-icon name="plus" [size]="16" />{{ t('app.settings.form.addRow') }}</button>
+                }
+              </div>
+              <div class="rt-wrap">
+                <table class="rt" [class.wide]="tab.fields.length > 1">
+                  <thead>
+                    <tr>
+                      <th class="n">#</th>
+                      @for (f of tab.fields; track f.name) {
+                        <th>{{ text(f.label) }} @if (f.required) { <i class="rq">*</i> }</th>
+                      }
+                      @if (rows(tab).length && !locked()) { <th class="del"></th> }
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (row of rows(tab); track $index; let i = $index) {
+                      <tr>
+                        <td class="n">{{ i + 1 }}</td>
+                        @for (f of tab.fields; track f.name) {
+                          <td>
+                            <ts-settings-field
+                              [compact]="true"
+                              [locked]="locked()"
+                              [field]="f"
+                              [value]="row[f.name]"
+                              [invalid]="badCell(tab.id, i, f.name)"
+                              [refOptions]="refOptions()"
+                              (valueChange)="setCell(tab.id, i, f.name, $event)"
+                            />
+                          </td>
+                        }
+                        @if (!locked()) {
+                          <td class="del">
+                            <button type="button" class="icb" [title]="t('app.settings.form.removeRow')" [attr.aria-label]="t('app.settings.form.removeRow')" (click)="removeRow(tab.id, i)">
+                              <ts-icon name="trash" [size]="16" />
+                            </button>
+                          </td>
+                        }
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+                @if (!rows(tab).length) {
+                  <div class="none">{{ t('app.settings.form.noRows') }}</div>
+                }
+              </div>
+            }
+          }
+        </div>
+      </div>
+    </div>
+
+    <footer class="mf">
+      @if (locked()) {
+        <button type="button" class="ts-btn ts-btn--ghost" (click)="closed.emit()">{{ t('app.common.close') }}</button>
+        <button type="button" class="ts-btn ts-btn--ghost" (click)="copy.emit()"><ts-icon name="copy" [size]="16" />{{ t('app.settings.form.copy') }}</button>
+        <button type="button" class="ts-btn" (click)="startEdit()"><ts-icon name="pencil" [size]="16" />{{ t('app.settings.edit') }}</button>
+      } @else {
+        <button type="button" class="ts-btn ts-btn--ghost" (click)="closed.emit()">{{ t('app.common.cancel') }}</button>
+        <button type="button" class="ts-btn" (click)="save()">{{ t('app.settings.form.save') }}</button>
+      }
+    </footer>
+  </div>
+</div>

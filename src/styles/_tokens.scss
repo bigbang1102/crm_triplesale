@@ -1,0 +1,305 @@
+// ---------------------------------------------------------------------------
+// Design tokens — values extracted from the Java frontend (docs/analysis/01-shell-theme.md §4).
+// Components must use these variables; never hard-code a hex in a component.
+// The colour *concepts* (stepper / interest / tag palettes) live in
+// src/app/shared/constants/palettes.ts and are applied through inline styles.
+// ---------------------------------------------------------------------------
+
+:root {
+  // font scale: PrefsService sets --ts-fs-adj to -2px | 0px | +2px (buttons A  A  A)
+  --ts-fs-adj: 0px;
+  --ts-fs-mini: calc(10px + var(--ts-fs-adj));
+  --ts-fs-small: calc(12px + var(--ts-fs-adj));
+  --ts-fs-0: calc(14px + var(--ts-fs-adj)); // base text
+  --ts-fs-1: calc(16px + var(--ts-fs-adj));
+  --ts-fs-2: calc(18px + var(--ts-fs-adj));
+  --ts-fs-3: calc(20px + var(--ts-fs-adj));
+  --ts-fs-4: calc(22px + var(--ts-fs-adj));
+  --ts-fs-5: calc(24px + var(--ts-fs-adj));
+  --ts-fs-6: calc(26px + var(--ts-fs-adj));
+  --ts-fs-7: calc(28px + var(--ts-fs-adj));
+  --ts-fs-8: calc(30px + var(--ts-fs-adj));
+  --ts-fs-9: calc(32px + var(--ts-fs-adj));
+  --ts-fs-10: calc(34px + var(--ts-fs-adj));
+
+  --ts-font: 'Noto Sans Thai', 'Sarabun', 'Leelawadee UI', 'Segoe UI', system-ui, sans-serif;
+  --ts-letter-spacing: 0.36px;
+
+  // layout metrics
+  --ts-rail-w: 68px;
+  // left edge of the main column (`.layout-main` margin-left) and of the fixed footer; ≤ 992px see below
+  --ts-main-ml: 68px;
+  --ts-topbar-h: 44px;
+  --ts-footer-h: 30px;
+  --ts-content-pad: 8px;
+
+  // brand
+  --ts-primary: #35236a; // buttons, active tab, dialog headers
+  --ts-primary-200: #483090;
+  --ts-primary-300: #5b3cb7;
+  --ts-accent: #00c08b; // menu hover/active, switches, check marks
+  --ts-accent-soft: rgba(0, 192, 139, 0.1);
+  --ts-accent-focus: #c8ffe8; // input focus ring
+  --ts-selected: #e8e2fb; // tab hover, active dropdown item
+  --ts-danger: #f8322f;
+  --ts-success: #26e152;
+  --ts-info: #0d61cf; // swal confirm button
+  --ts-warning: #e08a0b; // เครื่องหมายตกใจ "ต้องตั้งค่าก่อน" (หน้าตั้งค่า)
+
+  // surfaces
+  --ts-rail-bg: #0f172a; // same in both themes
+  --ts-rail-text: #ffffff;
+  --ts-page-bg: #ffffff;
+  --ts-shell-bg: #f8fafc; // `body` of the Java shell (layout-modify.css): only shows in the strip beside the rail at ≤ 992px
+  --ts-content-bg: #eaeefd;
+  --ts-surface: #ffffff;
+  --ts-surface-hover: #f3f4f6;
+  --ts-input-bg: #ffffff;
+  --ts-border: #e5e7eb;
+  --ts-line: #eaeaea;
+  --ts-line-soft: #e3e3e3; // top-bar separators, popup borders
+  --ts-scrollbar: #d9dce8;
+  --ts-scrollbar-hover: #b9bec9;
+
+  // text
+  --ts-text: #383838;
+  --ts-text-secondary: #697a8d; // form labels
+  --ts-text-header: #11142d;
+  --ts-text-muted: #606b85;
+  --ts-text-disabled: #969696;
+  --ts-topbar-text: #374151;
+  --ts-topbar-text-hover: #111827;
+  --ts-topbar-icon: #7c848d;
+  --ts-topbar-icon-active: #383838; // masked tab icon: active / hover
+  --ts-topbar-fa: #383838; // Font Awesome icon + chevron of a dropdown tab
+  --ts-topbar-chev: #6b7280; // chevron next to the user name
+  --ts-topbar-link: #35236a; // "Log" button
+  --ts-tab-label-active: #35236a;
+  --ts-tab-label-weight: 700;
+  --ts-chrome-bg: #ffffff; // top bar + footer
+  --ts-menu-bg: #ffffff; // dropdown / popups of the top bar
+  --ts-menu-text: #374151;
+
+  // shape
+  --ts-radius-sm: 4px;
+  --ts-radius: 10px;
+  --ts-radius-lg: 14px;
+  --ts-radius-pill: 140px;
+  --ts-shadow-card: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --ts-shadow-pop: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --ts-shadow-menu: 0 4px 12px rgba(0, 0, 0, 0.08); // top-bar dropdowns
+  --ts-shadow-topbar: 0 1px 4px rgba(0, 0, 0, 0.08);
+
+  // หน้า Configuration & Master data — สีตาม mockup master-setup final (30-10-2026) (features/settings)
+  --ts-tabbar: #f6f6f6; // แถบแท็บหมวด (แท็บที่เลือกเป็น --ts-surface)
+  --ts-surface-2: #f4f5f9; // พื้นกลุ่มขั้นตอน · หัวตาราง
+  --ts-th: #f4f5f9;
+  --ts-row-hover: #eff1f4;
+  --ts-border-strong: #d1d5db; // ขอบช่องกรอก ปุ่ม ขั้นตอน
+  --ts-muted: #7c848d;
+  --ts-violet-soft: #e5e0f6;
+  --ts-violet-tint: #f2effb;
+  --ts-violet-line: #cbc1ee;
+  --ts-green-ink: #00815d;
+  --ts-green-soft: #d9f3ec;
+  --ts-green-line: #8ce9cd;
+  --ts-amber: #ffbb38; // เครื่องหมายตกใจ "ต้องตั้งค่าก่อน"
+  --ts-on-amber: #383838;
+  --ts-amber-ink: #8a5a00;
+  --ts-amber-soft: #fff3da;
+  --ts-blue-ink: #1f5fb8;
+  --ts-blue-soft: #cee3ff;
+  --ts-pink-ink: #cc3333;
+  --ts-pink-soft: #ffe6e6;
+  --ts-req: #e24c4c; // เครื่องหมาย * ช่องบังคับ
+  --ts-badge-release-bg: rgba(10, 167, 124, 0.15);
+  --ts-badge-release: #0e7e5f;
+  --ts-badge-draft-bg: rgba(255, 187, 56, 0.2);
+  --ts-badge-draft: #8a5a00;
+  --ts-badge-block-bg: rgba(255, 64, 64, 0.14);
+  --ts-badge-block: #c62828;
+  --ts-shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06);
+  --ts-overlay: rgba(20, 18, 40, 0.38);
+
+  // ── Design System (Figma "COLORS" + "Color modes") ─────────────────────────────────────────────────
+  // ใช้กับหน้าที่ host ใส่ class `ts-ds` เท่านั้น (Sales Forecast · Configuration & Master data) — การ map เป็น --ts-* อยู่ที่
+  // src/styles/_ds-page.scss ; ชุดนี้ไม่แตะหน้าอื่นและ shell (แถบซ้าย/แท็บบน/ฟุตเตอร์ วัดมาจาก Java).
+  // palette : ไม่เปลี่ยนตามธีม
+  --ds-primary-100: #d9f3ec;
+  --ds-primary-200: #aff3e0;
+  --ds-primary-300: #8ce9cd;
+  --ds-primary-400: #62e1b3;
+  --ds-primary-500: #06d098;
+  --ds-primary-600: #00c08b; // Base
+  --ds-primary-700: #0aa77c;
+  --ds-primary-800: #0c8e6a;
+  --ds-primary-900: #00815d;
+  --ds-secondary-100: #e8e2fb;
+  --ds-secondary-200: #dbcfff;
+  --ds-secondary-300: #b7a4ef;
+  --ds-secondary-400: #7f63d2;
+  --ds-secondary-500: #6043b6;
+  --ds-secondary-600: #4e339d;
+  --ds-secondary-700: #462d90;
+  --ds-secondary-800: #3d287b;
+  --ds-secondary-900: #35236a; // Base
+  --ds-grey-100: #fafafa;
+  --ds-grey-200: #e1e1e1;
+  --ds-grey-300: #c8c8c8;
+  --ds-grey-400: #afafaf;
+  --ds-grey-500: #969696;
+  --ds-grey-600: #4b4b4b;
+  --ds-grey-700: #383838;
+  --ds-grey-800: #191919;
+  --ds-success-100: #73d3b2;
+  --ds-success-500: #02a36a; // Base
+  --ds-success-600: #00b374;
+  --ds-pending-100: #f4c56a;
+  --ds-pending-500: #eda721; // Base
+  --ds-pending-600: #e09609;
+  --ds-cancel-100: #ff8c8c;
+  --ds-cancel-500: #ea2828; // Base
+  --ds-cancel-700: #cd1515;
+  // Resource Color 1–6 (สีชุดแบ่งซีรีส์ — ไม่เปลี่ยนตามธีม)
+  --ds-res-1: #26bcec;
+  --ds-res-2: #187cff;
+  --ds-res-3: #8647ed;
+  --ds-res-4: #f94c9f;
+  --ds-res-5: #ff8e4e;
+  --ds-res-6: #00c08b;
+  // Color modes — Light mode
+  --ds-primary: var(--ds-primary-600);
+  --ds-secondary: var(--ds-secondary-900);
+  --ds-line: #eaeaea;
+  --ds-hover-button: rgba(203, 210, 219, 0.3); // CBD2DB 30%
+  --ds-highlight: rgba(93, 163, 255, 0.3); // 5DA3FF 30%
+  --ds-card-2: #f4f5f9;
+  --ds-secondary-soft: rgba(127, 99, 210, 0.2); // "Secondary 100" : 7F63D2 20%
+  --ds-text: #383838;
+  --ds-text-secondary: #7c848d;
+  --ds-text-disabled: #969696;
+  --ds-border: #d1d5db;
+  --ds-on-color: #ffffff;
+  --ds-text-hover: #b6b9bf;
+  --ds-bg: #eff2fd; // Background / Primary
+  --ds-card: #ffffff; // Background / Card
+  --ds-table-header: #eaeaea; // Background / Table Header BG
+
+  // stacking (same order as the Java template)
+  --ts-z-footer: 99;
+  --ts-z-topbar: 500;
+  --ts-z-dropdown: 1000;
+  --ts-z-rail: 2000;
+  --ts-z-fab: 2001;
+  --ts-z-dialog: 3000;
+  --ts-z-toast: 4000;
+
+  color-scheme: light;
+}
+
+// Java (template.xhtml): at ≤ 992px the rail shrinks to 60px (see side-rail) but `.layout-slim-plus .layout-main`
+// moves to margin-left 80px — a 20px strip of body background between rail and main. Kept on purpose: the Java page
+// really renders it (the 68px rule of layout-modify.css lives inside `@media (min-width: 993px)`).
+@media (max-width: 992px) {
+  :root {
+    --ts-main-ml: 80px;
+  }
+}
+
+:root[data-theme='dark'] {
+  --ts-page-bg: #111827;
+  --ts-shell-bg: #111827; // `.layout-wrapper` in dark_mode.css
+  --ts-content-bg: #1f2937;
+  --ts-surface: #1e293b;
+  --ts-surface-hover: #293548;
+  --ts-input-bg: #0f172a;
+  --ts-border: #374151;
+  --ts-line: #374151;
+  --ts-scrollbar: #374151;
+  --ts-scrollbar-hover: #4b5563;
+
+  --ts-text: #f1f5f9;
+  --ts-text-secondary: #d1d5db;
+  --ts-text-header: #f1f5f9;
+  --ts-text-muted: #9ca3af;
+  --ts-warning: #f0a53a;
+  --ts-text-disabled: #6b7280;
+  --ts-topbar-text: #9ca3af;
+  --ts-topbar-text-hover: #e5e7eb;
+  --ts-topbar-icon: #9ca3af;
+  --ts-topbar-icon-active: #e5e7eb;
+  --ts-topbar-fa: #9ca3af;
+  --ts-topbar-link: #b7a4ef;
+  --ts-tab-label-active: #ffffff;
+  --ts-tab-label-weight: 400;
+  --ts-chrome-bg: #111827;
+  --ts-menu-bg: #1f2937;
+  --ts-menu-text: #d1d5db;
+
+  --ts-selected: #293548; // active dropdown item
+  --ts-selected-text: #c4b5fd;
+  --ts-selected-bar: #7f63d2;
+  --ts-tab-active: #6366f1; // active tab underline
+
+  --ts-shadow-card: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --ts-shadow-pop: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --ts-shadow-menu: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --ts-shadow-topbar: 0 1px 4px rgba(0, 0, 0, 0.08);
+
+  // หน้า Configuration & Master data (dark) — สีเน้นตาม mockup ; พื้นใช้ชุดสี slate ของแอป
+  --ts-tabbar: #0f172a;
+  --ts-surface-2: #162033;
+  --ts-th: #293548;
+  --ts-row-hover: #293548;
+  --ts-border-strong: #4b5563;
+  --ts-muted: #9ca3af;
+  --ts-violet-soft: #3b3550;
+  --ts-violet-tint: #332f40;
+  --ts-violet-line: #5b4e8f;
+  --ts-green-ink: #66ddb3;
+  --ts-green-soft: #12392e;
+  --ts-green-line: #1f6b53;
+  --ts-amber-ink: #ffd688;
+  --ts-amber-soft: #3a2e14;
+  --ts-blue-ink: #9cc3f7;
+  --ts-blue-soft: #1e3550;
+  --ts-pink-ink: #ff8c8c;
+  --ts-pink-soft: #3e2222;
+  --ts-req: #ff8c8c;
+  --ts-badge-release-bg: rgba(0, 192, 139, 0.18);
+  --ts-badge-release: #66ddb3;
+  --ts-badge-draft-bg: rgba(255, 187, 56, 0.18);
+  --ts-badge-draft: #ffd688;
+  --ts-badge-block-bg: rgba(255, 64, 64, 0.18);
+  --ts-badge-block: #ff8c8c;
+  --ts-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --ts-overlay: rgba(0, 0, 0, 0.55);
+
+  // Design System — Color modes : Dark Mode (ดูหมายเหตุที่บล็อก Light ด้านบน)
+  --ds-secondary: var(--ds-secondary-400);
+  --ds-line: #454545;
+  --ds-card-2: #1c1c1c;
+  --ds-text: #ffffff;
+  --ds-text-secondary: #a9a9a9;
+  --ds-text-disabled: #545151;
+  --ds-border: #4d4d4d;
+  --ds-text-hover: #454545;
+  --ds-bg: #161616;
+  --ds-card: #252525;
+  --ds-table-header: #454545;
+
+  color-scheme: dark;
+}
+
+// light-theme counterparts of the dark-only tokens above
+:root {
+  --ts-selected-text: var(--ts-primary);
+  --ts-selected-bar: var(--ts-primary);
+  --ts-tab-active: var(--ts-primary);
+  // brand colour when used as TEXT / ICON colour (the brand purple is too dark on dark surfaces)
+  --ts-primary-fg: var(--ts-primary);
+}
+
+:root[data-theme='dark'] {
+  --ts-primary-fg: #a78bfa;
+}

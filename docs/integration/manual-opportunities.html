@@ -1,0 +1,35 @@
+<!-- ชิ้นส่วนของ manual/index.html — หัวข้อใหม่ "โอกาสขาย (Opportunities — พอร์ตแล้ว)" ตามแบบ §24 Dashboard; ผู้ประสานงานกำหนดเลขหัวข้อและเพิ่มลิงก์ในสารบัญ (id="leads") -->
+<section id="leads">
+  <h2><span class="num">NN</span>โอกาสขาย — Opportunities Board + List (พอร์ตแล้ว — เหมือนของเดิม 1:1)</h2>
+  <p>หน้า <code>/crm/opportunities</code> (<code>pages/lead.xhtml</code> + <code>components/access_pop.xhtml</code> + <code>components/lead/filter_modal.xhtml</code> + <code>components/move_step_modal.xhtml</code> + <code>css/lead.css</code> + <code>resources/js/tag_pill_color.js</code>) — แท็บ <b>Board</b> (kanban ตามขั้นตอนของกลุ่ม workflow, ลากการ์ดข้ามคอลัมน์, เลื่อนโหลดต่อคอลัมน์) และ <b>List</b> (ตารางเลื่อนโหลดต่อ), แถบสรุป (Lead Status ↔ WF Step), ผลิตภัณฑ์/กลุ่มขั้นตอน, เรียง, ค้นหา (การ์ดแนะนำลูกค้า), ตัวกรอง (modal), popover "ผู้มีสิทธิ์เข้าถึง", modal "ย้ายขั้นตอน" สร้างด้วย <code>npm run opportunities:sync</code> (<code>tools/sync-opportunities.mjs</code>) — <b>ห้ามแก้ไฟล์ที่สร้าง</b> ให้แก้สคริปต์แล้วรันใหม่ (swap ที่ไม่ตรงกับต้นฉบับ = สคริปต์หยุด)</p>
+
+  <div class="table-wrap"><table class="data">
+    <thead><tr><th>ไฟล์</th><th>ที่มา / หน้าที่</th></tr></thead>
+    <tbody>
+      <tr><td><code>features/opportunities/leads.html</code></td><td>markup ของ <code>lead.xhtml</code> + 3 include (วางต่อกันเหมือน Facelets) — <code>#{commonBean.msg[…]}</code> → <code>t('…')</code>, รูปของ context root → <code>assets/images/…</code>; ที่เหลือตามต้นฉบับ</td></tr>
+      <tr><td><code>features/opportunities/leads.scss</code></td><td><code>css/lead.css</code> + <code>&lt;style&gt;</code> ของ access_pop และ move_step_modal ตามต้นฉบับ + บล็อก "Angular adaptation" (CSS global ของ stack Java อ่านจากไฟล์จริง) + dark_mode.css เฉพาะกฎที่แตะหน้านี้</td></tr>
+      <tr><td><code>features/opportunities/leads.engine.ts</code></td><td>สคริปต์ทั้ง 5 บล็อก (~2,800 บรรทัด) <code>startOpportunities(env)</code> คืนฟังก์ชัน destroy — สิ่งที่เปลี่ยนมีแค่: ข้อความ/สิทธิ์/employee id/filter state/fetch/การนำทาง ถูกฉีดผ่าน <code>env</code> (Java เป็น EL, <code>window.fetch</code>, <code>navigator.sendBeacon</code>, <code>window.location</code>), listener/timer/interval/ชื่อบน <code>window</code>/popover ที่ย้ายไป <code>&lt;body&gt;</code> ถูกเก็บกวาดตอนออกจากหน้า, และจำลอง <code>DOMContentLoaded</code></td></tr>
+      <tr><td><code>leads.ts</code> · <code>leads-view.ts</code></td><td>host ที่เขียนเอง: โหลดค่าที่ <code>LeadBoardView</code> ฝัง EL (<code>savedFilterJson</code>), สร้าง <code>env</code>, เริ่ม/หยุด engine; เปลี่ยนภาษา = สร้างหน้าใหม่; ลิงก์ไปรายละเอียดผ่าน <code>javaLinkToRoute()</code> (<code>/crm/opportunities/:id?activityGroupId=</code>); โหมดจริงยังไม่มี = <code>&lt;ts-live-missing/&gt;</code></td></tr>
+      <tr><td><code>leads-backend.ts</code></td><td>สัญญา backend: <code>initial()</code> · <code>fetch(url, init)</code> (URL เดียวกับที่หน้า Java เรียก: <code>../board/leads?viewMode=board|list…</code>, <code>../board/master/movement-types?type=LD</code>, <code>../board/{tags,sale-groups,provinces,employees,districts}</code>, <code>/board/prospect-list</code>, <code>POST /board/filter-state</code>, <code>POST /board/contact-activities</code>)</td></tr>
+      <tr><td><code>leads.mock.ts</code></td><td>backend จำลอง (dev / เทสต์ / harness) — ข้อมูลชุดเดียวจาก <code>seedLead(n)</code> (240 ลีดแจกเป็น 4 ผลิตภัณฑ์: workflow 5 กลุ่ม · 3 กลุ่ม · ไม่มี workflow · กลุ่มเดียว) ตัวกรอง/ค้นหา/เรียง/แบ่งหน้าต่อคอลัมน์/ย้ายการ์ดทำงานจริง, filter state และการย้ายคงอยู่ใน <code>sessionStorage</code> (แทน HttpSession), ไม่พึ่ง Angular</td></tr>
+      <tr><td><code>public/assets/java-js/tag_pill_color.js</code> · <code>public/assets/images/{icon,lead}/*.svg</code></td><td>สำเนาตรงทุกไบต์ของไฟล์ Java ที่หน้าโหลดเอง / ใช้ (สีแท็ก, ไอคอน 14 + 8 ไฟล์)</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>ผลการตรวจเทียบกับหน้า Java จริง (<code>node tools/compare/run.mjs leads</code>)</h3>
+  <p>harness สร้างหน้า Java จริง (lead.xhtml + 3 include วางเหมือน Facelets, EL แทนค่าเหมือน server, สคริปต์และ <code>&lt;style&gt;</code> ตัวจริงตามลำดับจริง, <code>lead.css</code> ลิงก์ที่ head) ใน shell replica ที่ <code>/triplesale/pages/lead.html</code> (ให้ที่อยู่ relative <code>../board/…</code> <code>../images/…</code> ทำงานเหมือนเดิม) แล้วให้ทั้งสองฝั่งได้ข้อมูลชุดเดียวกัน (import <code>leads.mock.ts</code> ตัวเดียวกัน) รัน <b>232 สถานการณ์</b>ฝั่งละชุด เทียบ DOM + ข้อความ + computed style + ตำแหน่ง/ขนาด ทีละบรรทัด:</p>
+  <ul>
+    <li><b>หน้าตา</b>: Board และ List × สว่าง/มืด × 5 ขนาดจอ (390 · 768 · 1024 · 1280 · 1920) × ไทย/อังกฤษ · ปุ่ม A A A (±2px) ทั้งสองมุมมองและ modal · skeleton (โหลดครั้งแรก, คลุมเฉพาะเนื้อหา) · empty state (ไม่มีคอลัมน์, ไม่มีผลิตภัณฑ์, ไม่มีผลลัพธ์) · ตอบ 500</li>
+    <li><b>พฤติกรรม</b>: ผลิตภัณฑ์ (มี/ไม่มี workflow, กลุ่มเดียว) · กลุ่มขั้นตอน · สลับ Lead Status ↔ WF Step + ลูกศร · เรียง 5 แบบ · ค้นหา (ปุ่ม, Enter, Esc, ✕, การ์ดแนะนำ + เลือก) · ตัวกรองทุกช่อง (ช่วงวันที่, แท็บหลายตัว + chip + ค้นหา, สถานะ, ทีมขาย, จังหวัด → อำเภอ, ผู้รับผิดชอบ, กลุ่ม/ขั้นตอนของ List, สวิตช์สถานะปิด) · กรอง/ล้าง/ปิด/คลิกนอก/เปิดใหม่ค่ากลับ · ขยาย/ย่อการ์ด · popover ผู้มีสิทธิ์ · ลากการ์ด (hover, ย้าย, ยกเลิก, บันทึก, บันทึกไม่สำเร็จ, ช่องทางติดต่อ, ผู้ชมที่ลากไม่ได้, การ์ดที่ปิดแล้ว) · เลื่อนโหลดต่อคอลัมน์/ตาราง + auto-fill + ปุ่ม "โหลดเพิ่ม" · ลากเลื่อนบอร์ด/ตาราง · เปิดลีด (ปลายทาง + <code>activityGroupId</code>) · filter state ที่ session จำไว้ (โหลดหน้าซ้ำ)</li>
+    <li><b>เทสต์ในโปรเจกต์</b>: <code>leads.mock.spec.ts</code> (สัญญาของ backend จำลอง: รูปแบบ, ตัวกรอง, แบ่งหน้า, ย้ายการ์ด + กฎเจ้าของ, filter state) · <code>leads.spec.ts</code> (หน้าทั้งหน้าใน jsdom: markup, ข้อมูลหน้าแรก, ผลิตภัณฑ์, List + เลื่อนโหลด, ค้นหา, เปิดลีด, สิทธิ์, ลาก → modal → บันทึก, ตัวกรอง, เปลี่ยนภาษา, โหมดไม่ใช่ mock, ไม่มีอะไรค้างหลังออกจากหน้า)</li>
+  </ul>
+
+  <h3>ที่ต่างจาก Java (ตั้งใจ)</h3>
+  <ul>
+    <li>ธีมอยู่ที่ <code>&lt;html data-theme&gt;</code> (Java: <code>&lt;body&gt;</code>), ขนาดตัวอักษรใช้ <code>--ts-fs-adj</code> (Java: <code>--fs-adj</code>) — generator แปลงให้ ความจำเพาะเท่าเดิม</li>
+    <li>รูป/ไอคอนของ Java (<code>web/images/icon|lead</code>) ไว้ที่ <code>public/assets/images/…</code> ไฟล์ตรงทุกไบต์ (<code>default_avatar.svg</code> ใช้ของ chat ที่ <code>assets/images/</code> ชั้นเดียว)</li>
+    <li>ไม่มี servlet/BFF: <code>/board/*</code> เป็นสัญญาของ <code>OpportunitiesBackend</code> (mock หรือ live ในเฟสถัดไป) · <code>navigator.sendBeacon('/board/filter-state')</code> เป็น <code>env.beacon</code> · filter state ที่ Java เก็บใน HttpSession mock เก็บใน <code>sessionStorage</code> (คงอยู่ตอนโหลดหน้าซ้ำ)</li>
+    <li>รูปลูกค้าที่เป็น <code>http(s)://</code> ผ่าน <code>../docproxy?url=</code> (กัน mixed-content) — mock ไม่มีรูปแบบนี้ (ใช้ default avatar); เส้นทางนี้ต้องตัดสินใจตอนทำ live (ไม่มี BFF แล้ว)</li>
+    <li>โหมดไม่ใช่ mock: ยังไม่ต่อ backend จริง แสดง <code>&lt;ts-live-missing/&gt;</code> และไม่เรียกอะไร</li>
+  </ul>
+</section>

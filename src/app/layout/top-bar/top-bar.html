@@ -1,0 +1,213 @@
+<header class="bar">
+  <nav class="tabs" [attr.aria-label]="t('app.nav.tabs')">
+    @for (tab of nav.tabs(); track tab.id) {
+      @if (tab.children) {
+        <!-- dropdown tab: icon · label · chevron, menu hangs 8px below the label row -->
+        <div
+          class="tab tab-dd"
+          [class.open]="openTab() === tab.id"
+          [class.active]="nav.isActive(tab)"
+          (mouseenter)="hoverOpen(tab.id)"
+          (mouseleave)="hoverClose()"
+        >
+          <div class="dd">
+            <button
+              class="dd-btn"
+              type="button"
+              aria-haspopup="menu"
+              [attr.aria-expanded]="openTab() === tab.id"
+              (click)="toggleTab(tab.id)"
+            >
+              @if (tab.fa) {
+                <i class="fa-ico dd-ico" [class]="tab.fa" [style.color]="tab.color ?? null"></i>
+              }
+              <span class="txt">{{ label(tab) }}</span>
+              <i class="pi pi-chevron-down chev"></i>
+            </button>
+            <ul class="menu" role="menu">
+              @for (item of ordered(tab.children); track item.id) {
+                @if (item.children) {
+                  <li class="sub" role="none">
+                    <span class="item has-sub" role="menuitem" tabindex="0" aria-haspopup="menu">
+                      @if (item.iconClass) {
+                        <i class="sub-ic" [class]="item.iconClass"></i>
+                      }
+                      {{ label(item) }}
+                      <i class="pi pi-chevron-right chev-r"></i>
+                    </span>
+                    <ul class="menu sub-menu" role="menu">
+                      @for (child of item.children; track child.id) {
+                        <li role="none">
+                          <a class="item" role="menuitem" [routerLink]="child.route" [queryParams]="child.query" [class.active]="nav.isActive(child)" (click)="navigated()">
+                            {{ label(child) }}
+                          </a>
+                        </li>
+                      }
+                    </ul>
+                  </li>
+                } @else {
+                  <li role="none">
+                    @if (aiOff(item); as why) {
+                      <!-- an AI HUB tool the service cannot run: grey, no link -->
+                      <span class="item off" role="menuitem" aria-disabled="true" [title]="why">
+                        @if (item.iconClass) {
+                          <i class="sub-ic" [class.badge]="item.badge" [class]="item.iconClass"></i>
+                        }
+                        {{ label(item) }}
+                      </span>
+                    } @else {
+                      <a class="item" role="menuitem" [routerLink]="item.route" [queryParams]="item.query" [class.active]="nav.isActive(item)" (click)="navigated()">
+                        @if (item.iconClass) {
+                          <i class="sub-ic" [class.badge]="item.badge" [class]="item.iconClass" [style.background]="badge(item)"></i>
+                        }
+                        {{ label(item) }}
+                      </a>
+                    }
+                  </li>
+                }
+              }
+            </ul>
+          </div>
+        </div>
+      } @else {
+        <a
+          class="tab"
+          [routerLink]="tab.route"
+          [class.active]="nav.isActive(tab)"
+          [attr.aria-current]="nav.isActive(tab) ? 'page' : null"
+        >
+          @if (maskUrl(tab); as mask) {
+            <span class="mask" [style.-webkit-mask-image]="mask" [style.mask-image]="mask"></span>
+          } @else if (tab.fa) {
+            <i class="fa-ico" [class]="tab.fa" [style.color]="tab.color ?? null"></i>
+          }
+          <span class="txt">{{ label(tab) }}</span>
+        </a>
+      }
+    }
+  </nav>
+
+  <div class="right">
+    <!-- font size A A A -->
+    <div class="font" role="group" [attr.aria-label]="t('app.top.fontSize')">
+      @for (f of fontSteps; track f.step) {
+        <button
+          type="button"
+          [class]="'f f' + (f.step + 1)"
+          [attr.aria-pressed]="prefs.fontStep() === f.step"
+          [attr.aria-label]="t(f.labelKey)"
+          [title]="t(f.labelKey)"
+          (click)="prefs.setFontStep(f.step)"
+        >
+          A
+        </button>
+      }
+    </div>
+
+    <!-- light / dark -->
+    <button
+      type="button"
+      class="theme"
+      role="switch"
+      [attr.aria-checked]="prefs.theme() === 'dark'"
+      [attr.aria-label]="t('app.top.theme')"
+      [title]="t('app.top.theme')"
+      (click)="prefs.toggleTheme()"
+    >
+      <span class="knob">
+        <img [src]="prefs.theme() === 'dark' ? 'assets/icons/topnav/theme-moon.svg' : 'assets/icons/topnav/theme-sun.svg'" alt="" width="20" height="20" />
+      </span>
+    </button>
+
+    <!-- notifications: the bell with the unread badge opens the panel (ts-notification-panel of the shell) -->
+    <button
+      type="button"
+      class="bell"
+      [attr.aria-label]="t('app.notif.title')"
+      [attr.aria-expanded]="notifications.panelOpen()"
+      [title]="t('app.notif.title')"
+      (click)="toggleNotifications()"
+    >
+      <i class="pi pi-bell"></i>
+      @if (notifications.unread() > 0) {
+        <span class="bell-badge">{{ bellBadge() }}</span>
+      }
+    </button>
+
+    <span class="spacer-25" aria-hidden="true"></span>
+
+    <!-- user -->
+    <div class="popup-wrap">
+      <button
+        type="button"
+        class="user"
+        aria-haspopup="menu"
+        [attr.aria-expanded]="popup() === 'user'"
+        [attr.aria-label]="t('app.top.user')"
+        (click)="togglePopup('user')"
+      >
+        <i class="far fa-user user-ico"></i>
+        <span class="lbl">{{ displayName() }}</span>
+        @if (auth.session()?.branch; as branch) {
+          <span class="lbl branch" [title]="t('app.top.activeBranch')">({{ branch.name }})</span>
+        }
+        <i class="fas fa-chevron-down user-chev"></i>
+      </button>
+      @if (popup() === 'user') {
+        <div class="pop user-pop" role="menu">
+          @if (canSwitchCompany()) {
+            <button type="button" class="pop-item" role="menuitem" (click)="switchCompany()">
+              <i class="pi pi-building pop-ico"></i>
+              {{ t('app.top.switchCompany') }}
+            </button>
+          }
+          <button type="button" class="pop-item" role="menuitem" (click)="logout()">
+            <i class="pi pi-sign-out pop-ico"></i>
+            {{ t('label.usermenu.logout') }}
+          </button>
+        </div>
+      }
+    </div>
+
+    <!-- language: flag of the current language, click to choose -->
+    <div class="popup-wrap lang-wrap">
+      <button
+        type="button"
+        class="lang"
+        aria-haspopup="menu"
+        [attr.aria-expanded]="popup() === 'lang'"
+        [attr.aria-label]="t('app.top.language')"
+        [title]="t('app.top.language')"
+        (click)="togglePopup('lang')"
+      >
+        <img class="flag" [src]="flag(prefs.lang())" alt="" width="24" height="18" />
+      </button>
+      @if (popup() === 'lang') {
+        <div class="pop lang-pop" role="menu">
+          <button type="button" class="pop-item lang-opt" role="menuitemradio" [attr.aria-checked]="prefs.lang() === 'th'" (click)="setLang('th')">
+            <img class="flag" [src]="flag('th')" alt="" width="22" height="16" />
+            <span class="grow">ไทย</span>
+            <i class="pi pi-check ok" [class.hidden]="prefs.lang() !== 'th'"></i>
+          </button>
+          <button type="button" class="pop-item lang-opt" role="menuitemradio" [attr.aria-checked]="prefs.lang() === 'en'" (click)="setLang('en')">
+            <img class="flag" [src]="flag('en')" alt="" width="22" height="16" />
+            <span class="grow">English</span>
+            <i class="pi pi-check ok" [class.hidden]="prefs.lang() !== 'en'"></i>
+          </button>
+        </div>
+      }
+    </div>
+
+    @if (apiLogEnabled) {
+      <!-- "Log" of the Java top bar (algOpen()): opens the Log window, which is `ts-api-log` of the shell -->
+      <div class="popup-wrap log-wrap">
+        <button type="button" class="log" [title]="t('app.apiLog.hint')" (click)="apiLog.open()">
+          <i class="fas fa-terminal"></i>
+          <span>Log</span>
+        </button>
+      </div>
+    }
+
+    <span class="spacer-40" aria-hidden="true"></span>
+  </div>
+</header>

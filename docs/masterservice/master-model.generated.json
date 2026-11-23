@@ -1,0 +1,8515 @@
+{
+ "generatedFrom": [
+  "master-setup final mock up 30-10-2026.html",
+  "Triple_Sales_Config_MasterData_Spec_v1.2_FeatureList1.3.xlsx",
+  "TripleSales_MasterData_SetupFlow.drawio"
+ ],
+ "schema": "masterdata",
+ "phases": [
+  {
+   "code": "p0",
+   "name": "ข้อมูลตั้งต้น (ACE)",
+   "sort": 1
+  },
+  {
+   "code": "p1",
+   "name": "องค์กรและคน",
+   "sort": 2
+  },
+  {
+   "code": "p2",
+   "name": "ขั้นตอนการขาย",
+   "sort": 3
+  },
+  {
+   "code": "p3",
+   "name": "ลูกค้าและการตลาด",
+   "sort": 4
+  },
+  {
+   "code": "p4",
+   "name": "การเงินและทั่วไป",
+   "sort": 5
+  },
+  {
+   "code": "p5",
+   "name": "โมดูลเสริม",
+   "sort": 6
+  }
+ ],
+ "steps": [
+  {
+   "no": 1,
+   "code": "entity",
+   "phase": "p0",
+   "name": "นิติบุคคล",
+   "golive": true,
+   "deps": [],
+   "tables": [
+    "entitygroup",
+    "businessentity"
+   ],
+   "optional": [],
+   "doneRule": "TABLES",
+   "permFields": null
+  },
+  {
+   "no": 2,
+   "code": "systemname",
+   "phase": "p0",
+   "name": "ระบบที่ใช้งาน",
+   "golive": true,
+   "deps": [],
+   "tables": [
+    "systemname"
+   ],
+   "optional": [],
+   "doneRule": "TABLES",
+   "permFields": null
+  },
+  {
+   "no": 3,
+   "code": "channel",
+   "phase": "p0",
+   "name": "ช่องทางและเอกสาร",
+   "golive": true,
+   "deps": [
+    "entity"
+   ],
+   "tables": [
+    "communicationtype",
+    "contacttype",
+    "attachfiletype",
+    "documentcategory",
+    "datamoduletype"
+   ],
+   "optional": [
+    "datamoduletype"
+   ],
+   "doneRule": "TABLES",
+   "permFields": null
+  },
+  {
+   "no": 4,
+   "code": "movementtype",
+   "phase": "p0",
+   "name": "ประเภทรายการ",
+   "golive": true,
+   "deps": [
+    "entity"
+   ],
+   "tables": [
+    "movementtype"
+   ],
+   "optional": [],
+   "doneRule": "TABLES",
+   "permFields": null
+  },
+  {
+   "no": 5,
+   "code": "typeset",
+   "phase": "p0",
+   "name": "ประเภทลูกค้าและคู่ค้า",
+   "golive": true,
+   "deps": [
+    "entity"
+   ],
+   "tables": [
+    "companytype",
+    "customertype",
+    "businesstype",
+    "membertype",
+    "businesspartnertype",
+    "vendortype",
+    "coupontype"
+   ],
+   "optional": [
+    "membertype",
+    "businesspartnertype",
+    "vendortype",
+    "coupontype"
+   ],
+   "doneRule": "TABLES",
+   "permFields": null
+  },
+  {
+   "no": 6,
+   "code": "instype",
+   "phase": "p0",
+   "name": "ประกันและสินเชื่อ",
+   "golive": false,
+   "deps": [
+    "entity"
+   ],
+   "tables": [
+    "insurancetype",
+    "insurancenotificationtype",
+    "loantype"
+   ],
+   "optional": [],
+   "doneRule": "TABLES",
+   "permFields": null
+  },
+  {
+   "no": 7,
+   "code": "calendartype",
+   "phase": "p0",
+   "name": "ประเภทปฏิทิน",
+   "golive": false,
+   "deps": [
+    "entity"
+   ],
+   "tables": [
+    "calendartype"
+   ],
+   "optional": [],
+   "doneRule": "TABLES",
+   "permFields": null
+  },
+  {
+   "no": 8,
+   "code": "branch",
+   "phase": "p1",
+   "name": "สาขา",
+   "golive": true,
+   "deps": [
+    "entity"
+   ],
+   "tables": [
+    "branch"
+   ],
+   "optional": [],
+   "doneRule": "TABLES",
+   "permFields": null
+  },
+  {
+   "no": 9,
+   "code": "org",
+   "phase": "p1",
+   "name": "โครงสร้างองค์กร",
+   "golive": true,
+   "deps": [
+    "branch"
+   ],
+   "tables": [
+    "department",
+    "positionorganize",
+    "position"
+   ],
+   "optional": [
+    "positionorganize"
+   ],
+   "doneRule": "TABLES",
+   "permFields": null
+  },
+  {
+   "no": 10,
+   "code": "employee",
+   "phase": "p1",
+   "name": "พนักงาน",
+   "golive": true,
+   "deps": [
+    "systemname",
+    "org"
+   ],
+   "tables": [
+    "prefix",
+    "employee"
+   ],
+   "optional": [
+    "prefix"
+   ],
+   "doneRule": "TABLES",
+   "permFields": null
+  },
+  {
+   "no": 11,
+   "code": "salesteam",
+   "phase": "p1",
+   "name": "ทีมขาย",
+   "golive": true,
+   "deps": [
+    "branch",
+    "employee"
+   ],
+   "tables": [
+    "salegroup",
+    "saleperson"
+   ],
+   "optional": [],
+   "doneRule": "TABLES",
+   "permFields": null
+  },
+  {
+   "no": 12,
+   "code": "actstatus",
+   "phase": "p2",
+   "name": "สถานะกิจกรรม",
+   "golive": true,
+   "deps": [
+    "org"
+   ],
+   "tables": [
+    "activitystatus",
+    "keyactivitytype"
+   ],
+   "optional": [
+    "keyactivitytype"
+   ],
+   "doneRule": "TABLES",
+   "permFields": null
+  },
+  {
+   "no": 13,
+   "code": "flow",
+   "phase": "p2",
+   "name": "ขั้นตอนการขาย",
+   "golive": true,
+   "deps": [
+    "movementtype",
+    "org"
+   ],
+   "tables": [
+    "activitygroup",
+    "activity",
+    "activityconfig",
+    "activityinapp"
+   ],
+   "optional": [
+    "activityconfig",
+    "activityinapp"
+   ],
+   "doneRule": "TABLES",
+   "permFields": null
+  },
+  {
+   "no": 14,
+   "code": "oppsharinggroup",
+   "phase": "p2",
+   "name": "กลุ่มแชร์ OPP",
+   "golive": true,
+   "deps": [
+    "org",
+    "employee"
+   ],
+   "tables": [
+    "oppsharinggroup"
+   ],
+   "optional": [],
+   "doneRule": "TABLES",
+   "permFields": null
+  },
+  {
+   "no": 15,
+   "code": "opportunityconfig",
+   "phase": "p2",
+   "name": "Pipeline OPP",
+   "golive": true,
+   "deps": [
+    "flow",
+    "oppsharinggroup"
+   ],
+   "tables": [
+    "opportunityconfig"
+   ],
+   "optional": [],
+   "doneRule": "TABLES",
+   "permFields": null
+  },
+  {
+   "no": 16,
+   "code": "waitlist",
+   "phase": "p2",
+   "name": "Waitlist",
+   "golive": false,
+   "deps": [
+    "oppsharinggroup"
+   ],
+   "tables": [
+    "waitlisttype",
+    "waitlistsharinggroup",
+    "waitlist"
+   ],
+   "optional": [],
+   "doneRule": "TABLES",
+   "permFields": null
+  },
+  {
+   "no": 17,
+   "code": "leadstatus",
+   "phase": "p3",
+   "name": "สถานะ Lead",
+   "golive": true,
+   "deps": [
+    "entity"
+   ],
+   "tables": [
+    "leadstatus"
+   ],
+   "optional": [],
+   "doneRule": "TABLES",
+   "permFields": null
+  },
+  {
+   "no": 18,
+   "code": "customergroup",
+   "phase": "p3",
+   "name": "กลุ่มลูกค้า",
+   "golive": false,
+   "deps": [
+    "typeset"
+   ],
+   "tables": [
+    "customergroup"
+   ],
+   "optional": [],
+   "doneRule": "TABLES",
+   "permFields": null
+  },
+  {
+   "no": 19,
+   "code": "marketing",
+   "phase": "p3",
+   "name": "การตลาด",
+   "golive": true,
+   "deps": [
+    "entity"
+   ],
+   "tables": [
+    "marketinggroup",
+    "marketingchanel"
+   ],
+   "optional": [],
+   "doneRule": "TABLES",
+   "permFields": null
+  },
+  {
+   "no": 20,
+   "code": "custlists",
+   "phase": "p3",
+   "name": "อาชีพและ Tag",
+   "golive": false,
+   "deps": [
+    "entity"
+   ],
+   "tables": [
+    "occupation",
+    "tag"
+   ],
+   "optional": [],
+   "doneRule": "TABLES",
+   "permFields": null
+  },
+  {
+   "no": 21,
+   "code": "pdpa",
+   "phase": "p3",
+   "name": "ฟิลด์ข้อมูลส่วนบุคคล",
+   "golive": true,
+   "deps": [
+    "entity"
+   ],
+   "tables": [
+    "dataattributeroleconfig"
+   ],
+   "optional": [],
+   "doneRule": "TABLES",
+   "permFields": null
+  },
+  {
+   "no": 22,
+   "code": "defperm",
+   "phase": "p3",
+   "name": "สิทธิ์เริ่มต้น Lead / Prospect",
+   "golive": true,
+   "deps": [
+    "opportunityconfig",
+    "leadstatus"
+   ],
+   "tables": [],
+   "optional": [],
+   "doneRule": "ENTITY_PERMISSIONS",
+   "permFields": [
+    "default_permission_lead",
+    "default_permission_prospect",
+    "customer_pdpa",
+    "customer_critical",
+    "company_financial",
+    "company_strategic"
+   ]
+  },
+  {
+   "no": 23,
+   "code": "address",
+   "phase": "p4",
+   "name": "ที่อยู่",
+   "golive": true,
+   "deps": [],
+   "tables": [
+    "country",
+    "province",
+    "district",
+    "subdistrict"
+   ],
+   "optional": [],
+   "doneRule": "TABLES",
+   "permFields": null
+  },
+  {
+   "no": 24,
+   "code": "currency",
+   "phase": "p4",
+   "name": "สกุลเงิน",
+   "golive": true,
+   "deps": [
+    "entity"
+   ],
+   "tables": [
+    "currency",
+    "exchangerate"
+   ],
+   "optional": [
+    "exchangerate"
+   ],
+   "doneRule": "TABLES",
+   "permFields": null
+  },
+  {
+   "no": 25,
+   "code": "fiscalyears",
+   "phase": "p4",
+   "name": "ปีบัญชี",
+   "golive": true,
+   "deps": [
+    "entity"
+   ],
+   "tables": [
+    "fiscalyears"
+   ],
+   "optional": [],
+   "doneRule": "TABLES",
+   "permFields": null
+  },
+  {
+   "no": 26,
+   "code": "payment",
+   "phase": "p4",
+   "name": "บัญชีและการรับจ่าย",
+   "golive": false,
+   "deps": [
+    "entity"
+   ],
+   "tables": [
+    "bankbook",
+    "paymentmethod",
+    "receivemethod"
+   ],
+   "optional": [
+    "paymentmethod",
+    "receivemethod"
+   ],
+   "doneRule": "TABLES",
+   "permFields": null
+  },
+  {
+   "no": 27,
+   "code": "product",
+   "phase": "p4",
+   "name": "สินค้า",
+   "golive": false,
+   "deps": [
+    "entity"
+   ],
+   "tables": [
+    "unitofmeasure",
+    "materialgroup",
+    "material"
+   ],
+   "optional": [],
+   "doneRule": "TABLES",
+   "permFields": null
+  },
+  {
+   "no": 28,
+   "code": "partner",
+   "phase": "p5",
+   "name": "คู่ค้า",
+   "golive": false,
+   "deps": [
+    "typeset"
+   ],
+   "tables": [
+    "vendorgroup",
+    "businesspartner"
+   ],
+   "optional": [],
+   "doneRule": "TABLES",
+   "permFields": null
+  },
+  {
+   "no": 29,
+   "code": "coupon",
+   "phase": "p5",
+   "name": "โปรโมชั่นและคูปอง",
+   "golive": false,
+   "deps": [
+    "typeset"
+   ],
+   "tables": [
+    "promotion",
+    "coupon"
+   ],
+   "optional": [],
+   "doneRule": "TABLES",
+   "permFields": null
+  },
+  {
+   "no": 30,
+   "code": "calendar",
+   "phase": "p5",
+   "name": "ปฏิทิน",
+   "golive": false,
+   "deps": [
+    "calendartype",
+    "employee"
+   ],
+   "tables": [
+    "calendar"
+   ],
+   "optional": [],
+   "doneRule": "TABLES",
+   "permFields": null
+  },
+  {
+   "no": 31,
+   "code": "kpi",
+   "phase": "p5",
+   "name": "KPI (SUN)",
+   "golive": false,
+   "deps": [
+    "entity"
+   ],
+   "tables": [
+    "kpiunit",
+    "kpitasktype",
+    "kpilevel",
+    "kpiproduct",
+    "kpicontact",
+    "kpipillar",
+    "kpitask",
+    "kpipillartask"
+   ],
+   "optional": [],
+   "doneRule": "TABLES",
+   "permFields": null
+  }
+ ],
+ "tables": [
+  {
+   "key": "entitygroup",
+   "label": "กลุ่มนิติบุคคล",
+   "physicalName": "con_master_entitygroup",
+   "scope": "SYS",
+   "level": "S",
+   "homeStep": "entity",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสกลุ่มนิติบุคคล",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อกลุ่มนิติบุคคล",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "รายละเอียด",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "entitykey",
+     "label": "key นิติบุคคล",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "businessentity",
+   "label": "นิติบุคคล",
+   "physicalName": "con_master_businessentity",
+   "scope": "SYS",
+   "level": "S",
+   "homeStep": "entity",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสนิติบุคคล",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อนิติบุคคล",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name_eng",
+     "label": "ชื่อภาษาอังกฤษ",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "คำอธิบาย",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "entitygroupid",
+     "label": "กลุ่มนิติบุคคล",
+     "sql": "BIGINT",
+     "required": true,
+     "ref": "entitygroup",
+     "options": null
+    },
+    {
+     "name": "address",
+     "label": "ที่อยู่",
+     "sql": "VARCHAR(1000)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "subdistrictid",
+     "label": "ตำบล/แขวง",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "subdistrict",
+     "options": null
+    },
+    {
+     "name": "districtid",
+     "label": "อำเภอ",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "district",
+     "options": null
+    },
+    {
+     "name": "provinceid",
+     "label": "จังหวัด",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "province",
+     "options": null
+    },
+    {
+     "name": "countryid",
+     "label": "ประเทศ",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "country",
+     "options": null
+    },
+    {
+     "name": "postcode",
+     "label": "รหัสไปรษณีย์",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "phone",
+     "label": "เบอร์โทรศัพท์",
+     "sql": "VARCHAR(15)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "email",
+     "label": "E-mail",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "url",
+     "label": "url",
+     "sql": "VARCHAR(255)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "currencyid",
+     "label": "สกุลเงิน",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "currency",
+     "options": null
+    },
+    {
+     "name": "chart_of_account",
+     "label": "chart_of_account",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "fiscal_year_start",
+     "label": "เริ่มต้นปีบัญชี",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "tax_rate_default",
+     "label": "อัตราภาษี",
+     "sql": "NUMERIC(11,2)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "logo_path",
+     "label": "logo",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "timezone",
+     "label": "timezone (Asia/Bangkok)",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "default_permission_lead",
+     "label": "default สิทธิของ LEAD",
+     "sql": "VARCHAR(30)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "private",
+      "latestperson_read_only",
+      "latestperson_read_write",
+      "latestperson_read_write_delete"
+     ]
+    },
+    {
+     "name": "default_permission_prospect",
+     "label": "default สิทธิของ PROSPECT",
+     "sql": "VARCHAR(40)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "private",
+      "latestperson_read_only",
+      "latestperson_read_write",
+      "latestperson_read_write_delete",
+      "related_public_read_only",
+      "related_public_read_write",
+      "related_public_read_write_delete"
+     ]
+    },
+    {
+     "name": "customer_pdpa",
+     "label": "Customer PDPA  Data ของขั้นตอนภายหลัง",
+     "sql": "VARCHAR(10)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "open",
+      "close"
+     ]
+    },
+    {
+     "name": "customer_critical",
+     "label": "Customer Critical Data ของขั้นตอนภายหลัง",
+     "sql": "VARCHAR(10)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "open",
+      "close"
+     ]
+    },
+    {
+     "name": "company_financial",
+     "label": "Company Financial Data ของขั้นตอนภายหลัง",
+     "sql": "VARCHAR(10)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "open",
+      "close"
+     ]
+    },
+    {
+     "name": "company_strategic",
+     "label": "Company Strategic Data ของขั้นตอนภายหลัง",
+     "sql": "VARCHAR(10)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "open",
+      "close"
+     ]
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "systemname",
+   "label": "ระบบ",
+   "physicalName": "con_master_systemname",
+   "scope": "SYS",
+   "level": "S",
+   "homeStep": "systemname",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสระบบ",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อระบบ",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "รายละเอียด",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "url",
+     "label": "url",
+     "sql": "VARCHAR(255)",
+     "required": true,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "communicationtype",
+   "label": "ช่องทางที่สะดวก",
+   "physicalName": "con_master_communicationtype",
+   "scope": "ENT",
+   "level": "S",
+   "homeStep": "channel",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสประเภทการติดต่อ",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อประเภทการติดต่อ",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "รายละเอียด",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "contacttype",
+   "label": "ประเภทการติดต่อ",
+   "physicalName": "con_master_contacttype",
+   "scope": "ENT",
+   "level": "S",
+   "homeStep": "channel",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสประเภทการติดต่อ",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อประเภทการติดต่อ",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "รายละเอียด",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "communicationtypeid",
+     "label": "ช่องทางที่สะดวก",
+     "sql": "BIGINT",
+     "required": true,
+     "ref": "communicationtype",
+     "options": null,
+     "extension": true
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "attachfiletype",
+   "label": "ประเภทไฟล์แนบ",
+   "physicalName": "con_master_attachfiletype",
+   "scope": "ENT",
+   "level": "S",
+   "homeStep": "channel",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสประเภท AttachFile",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อประเภท AttachFile",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "รายละเอียด",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "contacttypeid",
+     "label": "ประเภทการติดต่อ",
+     "sql": "BIGINT",
+     "required": true,
+     "ref": "contacttype",
+     "options": null,
+     "extension": true
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "documentcategory",
+   "label": "ประเภทงานเอกสาร",
+   "physicalName": "con_master_documentcategory",
+   "scope": "ENT",
+   "level": "S",
+   "homeStep": "channel",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัส",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อ",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "รายละเอียด",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "datamoduletype",
+   "label": "กลุ่ม Master",
+   "physicalName": "con_master_datamoduletype",
+   "scope": "ENT",
+   "level": "S",
+   "homeStep": "channel",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสจัดกลุ่ม Master",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อจัดกลุ่ม Master",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "รายละเอียด",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": [
+    {
+     "name": "datamoduletypemasterlistitem",
+     "physicalName": "con_master_datamoduletypemasterlistitem",
+     "parentColumn": "datamoduletypeid",
+     "columns": [
+      {
+       "name": "mastername",
+       "label": "ชื่อ master",
+       "sql": "VARCHAR(100)",
+       "required": false,
+       "ref": null,
+       "options": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "movementtype",
+   "label": "ประเภทรายการ",
+   "physicalName": "con_master_movementtype",
+   "scope": "ENT",
+   "level": "S",
+   "homeStep": "movementtype",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัส",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อ",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "รายละเอียด",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name_en",
+     "label": "ชื่อ (EN)",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name_l3",
+     "label": "ชื่อ (L3)",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name_l4",
+     "label": "ชื่อ (L4)",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": [
+    {
+     "name": "movementtypetxtypeitem",
+     "physicalName": "con_master_movementtypetxtypeitem",
+     "parentColumn": "movementtypeid",
+     "columns": [
+      {
+       "name": "txtype",
+       "label": "ประเภทเอกสาร",
+       "sql": "VARCHAR(100)",
+       "required": true,
+       "ref": null,
+       "options": null
+      },
+      {
+       "name": "is_createnew",
+       "label": "สามารถสร้างโดยไม่อ้างอิง",
+       "sql": "CHAR(1)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "Y",
+        "N"
+       ]
+      }
+     ]
+    },
+    {
+     "name": "movementtypesettleruleitem",
+     "physicalName": "con_master_movementtypesettleruleitem",
+     "parentColumn": "movementtypeid",
+     "columns": [
+      {
+       "name": "txtype_settle",
+       "label": "ประเภทเอกสาร",
+       "sql": "VARCHAR(100)",
+       "required": false,
+       "ref": null,
+       "options": null
+      },
+      {
+       "name": "movementtype_settleid",
+       "label": "ประเภทรายการ",
+       "sql": "BIGINT",
+       "required": false,
+       "ref": "movementtype",
+       "options": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "companytype",
+   "label": "ประเภทร้านค้า",
+   "physicalName": "con_master_companytype",
+   "scope": "ENT",
+   "level": "S",
+   "homeStep": "typeset",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสประเภทร้านค้า",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อประเภทร้านค้า",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "คำอธิบาย",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "iscan_use_refcompanycode",
+     "label": "iscan_use_refcompanycode",
+     "sql": "CHAR(1)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "Y",
+      "N"
+     ]
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "customertype",
+   "label": "ประเภทลูกค้า",
+   "physicalName": "con_master_customertype",
+   "scope": "ENT",
+   "level": "S",
+   "homeStep": "typeset",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสประเภทลูกค้า",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อประเภทลูกค้า",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "คำอธิบาย",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "companytypeid",
+     "label": "ประเภทร้านค้า",
+     "sql": "BIGINT",
+     "required": true,
+     "ref": "companytype",
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "businesstype",
+   "label": "ประเภทธุรกิจ",
+   "physicalName": "con_master_businesstype",
+   "scope": "ENT",
+   "level": "S",
+   "homeStep": "typeset",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสประเภทธุรกิจ",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อประเภทธุรกิจ",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name_en",
+     "label": "ชื่อประเภทธุรกิจ EN",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "คำอธิบาย",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name_l3",
+     "label": "ชื่อประเภทธุรกิจ L3",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name_l4",
+     "label": "ชื่อประเภทธุรกิจ L4",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "membertype",
+   "label": "ประเภทสมาชิก",
+   "physicalName": "con_master_membertype",
+   "scope": "ENT",
+   "level": "S",
+   "homeStep": "typeset",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสประเภทสมาชิก",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อประเภทสมาชิก",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name_en",
+     "label": "ชื่อประเภทสมาชิก(EN)",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "คำอธิบาย",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "description_en",
+     "label": "คำอธิบาย(EN)",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "point_level",
+     "label": "ระดับแต้ม",
+     "sql": "INTEGER",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "privilege",
+     "label": "สิทธิ์พิเศษ",
+     "sql": "VARCHAR(1000)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "privilege_en",
+     "label": "สิทธิ์พิเศษ(EN)",
+     "sql": "VARCHAR(1000)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "membertype_image",
+     "label": "รูปภาพประกอบ",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "businesspartnertype",
+   "label": "ประเภทคู่ค้า",
+   "physicalName": "con_master_businesspartnertype",
+   "scope": "ENT",
+   "level": "S",
+   "homeStep": "typeset",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสบริษัท",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ประเภทบริษัท",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name_en",
+     "label": "ประเภทบริษัท EN",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "รายละเอียด",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "partnertype",
+     "label": "ประเภทคู่ค้า",
+     "sql": "CHAR(1)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "R",
+      "O"
+     ]
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "vendortype",
+   "label": "ประเภทผู้ขาย",
+   "physicalName": "con_master_vendortype",
+   "scope": "ENT",
+   "level": "S",
+   "homeStep": "typeset",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสประเภทผู้ขาย",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อประเภทผู้ขาย",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "คำอธิบาย",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "coupontype",
+   "label": "ประเภทคูปอง",
+   "physicalName": "con_master_coupontype",
+   "scope": "ENT",
+   "level": "S",
+   "homeStep": "typeset",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัส Coupontype",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อ  Coupontype",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name_en",
+     "label": "ชื่อ Coupontype (EN)",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "descript",
+     "label": "รายละเอียด Coupontype",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "insurancetype",
+   "label": "แผนประกัน",
+   "physicalName": "con_master_insurancetype",
+   "scope": "ENT",
+   "level": "S",
+   "homeStep": "instype",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสแผนประกัน",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อแผนประกัน",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "short_name",
+     "label": "ชื่อย่อ",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "description",
+     "label": "รายละเอียด",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "securityaccesskey",
+     "label": "รหัสเข้าถึง",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "insurancenotificationtype",
+   "label": "รูปแบบประกันภัย",
+   "physicalName": "con_master_insurancenotificationtype",
+   "scope": "ENT",
+   "level": "S",
+   "homeStep": "instype",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสรูปแบบประกันภัย",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อรูปแบบประกันภัย",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "short_name",
+     "label": "ชื่อย่อ",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "description",
+     "label": "รายละเอียด",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "loantype",
+   "label": "รูปแบบสินเชื่อ",
+   "physicalName": "con_master_loantype",
+   "scope": "ENT",
+   "level": "S",
+   "homeStep": "instype",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสรูปแบบสินเชื่อ",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อรูปแบบสินเชื่อ",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "รายละเอียด",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "calendartype",
+   "label": "ประเภทปฏิทิน",
+   "physicalName": "con_master_calendartype",
+   "scope": "ENT",
+   "level": "S",
+   "homeStep": "calendartype",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัส CALENDAR",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อ CALENDAR",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "คำอธิบาย",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "branch",
+   "label": "สาขา",
+   "physicalName": "con_master_branch",
+   "scope": "ENT",
+   "level": "E",
+   "homeStep": "branch",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสสาขา",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อสาขา",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "address",
+     "label": "ที่อยู่",
+     "sql": "VARCHAR(1000)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "tel",
+     "label": "เบอร์โทรศัพท์",
+     "sql": "VARCHAR(15)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "description",
+     "label": "คำอธิบาย",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "department",
+   "label": "หน่วยงาน",
+   "physicalName": "con_master_department",
+   "scope": "ENT",
+   "level": "E",
+   "homeStep": "org",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสหน่วยงาน",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อหน่วยงาน",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "positionorganize",
+   "label": "แผนก",
+   "physicalName": "con_master_positionorganize",
+   "scope": "ENT",
+   "level": "E",
+   "homeStep": "org",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสแผนก",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อแผนก",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "departmenttype",
+     "label": "กลุ่มค่าใช้จ่าย",
+     "sql": "CHAR(1)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "A",
+      "S"
+     ]
+    },
+    {
+     "name": "subsidiariesid",
+     "label": "ภายใต้ Position Org",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "positionorganize",
+     "options": null
+    },
+    {
+     "name": "manpower",
+     "label": "จำนวนคนในหน่วยงาน",
+     "sql": "INTEGER",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "approve_role",
+     "label": "สิทธ์การอนุมัติ",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "description",
+     "label": "คำอธิบาย",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": [
+    {
+     "name": "positionorganizemanpoweritem",
+     "physicalName": "con_master_positionorganizemanpoweritem",
+     "parentColumn": "positionorganizeid",
+     "columns": [
+      {
+       "name": "positionid",
+       "label": "ตำแหน่งงาน",
+       "sql": "BIGINT",
+       "required": false,
+       "ref": "position",
+       "options": null
+      },
+      {
+       "name": "subsidairyofid",
+       "label": "ตำแหน่งผู้บังคับบัญชา",
+       "sql": "BIGINT",
+       "required": false,
+       "ref": "position",
+       "options": null
+      },
+      {
+       "name": "manpower",
+       "label": "อัตรากำลังพลทั้งหมด",
+       "sql": "INTEGER",
+       "required": false,
+       "ref": null,
+       "options": null
+      },
+      {
+       "name": "current_manpower",
+       "label": "อัตรากำลังพลปัจจุบัน",
+       "sql": "INTEGER",
+       "required": false,
+       "ref": null,
+       "options": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "position",
+   "label": "ตำแหน่งงาน",
+   "physicalName": "con_master_position",
+   "scope": "ENT",
+   "level": "E",
+   "homeStep": "org",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสตำแหน่ง",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อตำแหน่ง",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "คำอธิบาย",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "employee_level",
+     "label": "พนักงานระดับ",
+     "sql": "VARCHAR(10)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "Operation",
+      "Supervise",
+      "Management",
+      "Executive"
+     ]
+    },
+    {
+     "name": "positionorganizeid",
+     "label": "positionorganize",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "positionorganize",
+     "options": null
+    },
+    {
+     "name": "commander_position1id",
+     "label": "ผู้บังคับบัญชาโดยตรง",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "position",
+     "options": null
+    },
+    {
+     "name": "commander_position2id",
+     "label": "ผู้บังคับบัญชาระดับสูง",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "position",
+     "options": null
+    },
+    {
+     "name": "competency_ratio",
+     "label": "สัดส่วนคุณลักษณะส่วนบุคคล",
+     "sql": "NUMERIC(5,2)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "kpi_ratio",
+     "label": "สัดส่วนผลการทำงาน",
+     "sql": "NUMERIC(5,2)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "attendance_ratio",
+     "label": "สัดส่วนสถิติการมาทำงาน",
+     "sql": "NUMERIC(5,2)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "allbranch",
+     "label": "สาขาที่สังกัด",
+     "sql": "CHAR(1)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "Y",
+      "N"
+     ]
+    }
+   ],
+   "items": [
+    {
+     "name": "positionbranchitem",
+     "physicalName": "con_master_positionbranchitem",
+     "parentColumn": "positionid",
+     "columns": [
+      {
+       "name": "branchid",
+       "label": "สาขา",
+       "sql": "BIGINT",
+       "required": true,
+       "ref": "branch",
+       "options": null
+      }
+     ]
+    },
+    {
+     "name": "positionparentpositionitem",
+     "physicalName": "con_master_positionparentpositionitem",
+     "parentColumn": "positionid",
+     "columns": [
+      {
+       "name": "parent_positionid",
+       "label": "ตำแหน่งระดับก่อนหน้า",
+       "sql": "BIGINT",
+       "required": false,
+       "ref": "position",
+       "options": null
+      },
+      {
+       "name": "is_main",
+       "label": "ตำแหน่งหลัก",
+       "sql": "BOOLEAN",
+       "required": true,
+       "ref": null,
+       "options": null
+      }
+     ]
+    },
+    {
+     "name": "positionrolepositionitem",
+     "physicalName": "con_master_positionrolepositionitem",
+     "parentColumn": "positionid",
+     "columns": [
+      {
+       "name": "rolepositionname",
+       "label": "ชื่อตำแหน่งงาน",
+       "sql": "VARCHAR(100)",
+       "required": false,
+       "ref": null,
+       "options": null
+      },
+      {
+       "name": "description",
+       "label": "คำอธิบาย",
+       "sql": "VARCHAR(500)",
+       "required": false,
+       "ref": null,
+       "options": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "prefix",
+   "label": "คำนำหน้า",
+   "physicalName": "con_master_prefix",
+   "scope": "ENT",
+   "level": "U",
+   "homeStep": "employee",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสคำนำหน้า",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อ",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "prefix_name_th",
+     "label": "ชื่อคำนำหน้า (TH)",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "prefix_name_en",
+     "label": "ชื่อคำนำหน้า (EN)",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "employee",
+   "label": "พนักงาน",
+   "physicalName": "con_master_employee",
+   "scope": "ENT",
+   "level": "U",
+   "homeStep": "employee",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสพนักงาน",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อพนักงาน",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "firstname",
+     "label": "ชื่อ",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "lastname",
+     "label": "นามสกุล",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "nickname",
+     "label": "ชื่อเล่น",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "departmentid",
+     "label": "แผนก",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "department",
+     "options": null
+    },
+    {
+     "name": "description",
+     "label": "รายละเอียด",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "prefixid",
+     "label": "คำนำหน้า",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "prefix",
+     "options": null
+    },
+    {
+     "name": "first_name_th",
+     "label": "ชื่อ (ไทย)",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "last_name_th",
+     "label": "นามสกุล (ไทย)",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "first_name_en",
+     "label": "ชื่อ (อังกฤษ)",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "last_name_en",
+     "label": "นามสกุล (อังกฤษ)",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "email",
+     "label": "อีเมล์",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "home_phone_number",
+     "label": "เบอร์โทรบ้าน",
+     "sql": "VARCHAR(15)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "phone_number",
+     "label": "เบอร์มือถือ",
+     "sql": "VARCHAR(15)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "working_date",
+     "label": "วันที่เริ่มงาน",
+     "sql": "DATE",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "attachfile",
+     "label": "รูปภาพประกอบ",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "address1",
+     "label": "ที่อยู่1",
+     "sql": "VARCHAR(1000)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "address2",
+     "label": "ที่อยู่2",
+     "sql": "VARCHAR(1000)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "provinceid",
+     "label": "จังหวัด",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "province",
+     "options": null
+    },
+    {
+     "name": "districtid",
+     "label": "อำเภอ",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "district",
+     "options": null
+    },
+    {
+     "name": "subdistrictid",
+     "label": "ตำบล",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "subdistrict",
+     "options": null
+    },
+    {
+     "name": "post_code",
+     "label": "รหัสไปรษณีย์",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "home_address",
+     "label": "ที่อยู่ตามทะเบียนบ้าน",
+     "sql": "VARCHAR(1000)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "home_provinceid",
+     "label": "จังหวัด",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "province",
+     "options": null
+    },
+    {
+     "name": "home_districtid",
+     "label": "อำเภอ",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "district",
+     "options": null
+    },
+    {
+     "name": "home_subdistrictid",
+     "label": "ตำบล",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "subdistrict",
+     "options": null
+    },
+    {
+     "name": "username",
+     "label": "ชื่อผู้ใช้",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": [
+    {
+     "name": "employeecoverforitem",
+     "physicalName": "con_master_employeecoverforitem",
+     "parentColumn": "employeeid",
+     "columns": [
+      {
+       "name": "cover_employeeid",
+       "label": "พนักงานที่รับผิดชอบแทน",
+       "sql": "BIGINT",
+       "required": false,
+       "ref": "employee",
+       "options": null
+      },
+      {
+       "name": "valid_from",
+       "label": "วันที่เริ่มต้น",
+       "sql": "VARCHAR(100)",
+       "required": false,
+       "ref": null,
+       "options": null
+      },
+      {
+       "name": "valid_to",
+       "label": "วันที่สิ้นสุด",
+       "sql": "VARCHAR(100)",
+       "required": false,
+       "ref": null,
+       "options": null
+      }
+     ]
+    },
+    {
+     "name": "employeesubpositionitem",
+     "physicalName": "con_master_employeesubpositionitem",
+     "parentColumn": "employeeid",
+     "columns": [
+      {
+       "name": "positionid",
+       "label": "ตำแหน่ง",
+       "sql": "BIGINT",
+       "required": false,
+       "ref": "position",
+       "options": null
+      },
+      {
+       "name": "is_main",
+       "label": "ตำแหน่งหลัก",
+       "sql": "CHAR(1)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "N",
+        "Y"
+       ]
+      },
+      {
+       "name": "description",
+       "label": "หมายเหตุ",
+       "sql": "VARCHAR(500)",
+       "required": false,
+       "ref": null,
+       "options": null
+      }
+     ]
+    },
+    {
+     "name": "employeesystemitem",
+     "physicalName": "con_master_employeesystemitem",
+     "parentColumn": "employeeid",
+     "columns": [
+      {
+       "name": "systemnameid",
+       "label": "ชื่อระบบ",
+       "sql": "BIGINT",
+       "required": true,
+       "ref": "systemname",
+       "options": null
+      }
+     ]
+    },
+    {
+     "name": "employeebranchitem",
+     "physicalName": "con_master_employeebranchitem",
+     "parentColumn": "employeeid",
+     "columns": [
+      {
+       "name": "ms_branch_id",
+       "label": "สาขา",
+       "sql": "BIGINT",
+       "required": false,
+       "ref": "branch",
+       "options": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "salegroup",
+   "label": "กลุ่มการขาย",
+   "physicalName": "con_master_salegroup",
+   "scope": "ENT",
+   "level": "U",
+   "homeStep": "salesteam",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสกลุ่มการขาย",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อกลุ่มการขาย",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "คำอธิบาย",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "branchid",
+     "label": "สาขา",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "branch",
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "saleperson",
+   "label": "พนักงานขาย",
+   "physicalName": "con_master_saleperson",
+   "scope": "ENT",
+   "level": "U",
+   "homeStep": "salesteam",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสพนักงานขาย",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อพนักงานขาย",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "employeeid",
+     "label": "ข้อมูลพนักงาน",
+     "sql": "BIGINT",
+     "required": true,
+     "ref": "employee",
+     "options": null
+    },
+    {
+     "name": "description",
+     "label": "คำอธิบาย",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "phone",
+     "label": "เบอร์โทรศัพท์",
+     "sql": "VARCHAR(15)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "email",
+     "label": "email",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "facebook",
+     "label": "facebook",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "lineid",
+     "label": "lineid",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "attachfile",
+     "label": "รูปภาพประกอบ",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "firstname",
+     "label": "ชื่อ",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "lastname",
+     "label": "นามสกุล",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "nickname",
+     "label": "ชื่อเล่น",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": [
+    {
+     "name": "salepersonsalegroupitem",
+     "physicalName": "con_master_salepersonsalegroupitem",
+     "parentColumn": "salepersonid",
+     "columns": [
+      {
+       "name": "salegroupid",
+       "label": "กลุ่มการขายที่สังกัด",
+       "sql": "BIGINT",
+       "required": true,
+       "ref": "salegroup",
+       "options": null
+      },
+      {
+       "name": "description",
+       "label": "รายละเอียด",
+       "sql": "VARCHAR(500)",
+       "required": false,
+       "ref": null,
+       "options": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "activitystatus",
+   "label": "สถานะกิจกรรม",
+   "physicalName": "con_master_activitystatus",
+   "scope": "ENT",
+   "level": "E",
+   "homeStep": "actstatus",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสสถานะ",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อสถานะ",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "departmentid",
+     "label": "หน่วยงาน",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "department",
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "keyactivitytype",
+   "label": "ประเภทกิจกรรมหลัก",
+   "physicalName": "con_master_keyactivitytype",
+   "scope": "ENT",
+   "level": "E",
+   "homeStep": "actstatus",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัส Keyactivitytype",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อ Keyactivitytype",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "viewinapp",
+     "label": "ข้อความที่แสดงใน App",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "kpiid",
+     "label": "KPI",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "kpiunit",
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "คำอธิบาย",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "slastart",
+     "label": "จุดเริ่มต้นของsla",
+     "sql": "CHAR(1)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "Y",
+      "N"
+     ]
+    },
+    {
+     "name": "slaend",
+     "label": "จุดสิ้นสุดsla",
+     "sql": "CHAR(1)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "Y",
+      "N"
+     ]
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "activitygroup",
+   "label": "กลุ่มขั้นตอน",
+   "physicalName": "con_master_activitygroup",
+   "scope": "ENT",
+   "level": "E",
+   "homeStep": "flow",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสกลุ่มขั้นตอน",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อกลุ่มขั้นตอน",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "departmentid",
+     "label": "หน่วยงาน",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "department",
+     "options": null
+    },
+    {
+     "name": "special_condition",
+     "label": "เงื่อนไขพิเศษ",
+     "sql": "CHAR(1)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "n",
+      "y"
+     ]
+    },
+    {
+     "name": "conditionvalueid",
+     "label": "ค่าเงื่อนไขพิเศษ",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "activity",
+     "options": null
+    },
+    {
+     "name": "movementtypeid",
+     "label": "ประเภทรายการ",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "movementtype",
+     "options": null
+    },
+    {
+     "name": "color_code",
+     "label": "รหัสสี",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": [
+    {
+     "name": "activitygrouppositionitem",
+     "physicalName": "con_master_activitygrouppositionitem",
+     "parentColumn": "activitygroupid",
+     "columns": [
+      {
+       "name": "positionid",
+       "label": "ตำแหน่ง",
+       "sql": "BIGINT",
+       "required": false,
+       "ref": "position",
+       "options": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "activity",
+   "label": "ขั้นตอน",
+   "physicalName": "con_master_activity",
+   "scope": "ENT",
+   "level": "E",
+   "homeStep": "flow",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสขั้นตอน",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อขั้นตอน",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "sla",
+     "label": "SLA (วัน)",
+     "sql": "INTEGER",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "keyactivitytypeid",
+     "label": "อ้างอิง keyactivitytype",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "keyactivitytype",
+     "options": null
+    },
+    {
+     "name": "departmentid",
+     "label": "หน่วยงาน",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "department",
+     "options": null
+    },
+    {
+     "name": "stepchange_date",
+     "label": "วันที่เปลี่ยนขั้นตอน",
+     "sql": "DATE",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "activitygroupid",
+     "label": "กลุ่มขั้นตอน",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "activitygroup",
+     "options": null
+    },
+    {
+     "name": "exclude_sla",
+     "label": "ยกเว้นการนับ SLA",
+     "sql": "CHAR(1)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "Y",
+      "N"
+     ]
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "activityconfig",
+   "label": "กฎเปลี่ยนขั้นตอน",
+   "physicalName": "con_master_activityconfig",
+   "scope": "ENT",
+   "level": "E",
+   "homeStep": "flow",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสขั้นตอน (Config)",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อขั้นตอน (Config)",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "คำอธิบาย",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": [
+    {
+     "name": "activityconfigconfigitem",
+     "physicalName": "con_master_activityconfigconfigitem",
+     "parentColumn": "activityconfigid",
+     "columns": [
+      {
+       "name": "activitygroup_fromid",
+       "label": "กลุ่มขั้นตอน (from)",
+       "sql": "BIGINT",
+       "required": false,
+       "ref": "activitygroup",
+       "options": null
+      },
+      {
+       "name": "activitystep_fromid",
+       "label": "ขั้นตอน (from)",
+       "sql": "BIGINT",
+       "required": false,
+       "ref": "activity",
+       "options": null
+      },
+      {
+       "name": "activitygroup_toid",
+       "label": "กลุ่มขั้นตอน (to)",
+       "sql": "BIGINT",
+       "required": false,
+       "ref": "activitygroup",
+       "options": null
+      },
+      {
+       "name": "activitystep_toid",
+       "label": "ขั้นตอน (to)",
+       "sql": "BIGINT",
+       "required": false,
+       "ref": "activity",
+       "options": null
+      },
+      {
+       "name": "auto_success",
+       "label": "ปิดโอกาสขายอัตโนมัติ",
+       "sql": "CHAR(1)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "y",
+        "n"
+       ]
+      },
+      {
+       "name": "auto_schedule",
+       "label": "สร้าง งาน / นัดหมายอัตโนมัติ",
+       "sql": "CHAR(1)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "y",
+        "n"
+       ]
+      },
+      {
+       "name": "auto_noti",
+       "label": "แจ้งเตือนอัตโนมัติ",
+       "sql": "CHAR(1)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "y",
+        "n"
+       ]
+      },
+      {
+       "name": "auto_as",
+       "label": "สร้างบริการหลังการขายอัตโนมัต",
+       "sql": "CHAR(1)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "y",
+        "n"
+       ]
+      },
+      {
+       "name": "chat_status",
+       "label": "สถานะแชท",
+       "sql": "VARCHAR(100)",
+       "required": false,
+       "ref": null,
+       "options": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "activityinapp",
+   "label": "ขั้นตอนใน App",
+   "physicalName": "con_master_activityinapp",
+   "scope": "ENT",
+   "level": "E",
+   "homeStep": "flow",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสขั้นตอน",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อขั้นตอน",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "activitygroupid",
+     "label": "กลุ่มขั้นตอน",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "activitygroup",
+     "options": null
+    },
+    {
+     "name": "stepchange_date",
+     "label": "วันที่เปลี่ยนขั้นตอน",
+     "sql": "DATE",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "oppsharinggroup",
+   "label": "กลุ่มแชร์ OPP",
+   "physicalName": "con_master_oppsharinggroup",
+   "scope": "ENT",
+   "level": "E",
+   "homeStep": "oppsharinggroup",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัส Opp Sharing Group",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อ Opp Sharing Group",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "รายละเอียด",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": [
+    {
+     "name": "oppsharinggrouppositionitem",
+     "physicalName": "con_master_oppsharinggrouppositionitem",
+     "parentColumn": "oppsharinggroupid",
+     "columns": [
+      {
+       "name": "positionid",
+       "label": "ตำแหน่ง",
+       "sql": "BIGINT",
+       "required": false,
+       "ref": "position",
+       "options": null
+      },
+      {
+       "name": "view_opp",
+       "label": "สิทธิการเห็น Opportunity",
+       "sql": "VARCHAR(10)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "no",
+        "yes"
+       ]
+      },
+      {
+       "name": "view_task",
+       "label": "สิทธิการเห็น Task",
+       "sql": "VARCHAR(10)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "no",
+        "yes"
+       ]
+      },
+      {
+       "name": "view_appointment",
+       "label": "สิทธิการเห็นนัดหมาย",
+       "sql": "VARCHAR(10)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "no",
+        "yes"
+       ]
+      },
+      {
+       "name": "edit_opp",
+       "label": "สิทธิแก้ไข Opportunity",
+       "sql": "VARCHAR(10)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "no",
+        "yes"
+       ]
+      },
+      {
+       "name": "add_cac",
+       "label": "สิทธิสร้าง CAC",
+       "sql": "VARCHAR(10)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "no",
+        "yes"
+       ]
+      },
+      {
+       "name": "add_task",
+       "label": "สิทธิสร้าง Task",
+       "sql": "VARCHAR(10)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "no",
+        "yes"
+       ]
+      },
+      {
+       "name": "add_appointment",
+       "label": "สิทธิสร้างนัดหมาย",
+       "sql": "VARCHAR(10)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "no",
+        "yes"
+       ]
+      },
+      {
+       "name": "view_chat",
+       "label": "สิทธิการเห็น Chat",
+       "sql": "VARCHAR(10)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "no",
+        "yes"
+       ]
+      },
+      {
+       "name": "answer_chat",
+       "label": "สิทธิการตอบ Chat",
+       "sql": "VARCHAR(10)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "no",
+        "yes"
+       ]
+      }
+     ]
+    },
+    {
+     "name": "oppsharinggroupemployeeitem",
+     "physicalName": "con_master_oppsharinggroupemployeeitem",
+     "parentColumn": "oppsharinggroupid",
+     "columns": [
+      {
+       "name": "employeeid",
+       "label": "พนักงาน",
+       "sql": "BIGINT",
+       "required": false,
+       "ref": "employee",
+       "options": null
+      },
+      {
+       "name": "view_opp",
+       "label": "สิทธิการเห็น Opportunity",
+       "sql": "VARCHAR(10)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "no",
+        "yes"
+       ]
+      },
+      {
+       "name": "view_task",
+       "label": "สิทธิการเห็น Task",
+       "sql": "VARCHAR(10)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "no",
+        "yes"
+       ]
+      },
+      {
+       "name": "view_appointment",
+       "label": "สิทธิการเห็นนัดหมาย",
+       "sql": "VARCHAR(10)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "no",
+        "yes"
+       ]
+      },
+      {
+       "name": "edit_opp",
+       "label": "สิทธิแก้ไข Opportunity",
+       "sql": "VARCHAR(10)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "no",
+        "yes"
+       ]
+      },
+      {
+       "name": "add_cac",
+       "label": "สิทธิสร้าง CAC",
+       "sql": "VARCHAR(10)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "no",
+        "yes"
+       ]
+      },
+      {
+       "name": "add_task",
+       "label": "สิทธิสร้าง Task",
+       "sql": "VARCHAR(10)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "no",
+        "yes"
+       ]
+      },
+      {
+       "name": "add_appointment",
+       "label": "สิทธิสร้างนัดหมาย",
+       "sql": "VARCHAR(10)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "no",
+        "yes"
+       ]
+      },
+      {
+       "name": "view_chat",
+       "label": "สิทธิการเห็น Chat",
+       "sql": "VARCHAR(10)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "no",
+        "yes"
+       ]
+      },
+      {
+       "name": "answer_chat",
+       "label": "สิทธิการตอบ Chat",
+       "sql": "VARCHAR(10)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "no",
+        "yes"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "opportunityconfig",
+   "label": "Pipeline OPP",
+   "physicalName": "con_master_opportunityconfig",
+   "scope": "ENT",
+   "level": "E",
+   "homeStep": "opportunityconfig",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสขั้นตอน (Config)",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อขั้นตอน (Config)",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "คำอธิบาย",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "pipelinetype",
+     "label": "ประเภท Pipeline",
+     "sql": "VARCHAR(10)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "single",
+      "multiple"
+     ]
+    }
+   ],
+   "items": [
+    {
+     "name": "opportunityconfigconfigitem",
+     "physicalName": "con_master_opportunityconfigconfigitem",
+     "parentColumn": "opportunityconfigid",
+     "columns": [
+      {
+       "name": "activitygroup_fromid",
+       "label": "กลุ่มขั้นตอน (from)",
+       "sql": "BIGINT",
+       "required": false,
+       "ref": "activitygroup",
+       "options": null
+      },
+      {
+       "name": "activity_fromid",
+       "label": "ขั้นตอน (from)",
+       "sql": "BIGINT",
+       "required": false,
+       "ref": "activity",
+       "options": null
+      },
+      {
+       "name": "activitygroup_toid",
+       "label": "กลุ่มขั้นตอน (to)",
+       "sql": "BIGINT",
+       "required": false,
+       "ref": "activitygroup",
+       "options": null
+      },
+      {
+       "name": "activity_toid",
+       "label": "ขั้นตอน (to)",
+       "sql": "BIGINT",
+       "required": false,
+       "ref": "activity",
+       "options": null
+      },
+      {
+       "name": "auto_success",
+       "label": "ปิดโอกาสขายอัตโนมัติ",
+       "sql": "CHAR(1)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "y",
+        "n"
+       ]
+      },
+      {
+       "name": "auto_schedule",
+       "label": "สร้าง งาน / นัดหมายอัตโนมัติ",
+       "sql": "CHAR(1)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "y",
+        "n"
+       ]
+      },
+      {
+       "name": "auto_noti",
+       "label": "แจ้งเตือนอัตโนมัติ",
+       "sql": "CHAR(1)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "y",
+        "n"
+       ]
+      },
+      {
+       "name": "auto_as",
+       "label": "สร้างบริการหลังการขายอัตโนมัต",
+       "sql": "CHAR(1)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "y",
+        "n"
+       ]
+      },
+      {
+       "name": "chat_status",
+       "label": "สถานะแชท",
+       "sql": "VARCHAR(100)",
+       "required": false,
+       "ref": null,
+       "options": null
+      }
+     ]
+    },
+    {
+     "name": "opportunityconfiggrouppipelineitem",
+     "physicalName": "con_master_opportunityconfiggrouppipelineitem",
+     "parentColumn": "opportunityconfigid",
+     "columns": [
+      {
+       "name": "orderno",
+       "label": "ลำดับ",
+       "sql": "VARCHAR(100)",
+       "required": false,
+       "ref": null,
+       "options": null
+      },
+      {
+       "name": "activitygroupid",
+       "label": "กลุ่มขั้นตอน",
+       "sql": "BIGINT",
+       "required": true,
+       "ref": "activitygroup",
+       "options": null
+      },
+      {
+       "name": "sla",
+       "label": "sla",
+       "sql": "INTEGER",
+       "required": true,
+       "ref": null,
+       "options": null
+      },
+      {
+       "name": "slaunitid",
+       "label": "หน่วย",
+       "sql": "BIGINT",
+       "required": false,
+       "ref": "kpiunit",
+       "options": null
+      }
+     ]
+    },
+    {
+     "name": "opportunityconfigsteppipelineitem",
+     "physicalName": "con_master_opportunityconfigsteppipelineitem",
+     "parentColumn": "opportunityconfigid",
+     "columns": [
+      {
+       "name": "orderno",
+       "label": "ลำดับ",
+       "sql": "VARCHAR(100)",
+       "required": false,
+       "ref": null,
+       "options": null
+      },
+      {
+       "name": "activitygroupid",
+       "label": "กลุ่มขั้นตอน",
+       "sql": "BIGINT",
+       "required": true,
+       "ref": "activitygroup",
+       "options": null
+      },
+      {
+       "name": "activityid",
+       "label": "ขั้นตอน",
+       "sql": "BIGINT",
+       "required": true,
+       "ref": "activity",
+       "options": null
+      },
+      {
+       "name": "sla",
+       "label": "sla",
+       "sql": "INTEGER",
+       "required": false,
+       "ref": null,
+       "options": null
+      },
+      {
+       "name": "slaunitid",
+       "label": "หน่วย",
+       "sql": "BIGINT",
+       "required": false,
+       "ref": "kpiunit",
+       "options": null
+      }
+     ]
+    },
+    {
+     "name": "opportunityconfigpeersharingitem",
+     "physicalName": "con_master_opportunityconfigpeersharingitem",
+     "parentColumn": "opportunityconfigid",
+     "columns": [
+      {
+       "name": "activitygroupid",
+       "label": "กลุ่มขั้นตอน",
+       "sql": "BIGINT",
+       "required": false,
+       "ref": "activitygroup",
+       "options": null
+      },
+      {
+       "name": "view_opp",
+       "label": "สิทธิการเห็น Opportunity",
+       "sql": "VARCHAR(10)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "no",
+        "yes"
+       ]
+      },
+      {
+       "name": "view_task",
+       "label": "สิทธิการเห็น Task",
+       "sql": "VARCHAR(10)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "no",
+        "yes"
+       ]
+      },
+      {
+       "name": "view_appointment",
+       "label": "สิทธิการเห็นนัดหมาย",
+       "sql": "VARCHAR(10)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "no",
+        "yes"
+       ]
+      },
+      {
+       "name": "edit_opp",
+       "label": "สิทธิแก้ไข Opportunity",
+       "sql": "VARCHAR(10)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "no",
+        "yes"
+       ]
+      },
+      {
+       "name": "add_cac",
+       "label": "สิทธิสร้าง CAC",
+       "sql": "VARCHAR(10)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "no",
+        "yes"
+       ]
+      },
+      {
+       "name": "add_task",
+       "label": "สิทธิสร้าง Task",
+       "sql": "VARCHAR(10)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "no",
+        "yes"
+       ]
+      },
+      {
+       "name": "add_appointment",
+       "label": "สิทธิสร้างนัดหมาย",
+       "sql": "VARCHAR(10)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "no",
+        "yes"
+       ]
+      },
+      {
+       "name": "view_chat",
+       "label": "สิทธิการเห็น Chat",
+       "sql": "VARCHAR(10)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "no",
+        "yes"
+       ]
+      },
+      {
+       "name": "answer_chat",
+       "label": "สิทธิการตอบ Chat",
+       "sql": "VARCHAR(10)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "no",
+        "yes"
+       ]
+      }
+     ]
+    },
+    {
+     "name": "opportunityconfigexresponsiblepersonitem",
+     "physicalName": "con_master_opportunityconfigexresponsiblepersonitem",
+     "parentColumn": "opportunityconfigid",
+     "columns": [
+      {
+       "name": "view_opp",
+       "label": "สิทธิการเห็น Opportunity",
+       "sql": "VARCHAR(10)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "no",
+        "yes"
+       ]
+      },
+      {
+       "name": "view_task",
+       "label": "สิทธิการเห็น Task",
+       "sql": "VARCHAR(10)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "no",
+        "yes"
+       ]
+      },
+      {
+       "name": "view_appointment",
+       "label": "สิทธิการเห็นนัดหมาย",
+       "sql": "VARCHAR(10)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "no",
+        "yes"
+       ]
+      },
+      {
+       "name": "edit_opp",
+       "label": "สิทธิแก้ไข Opportunity",
+       "sql": "VARCHAR(10)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "no",
+        "yes"
+       ]
+      },
+      {
+       "name": "add_cac",
+       "label": "สิทธิสร้าง CAC",
+       "sql": "VARCHAR(10)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "no",
+        "yes"
+       ]
+      },
+      {
+       "name": "add_task",
+       "label": "สิทธิสร้าง Task",
+       "sql": "VARCHAR(10)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "no",
+        "yes"
+       ]
+      },
+      {
+       "name": "add_appointment",
+       "label": "สิทธิสร้างนัดหมาย",
+       "sql": "VARCHAR(10)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "no",
+        "yes"
+       ]
+      },
+      {
+       "name": "view_chat",
+       "label": "สิทธิการเห็น Chat",
+       "sql": "VARCHAR(10)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "no",
+        "yes"
+       ]
+      },
+      {
+       "name": "answer_chat",
+       "label": "สิทธิการตอบ Chat",
+       "sql": "VARCHAR(10)",
+       "required": false,
+       "ref": null,
+       "options": [
+        "no",
+        "yes"
+       ]
+      }
+     ]
+    },
+    {
+     "name": "opportunityconfigsharinggroupitem",
+     "physicalName": "con_master_opportunityconfigsharinggroupitem",
+     "parentColumn": "opportunityconfigid",
+     "columns": [
+      {
+       "name": "activityid",
+       "label": "ขั้นตอน",
+       "sql": "BIGINT",
+       "required": false,
+       "ref": "activity",
+       "options": null
+      },
+      {
+       "name": "sharinggroupid",
+       "label": "Sharing Group",
+       "sql": "BIGINT",
+       "required": false,
+       "ref": "oppsharinggroup",
+       "options": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "waitlisttype",
+   "label": "ประเภท Waitlist",
+   "physicalName": "con_master_waitlisttype",
+   "scope": "ENT",
+   "level": "E",
+   "homeStep": "waitlist",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสประเภท Waitlist",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อประเภท Waitlist",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "รายละเอียด",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "waitlistsharinggroup",
+   "label": "กลุ่มแชร์ Waitlist",
+   "physicalName": "con_master_waitlistsharinggroup",
+   "scope": "ENT",
+   "level": "E",
+   "homeStep": "waitlist",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัส Waitlist Sharing Group",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อ Waitlist Sharing Group",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "รายละเอียด",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": [
+    {
+     "name": "waitlistsharinggrouppositionitem",
+     "physicalName": "con_master_waitlistsharinggrouppositionitem",
+     "parentColumn": "waitlistsharinggroupid",
+     "columns": [
+      {
+       "name": "positionid",
+       "label": "ตำแหน่ง",
+       "sql": "BIGINT",
+       "required": false,
+       "ref": "position",
+       "options": null
+      }
+     ]
+    },
+    {
+     "name": "waitlistsharinggroupemployeeitem",
+     "physicalName": "con_master_waitlistsharinggroupemployeeitem",
+     "parentColumn": "waitlistsharinggroupid",
+     "columns": [
+      {
+       "name": "employeeid",
+       "label": "พนักงาน",
+       "sql": "BIGINT",
+       "required": false,
+       "ref": "employee",
+       "options": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "waitlist",
+   "label": "Waitlist",
+   "physicalName": "con_master_waitlist",
+   "scope": "ENT",
+   "level": "E",
+   "homeStep": "waitlist",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัส Waitlist",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อ Waitlist",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "waitlisttypeid",
+     "label": "ประเภท waitlist",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "waitlisttype",
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "รายละเอียด",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": [
+    {
+     "name": "waitlistoppsharinggroupitem",
+     "physicalName": "con_master_waitlistoppsharinggroupitem",
+     "parentColumn": "waitlistid",
+     "columns": [
+      {
+       "name": "opp_sharing_groupid",
+       "label": "OPP Sharing Group",
+       "sql": "BIGINT",
+       "required": false,
+       "ref": "oppsharinggroup",
+       "options": null
+      }
+     ]
+    },
+    {
+     "name": "waitlistwaitsharinggroupitem",
+     "physicalName": "con_master_waitlistwaitsharinggroupitem",
+     "parentColumn": "waitlistid",
+     "columns": [
+      {
+       "name": "waitlist_sharing_groupid",
+       "label": "Waitlist Sharing Group",
+       "sql": "BIGINT",
+       "required": false,
+       "ref": "waitlistsharinggroup",
+       "options": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "leadstatus",
+   "label": "สถานะ Lead",
+   "physicalName": "con_master_leadstatus",
+   "scope": "ENT",
+   "level": "E",
+   "homeStep": "leadstatus",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสสถานะlead",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อสถานะlead",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "รายละเอียด",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "is_convert",
+     "label": "สถานะสำหรับ convert เป็น prospect",
+     "sql": "VARCHAR(10)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "no",
+      "yes"
+     ]
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "customergroup",
+   "label": "กลุ่มลูกค้า",
+   "physicalName": "con_master_customergroup",
+   "scope": "ENT",
+   "level": "E",
+   "homeStep": "customergroup",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสกลุ่มลูกค้า",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อกลุ่มลูกค้า",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "คำอธิบาย",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "customertypeid",
+     "label": "ประเภทลูกค้า",
+     "sql": "BIGINT",
+     "required": true,
+     "ref": "customertype",
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "marketinggroup",
+   "label": "กลุ่มการตลาด",
+   "physicalName": "con_master_marketinggroup",
+   "scope": "ENT",
+   "level": "U",
+   "homeStep": "marketing",
+   "columns": [
+    {
+     "name": "code",
+     "label": "กลุ่มการตลาด",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อกลุ่มการตลาด",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "short_name",
+     "label": "ชื่อย่อ",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "description",
+     "label": "รายละเอียด",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "marketingchanel",
+   "label": "ช่องทางการตลาด",
+   "physicalName": "con_master_marketingchanel",
+   "scope": "ENT",
+   "level": "U",
+   "homeStep": "marketing",
+   "columns": [
+    {
+     "name": "code",
+     "label": "ช่องทางการตลาด",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อช่องทางการตลาด",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "short_name",
+     "label": "ชื่อย่อ",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "marketinggroupid",
+     "label": "กลุ่มการตลาด",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "marketinggroup",
+     "options": null
+    },
+    {
+     "name": "description",
+     "label": "รายละเอียด",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "occupation",
+   "label": "อาชีพ",
+   "physicalName": "con_master_occupation",
+   "scope": "ENT",
+   "level": "U",
+   "homeStep": "custlists",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสอาชีพ",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่ออาชีพ",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name_en",
+     "label": "ชื่ออาชีพ EN",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "คำอธิบาย",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name_l3",
+     "label": "ชื่ออาชีพ L3",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name_l4",
+     "label": "ชื่ออาชีพ L4",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "tag",
+   "label": "Tag",
+   "physicalName": "con_master_tag",
+   "scope": "ENT",
+   "level": "U",
+   "homeStep": "custlists",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัส Tag",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อ Tag",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "color_code",
+     "label": "รหัสสี",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "คำอธิบาย",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "dataattributeroleconfig",
+   "label": "ฟิลด์ข้อมูลส่วนบุคคล",
+   "physicalName": "con_master_dataattributeroleconfig",
+   "scope": "ENT",
+   "level": "E",
+   "homeStep": "pdpa",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัส",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อ",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "รายละเอียด",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "table_name",
+     "label": "ชื่อ Master",
+     "sql": "VARCHAR(255)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": [
+    {
+     "name": "dataattributeroleconfigpdpaitem",
+     "physicalName": "con_master_dataattributeroleconfigpdpaitem",
+     "parentColumn": "dataattributeroleconfigid",
+     "columns": [
+      {
+       "name": "fieldname",
+       "label": "ชื่อ field",
+       "sql": "VARCHAR(1000)",
+       "required": false,
+       "ref": null,
+       "options": null
+      }
+     ]
+    },
+    {
+     "name": "dataattributeroleconfigcriticalitem",
+     "physicalName": "con_master_dataattributeroleconfigcriticalitem",
+     "parentColumn": "dataattributeroleconfigid",
+     "columns": [
+      {
+       "name": "fieldname",
+       "label": "ชื่อ field",
+       "sql": "VARCHAR(1000)",
+       "required": false,
+       "ref": null,
+       "options": null
+      }
+     ]
+    },
+    {
+     "name": "dataattributeroleconfigfinancialitem",
+     "physicalName": "con_master_dataattributeroleconfigfinancialitem",
+     "parentColumn": "dataattributeroleconfigid",
+     "columns": [
+      {
+       "name": "fieldname",
+       "label": "ชื่อ field",
+       "sql": "VARCHAR(1000)",
+       "required": false,
+       "ref": null,
+       "options": null
+      }
+     ]
+    },
+    {
+     "name": "dataattributeroleconfigstrategicitem",
+     "physicalName": "con_master_dataattributeroleconfigstrategicitem",
+     "parentColumn": "dataattributeroleconfigid",
+     "columns": [
+      {
+       "name": "fieldname",
+       "label": "ชื่อ field",
+       "sql": "VARCHAR(1000)",
+       "required": false,
+       "ref": null,
+       "options": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "country",
+   "label": "ประเทศ",
+   "physicalName": "con_master_country",
+   "scope": "SYS",
+   "level": "U",
+   "homeStep": "address",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสประเทศ",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อประเทศ",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "name_th",
+     "label": "ชื่อประเทศ (TH)",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name_l3",
+     "label": "ชื่อประเทศ (L3)",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name_l4",
+     "label": "ชื่อประเทศ (L4)",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "phonecountry_code",
+     "label": "รหัสเบอร์ประเทศ",
+     "sql": "VARCHAR(15)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "phonenumber_format",
+     "label": "รูปแบบเบอร์ประเทศ",
+     "sql": "VARCHAR(15)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "province",
+   "label": "จังหวัด",
+   "physicalName": "con_master_province",
+   "scope": "SYS",
+   "level": "U",
+   "homeStep": "address",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสจังหวัด",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อจังหวัด",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "name_en",
+     "label": "ชื่อจังหวัด (EN)",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name_l3",
+     "label": "ชื่อจังหวัด (L3)",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name_l4",
+     "label": "ชื่อจังหวัด (L4)",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "district",
+   "label": "อำเภอ",
+   "physicalName": "con_master_district",
+   "scope": "SYS",
+   "level": "U",
+   "homeStep": "address",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสอำเภอ",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่ออำเภอ",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "ms_province_id",
+     "label": "จังหวัด",
+     "sql": "BIGINT",
+     "required": true,
+     "ref": "province",
+     "options": null
+    },
+    {
+     "name": "name_en",
+     "label": "ชื่ออำเภอ (EN)",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name_l3",
+     "label": "ชื่ออำเภอ (L3)",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name_l4",
+     "label": "ชื่ออำเภอ (L4)",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "subdistrict",
+   "label": "ตำบล",
+   "physicalName": "con_master_subdistrict",
+   "scope": "SYS",
+   "level": "U",
+   "homeStep": "address",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสตำบล",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อตำบล",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "ms_district_id",
+     "label": "อำเภอ",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "district",
+     "options": null
+    },
+    {
+     "name": "post_code",
+     "label": "รหัสไปรษณีย์",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name_en",
+     "label": "ชื่อตำบล (EN)",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name_l3",
+     "label": "ชื่อตำบล (L3)",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name_l4",
+     "label": "ชื่อตำบล (L4)",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "currency",
+   "label": "สกุลเงิน",
+   "physicalName": "con_master_currency",
+   "scope": "ENT",
+   "level": "U",
+   "homeStep": "currency",
+   "columns": [
+    {
+     "name": "code",
+     "label": "ชื่อย่อสกุลเงิน",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อสกุลเงิน",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "รายละเอียด",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "exchangerate",
+   "label": "อัตราแลกเปลี่ยน",
+   "physicalName": "con_master_exchangerate",
+   "scope": "ENT",
+   "level": "U",
+   "homeStep": "currency",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสการแลกเปลี่ยน",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อการแลกเปลี่ยน",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "currencyid",
+     "label": "สกุลเงิน",
+     "sql": "BIGINT",
+     "required": true,
+     "ref": "currency",
+     "options": null
+    },
+    {
+     "name": "exchangerate",
+     "label": "อัตราแลกเปลี่ยน",
+     "sql": "NUMERIC(11,2)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "description",
+     "label": "รายละเอียด",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "valid_from",
+     "label": "ใช้ได้ตั้งแต่",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "fiscalyears",
+   "label": "ปีบัญชี",
+   "physicalName": "con_master_fiscalyears",
+   "scope": "ENT",
+   "level": "E",
+   "homeStep": "fiscalyears",
+   "columns": [
+    {
+     "name": "code",
+     "label": "ปีภาษี",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "รายละเอียด",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "effectivedate",
+     "label": "วันที่เริ่มใช้",
+     "sql": "DATE",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "yearvalue",
+     "label": "ปี",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "bankbook",
+   "label": "บัญชีธนาคาร",
+   "physicalName": "con_master_bankbook",
+   "scope": "ENT",
+   "level": "U",
+   "homeStep": "payment",
+   "columns": [
+    {
+     "name": "code",
+     "label": "เลขที่บัญชี",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อบัญชี TH",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name_en",
+     "label": "ชื่อบัญชี EN",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "bankbranch",
+     "label": "สาขา",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "booktype",
+     "label": "ประเภทบัญชี",
+     "sql": "VARCHAR(10)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "Saving",
+      "Checking",
+      "Fixed"
+     ]
+    },
+    {
+     "name": "opendate",
+     "label": "วันที่เปิดบัญชี",
+     "sql": "DATE",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "description",
+     "label": "คำอธิบาย",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "is_online",
+     "label": "Online",
+     "sql": "CHAR(1)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "Y",
+      "N"
+     ]
+    },
+    {
+     "name": "is_qr",
+     "label": "QR",
+     "sql": "CHAR(1)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "Y",
+      "N"
+     ]
+    },
+    {
+     "name": "is_transfer",
+     "label": "Transfer",
+     "sql": "CHAR(1)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "Y",
+      "N"
+     ]
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "paymentmethod",
+   "label": "วิธีจ่ายเงิน",
+   "physicalName": "con_master_paymentmethod",
+   "scope": "ENT",
+   "level": "E",
+   "homeStep": "payment",
+   "columns": [
+    {
+     "name": "code",
+     "label": "วิธีการชำระเงิน",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "คำอธิบาย",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "รายละเอียด",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "show_in_statement",
+     "label": "แสดงใน Bank STMT",
+     "sql": "CHAR(1)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "N",
+      "Y"
+     ]
+    },
+    {
+     "name": "bankbookid",
+     "label": "บัญชีธนาคาร",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "bankbook",
+     "options": null
+    },
+    {
+     "name": "is_check",
+     "label": "รับเป็นเช็ค",
+     "sql": "CHAR(1)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "N",
+      "Y"
+     ]
+    },
+    {
+     "name": "is_transfer",
+     "label": "รับด้วยเงินโอน",
+     "sql": "CHAR(1)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "N",
+      "Y"
+     ]
+    },
+    {
+     "name": "is_creditcard",
+     "label": "รับเป็นบัตรเครดิต",
+     "sql": "CHAR(1)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "N",
+      "Y"
+     ]
+    },
+    {
+     "name": "is_cash",
+     "label": "รับเงินเงินสด",
+     "sql": "CHAR(1)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "N",
+      "Y"
+     ]
+    },
+    {
+     "name": "is_voucher",
+     "label": "รับเป็นบัตรกำนัล",
+     "sql": "CHAR(1)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "N",
+      "Y"
+     ]
+    },
+    {
+     "name": "is_gl",
+     "label": "รับด้วยบัญชีพัก",
+     "sql": "CHAR(1)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "N",
+      "Y"
+     ]
+    },
+    {
+     "name": "is_thirdparty",
+     "label": "Third party รับเงินแทน",
+     "sql": "CHAR(1)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "N",
+      "Y"
+     ]
+    },
+    {
+     "name": "thirdpartyid",
+     "label": "Thid party",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "businesspartner",
+     "options": null
+    },
+    {
+     "name": "is_billpayment",
+     "label": "รับโดย bill payment",
+     "sql": "CHAR(1)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "N",
+      "Y"
+     ]
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "receivemethod",
+   "label": "วิธีรับเงิน",
+   "physicalName": "con_master_receivemethod",
+   "scope": "ENT",
+   "level": "E",
+   "homeStep": "payment",
+   "columns": [
+    {
+     "name": "code",
+     "label": "วิธีการชำระเงิน",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "คำอธิบาย",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "รายละเอียด",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "show_in_statement",
+     "label": "แสดงใน Bank STMT",
+     "sql": "CHAR(1)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "N",
+      "Y"
+     ]
+    },
+    {
+     "name": "bankbookid",
+     "label": "บัญชีธนาคาร",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "bankbook",
+     "options": null
+    },
+    {
+     "name": "is_check",
+     "label": "รับเป็นเช็ค",
+     "sql": "CHAR(1)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "N",
+      "Y"
+     ]
+    },
+    {
+     "name": "is_transfer",
+     "label": "รับด้วยเงินโอน",
+     "sql": "CHAR(1)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "N",
+      "Y"
+     ]
+    },
+    {
+     "name": "is_creditcard",
+     "label": "รับเป็นบัตรเครดิต",
+     "sql": "CHAR(1)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "N",
+      "Y"
+     ]
+    },
+    {
+     "name": "is_cash",
+     "label": "รับเงินเงินสด",
+     "sql": "CHAR(1)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "N",
+      "Y"
+     ]
+    },
+    {
+     "name": "is_voucher",
+     "label": "รับเป็นบัตรกำนัล",
+     "sql": "CHAR(1)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "N",
+      "Y"
+     ]
+    },
+    {
+     "name": "is_gl",
+     "label": "รับด้วยบัญชีพัก",
+     "sql": "CHAR(1)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "N",
+      "Y"
+     ]
+    },
+    {
+     "name": "is_thirdparty",
+     "label": "Third party รับเงินแทน",
+     "sql": "CHAR(1)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "N",
+      "Y"
+     ]
+    },
+    {
+     "name": "thirdpartyid",
+     "label": "Thid party",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "businesspartner",
+     "options": null
+    },
+    {
+     "name": "is_billpayment",
+     "label": "รับโดย bill payment",
+     "sql": "CHAR(1)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "N",
+      "Y"
+     ]
+    },
+    {
+     "name": "name_en",
+     "label": "คำอธิบาย (EN)",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name_l3",
+     "label": "คำอธิบาย (L3)",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name_l4",
+     "label": "คำอธิบาย (L4)",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "unitofmeasure",
+   "label": "หน่วยนับ",
+   "physicalName": "con_master_unitofmeasure",
+   "scope": "ENT",
+   "level": "U",
+   "homeStep": "product",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสหน่วยนับ",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อหน่วยนับ",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "คำอธิบาย",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "dimension",
+     "label": "ชนิดหน่วยนับ",
+     "sql": "VARCHAR(10)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "QUANTITY",
+      "WEIGHT",
+      "LENGTH",
+      "SIZE",
+      "VOLUME",
+      "AREA",
+      "CAPACITY",
+      "TIME",
+      "OTHER"
+     ]
+    },
+    {
+     "name": "name_en",
+     "label": "ชื่อหน่วยนับ (EN)",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name_l3",
+     "label": "ชื่อหน่วยนับ (L3)",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name_l4",
+     "label": "ชื่อหน่วยนับ (L4)",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "materialgroup",
+   "label": "กลุ่มสินค้า",
+   "physicalName": "con_master_materialgroup",
+   "scope": "ENT",
+   "level": "U",
+   "homeStep": "product",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสกลุ่มสินค้า",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อกลุ่มสินค้า",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "รายละเอียด",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "vat_rate",
+     "label": "อัตราภาษีมูลค่าเพิ่ม",
+     "sql": "NUMERIC(11,2)",
+     "required": true,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "material",
+   "label": "สินค้า",
+   "physicalName": "con_master_material",
+   "scope": "ENT",
+   "level": "U",
+   "homeStep": "product",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสสินค้า",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อสินค้า",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "รายละเอียด",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "barcode",
+     "label": "บาร์โค้ด",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "materialgroupid",
+     "label": "กลุ่มสินค้า",
+     "sql": "BIGINT",
+     "required": true,
+     "ref": "materialgroup",
+     "options": null
+    },
+    {
+     "name": "baseunitid",
+     "label": "หน่วยนับหลัก",
+     "sql": "BIGINT",
+     "required": true,
+     "ref": "unitofmeasure",
+     "options": null
+    },
+    {
+     "name": "material_image",
+     "label": "รูปภาพประกอบ",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "weight",
+     "label": "น้ำหนัก",
+     "sql": "NUMERIC(11,2)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "weightunitid",
+     "label": "หน่วยนับน้ำหนัก",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "unitofmeasure",
+     "options": null
+    },
+    {
+     "name": "do_stock",
+     "label": "บันทึก Stock",
+     "sql": "CHAR(1)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "Y",
+      "N"
+     ]
+    },
+    {
+     "name": "do_batch",
+     "label": "ใช้ BatchNumber",
+     "sql": "CHAR(1)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "Y",
+      "N"
+     ]
+    },
+    {
+     "name": "name_en",
+     "label": "ชื่อสินค้าภาษาอังกฤษ",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "description_en",
+     "label": "รายละเอียดภาษาอังกฤษ",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "do_serial",
+     "label": "ใช้ SerialNumber",
+     "sql": "CHAR(1)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "Y",
+      "N"
+     ]
+    },
+    {
+     "name": "name_l3",
+     "label": "ชื่อสินค้า (L3)",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name_l4",
+     "label": "ชื่อสินค้า (L4)",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "product_condition",
+     "label": "สภาพสินค้า",
+     "sql": "VARCHAR(10)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "new",
+      "used"
+     ]
+    },
+    {
+     "name": "standard_purchase_price",
+     "label": "ราคาซื้อมาตรฐาน (ก่อน vat)",
+     "sql": "NUMERIC(11,2)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "standard_sale_price",
+     "label": "ราคาขายมาตรฐาน",
+     "sql": "NUMERIC(11,2)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": [
+    {
+     "name": "materialpictureitem",
+     "physicalName": "con_master_materialpictureitem",
+     "parentColumn": "materialid",
+     "columns": [
+      {
+       "name": "upload",
+       "label": "รูปภาพประกอบ",
+       "sql": "VARCHAR(100)",
+       "required": false,
+       "ref": null,
+       "options": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "vendorgroup",
+   "label": "กลุ่มผู้ขาย",
+   "physicalName": "con_master_vendorgroup",
+   "scope": "ENT",
+   "level": "E",
+   "homeStep": "partner",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสผู้ขาย",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อกลุ่มผู้ขาย",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "คำอธิบาย",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "vendortypeid",
+     "label": "ประเภทผู้ขาย",
+     "sql": "BIGINT",
+     "required": true,
+     "ref": "vendortype",
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "businesspartner",
+   "label": "คู่ค้า",
+   "physicalName": "con_master_businesspartner",
+   "scope": "ENT",
+   "level": "U",
+   "homeStep": "partner",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสลูกค้า",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อลูกค้า",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "reportname",
+     "label": "ชื่อในรายงาน",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "taxid",
+     "label": "เลขประจำตัวผู้เสียภาษีอากร",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "phone",
+     "label": "เบอร์โทรศัพท์",
+     "sql": "VARCHAR(15)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "mobile",
+     "label": "เบอร์โทรศัพท์มือถือ",
+     "sql": "VARCHAR(15)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "fax",
+     "label": "แฟกซ์",
+     "sql": "VARCHAR(15)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "email",
+     "label": "email",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "address",
+     "label": "ที่อยู่",
+     "sql": "VARCHAR(1000)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "zipcode",
+     "label": "รหัสไปรษณีย์",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "city",
+     "label": "จังหวัด",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "country",
+     "label": "ประเทศ",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "branchno",
+     "label": "ลำดับที่สาขา",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "branchname",
+     "label": "ชื่อสาขา",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "iscustomer",
+     "label": "ลูกค้า",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "isvendor",
+     "label": "ผู้ขาย",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "is_vatregistration",
+     "label": "จดทะเบียนภาษีมูลค่าเพิ่ม",
+     "sql": "NUMERIC(11,2)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "is_matchorder",
+     "label": "Matchorder",
+     "sql": "CHAR(1)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "N",
+      "Y"
+     ]
+    },
+    {
+     "name": "customergroupid",
+     "label": "กลุ่มลูกค้า",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "customergroup",
+     "options": null
+    },
+    {
+     "name": "vendorgroupid",
+     "label": "กลุ่มผู้ขาย",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "vendorgroup",
+     "options": null
+    },
+    {
+     "name": "registertype",
+     "label": "ประเภทการสมัคร",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "creditterm",
+     "label": "เครดิตเทอม",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "businesspartner_erp",
+     "label": "ข้อมูลคู่ค้า(ERP)",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": [
+    {
+     "name": "businesspartnercustomercontactitem",
+     "physicalName": "con_master_businesspartnercustomercontactitem",
+     "parentColumn": "businesspartnerid",
+     "columns": [
+      {
+       "name": "contactname",
+       "label": "ชื่อผู้ติดต่อ",
+       "sql": "VARCHAR(100)",
+       "required": false,
+       "ref": null,
+       "options": null
+      },
+      {
+       "name": "position",
+       "label": "ตำแหน่ง",
+       "sql": "VARCHAR(100)",
+       "required": false,
+       "ref": null,
+       "options": null
+      },
+      {
+       "name": "tel",
+       "label": "เบอร์โทรศัพท์",
+       "sql": "VARCHAR(15)",
+       "required": false,
+       "ref": null,
+       "options": null
+      },
+      {
+       "name": "mobile",
+       "label": "มือถือ",
+       "sql": "VARCHAR(15)",
+       "required": false,
+       "ref": null,
+       "options": null
+      },
+      {
+       "name": "fax",
+       "label": "เบอร์แฟกซ์",
+       "sql": "VARCHAR(15)",
+       "required": false,
+       "ref": null,
+       "options": null
+      },
+      {
+       "name": "working_hours",
+       "label": "เวลาทำงาน",
+       "sql": "VARCHAR(100)",
+       "required": false,
+       "ref": null,
+       "options": null
+      },
+      {
+       "name": "email",
+       "label": "อีเมล์",
+       "sql": "VARCHAR(100)",
+       "required": false,
+       "ref": null,
+       "options": null
+      },
+      {
+       "name": "social_network",
+       "label": "Social_Network",
+       "sql": "VARCHAR(100)",
+       "required": false,
+       "ref": null,
+       "options": null
+      },
+      {
+       "name": "address",
+       "label": "ที่อยู่",
+       "sql": "VARCHAR(1000)",
+       "required": false,
+       "ref": null,
+       "options": null
+      },
+      {
+       "name": "city",
+       "label": "จังหวัด",
+       "sql": "VARCHAR(100)",
+       "required": false,
+       "ref": null,
+       "options": null
+      },
+      {
+       "name": "zipcode",
+       "label": "รหัสไปรษณีย์",
+       "sql": "VARCHAR(100)",
+       "required": false,
+       "ref": null,
+       "options": null
+      },
+      {
+       "name": "country",
+       "label": "ประเทศ",
+       "sql": "VARCHAR(100)",
+       "required": false,
+       "ref": null,
+       "options": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "promotion",
+   "label": "โปรโมชั่น",
+   "physicalName": "con_master_promotion",
+   "scope": "ENT",
+   "level": "U",
+   "homeStep": "coupon",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัส Promotion",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อ Promotion",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "version",
+     "label": "Version",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "active",
+     "label": "Active",
+     "sql": "CHAR(1)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "Y",
+      "N"
+     ]
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "coupon",
+   "label": "คูปอง",
+   "physicalName": "con_master_coupon",
+   "scope": "ENT",
+   "level": "U",
+   "homeStep": "coupon",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัส Coupon",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อ Coupon",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name_en",
+     "label": "ชื่อ Coupon (EN)",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "description",
+     "label": "รายละเอียด Coupon",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "description_en",
+     "label": "รายละเอียด Coupon (EN)",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "branchid",
+     "label": "สาขา",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "branch",
+     "options": null
+    },
+    {
+     "name": "redeempoint",
+     "label": "จำนวน point ที่ใช้แลก",
+     "sql": "INTEGER",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "couponamount",
+     "label": "มูลค่าของคูปอง",
+     "sql": "NUMERIC(11,2)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "material_image",
+     "label": "รูปภาพ",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "limited",
+     "label": "จำกัดจำนวน",
+     "sql": "CHAR(1)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "Y",
+      "N"
+     ]
+    },
+    {
+     "name": "quantity",
+     "label": "จำนวนคูปอง",
+     "sql": "INTEGER",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "block_remark",
+     "label": "เหตุผลการบล็อค",
+     "sql": "VARCHAR(1000)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "campaign_display_toggle",
+     "label": "แสดงผลในหน้าแคมเปญ",
+     "sql": "BOOLEAN",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "couponcompanyid",
+     "label": "คูปองของร้าน",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "businesspartner",
+     "options": null
+    },
+    {
+     "name": "coupontypeid",
+     "label": "ประเภทคูปอง",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "coupontype",
+     "options": null
+    },
+    {
+     "name": "promotionid",
+     "label": "โปรโมชั่น",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "promotion",
+     "options": null
+    },
+    {
+     "name": "have_valid_to",
+     "label": "ระบุวันสิ้นสุดใช้งาน",
+     "sql": "CHAR(1)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "Y",
+      "N"
+     ]
+    },
+    {
+     "name": "validfrom",
+     "label": "วันที่เริ่มใช้",
+     "sql": "DATE",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "expired_date",
+     "label": "วันที่หมดอายุ",
+     "sql": "DATE",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "lottery_date",
+     "label": "วันที่จับฉลาก",
+     "sql": "DATE",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "announcement_date",
+     "label": "วันที่ประกาศผล",
+     "sql": "DATE",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "announcement_link",
+     "label": "ช่องทางประกาศผล",
+     "sql": "VARCHAR(255)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "payment_method",
+     "label": "วิธีชำระเงิน",
+     "sql": "VARCHAR(10)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "cash",
+      "creditcard"
+     ]
+    },
+    {
+     "name": "redemption_condition",
+     "label": "เงื่อนไขการแลก",
+     "sql": "VARCHAR(1000)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "redemption_condition_en",
+     "label": "เงื่อนไขการแลก (EN)",
+     "sql": "VARCHAR(1000)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "limit_per_member",
+     "label": "จำนวนการแลกต่อสมาชิก",
+     "sql": "INTEGER",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "application_type",
+     "label": "ประเภทการแสดงคูปอง",
+     "sql": "CHAR(1)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "A",
+      "C",
+      "P"
+     ]
+    }
+   ],
+   "items": [
+    {
+     "name": "couponmembertypeitem",
+     "physicalName": "con_master_couponmembertypeitem",
+     "parentColumn": "couponid",
+     "columns": [
+      {
+       "name": "membertypeid",
+       "label": "ประเภทสมาชิก",
+       "sql": "BIGINT",
+       "required": false,
+       "ref": "membertype",
+       "options": null
+      },
+      {
+       "name": "description",
+       "label": "คำอธิบาย",
+       "sql": "VARCHAR(500)",
+       "required": false,
+       "ref": null,
+       "options": null
+      }
+     ]
+    },
+    {
+     "name": "couponcustomertypeitem",
+     "physicalName": "con_master_couponcustomertypeitem",
+     "parentColumn": "couponid",
+     "columns": [
+      {
+       "name": "customertypeid",
+       "label": "ประเภทลูกค้า",
+       "sql": "BIGINT",
+       "required": false,
+       "ref": "customertype",
+       "options": null
+      },
+      {
+       "name": "description",
+       "label": "คำอธิบาย",
+       "sql": "VARCHAR(500)",
+       "required": false,
+       "ref": null,
+       "options": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "calendar",
+   "label": "ปฏิทิน",
+   "physicalName": "con_master_calendar",
+   "scope": "ENT",
+   "level": "U",
+   "homeStep": "calendar",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัส Calender",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อ Calender",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "calendartypeid",
+     "label": "ประเภท Calender",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "calendartype",
+     "options": null
+    },
+    {
+     "name": "employeeid",
+     "label": "ชื่อพนักงาน",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "employee",
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "คำอธิบาย",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": [
+    {
+     "name": "calendarsharedtoitem",
+     "physicalName": "con_master_calendarsharedtoitem",
+     "parentColumn": "calendarid",
+     "columns": [
+      {
+       "name": "employeeid",
+       "label": "ชื่อพนักงาน",
+       "sql": "BIGINT",
+       "required": false,
+       "ref": "employee",
+       "options": null
+      },
+      {
+       "name": "positionid",
+       "label": "ตำแหน่งงาน",
+       "sql": "BIGINT",
+       "required": false,
+       "ref": "position",
+       "options": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "kpiunit",
+   "label": "หน่วยวัด",
+   "physicalName": "con_master_kpiunit",
+   "scope": "ENT",
+   "level": "K",
+   "homeStep": "kpi",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัส Kpi",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อ Kpi",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "คำอธิบาย",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "kpitasktype",
+   "label": "ประเภทงาน KPI",
+   "physicalName": "con_master_kpitasktype",
+   "scope": "ENT",
+   "level": "K",
+   "homeStep": "kpi",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสประเภทงาน",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อประเภทงาน",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "tasktype",
+     "label": "ชนิดของงาน",
+     "sql": "VARCHAR(20)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "record",
+      "tracking",
+      "recordkpi",
+      "trackingsetdate"
+     ]
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "คำอธิบาย",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "kpilevel",
+   "label": "ระดับ KPI",
+   "physicalName": "con_master_kpilevel",
+   "scope": "ENT",
+   "level": "K",
+   "homeStep": "kpi",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัส Level",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อ Level",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "sla",
+     "label": "กำหนดระยะเวลา",
+     "sql": "INTEGER",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "kpi_unitid",
+     "label": "หน่วยวัด KPI",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "kpiunit",
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "รายละเอียด",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "kpiproduct",
+   "label": "สินค้า KPI",
+   "physicalName": "con_master_kpiproduct",
+   "scope": "ENT",
+   "level": "K",
+   "homeStep": "kpi",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสสินค้า",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อสินค้า",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "คำอธิบาย",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": [
+    {
+     "name": "kpiproductlevelitem",
+     "physicalName": "con_master_kpiproductlevelitem",
+     "parentColumn": "kpiproductid",
+     "columns": [
+      {
+       "name": "kpilevelid",
+       "label": "อ้างอิง kpilevel",
+       "sql": "BIGINT",
+       "required": false,
+       "ref": "kpilevel",
+       "options": null
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "key": "kpicontact",
+   "label": "ช่องทาง KPI",
+   "physicalName": "con_master_kpicontact",
+   "scope": "ENT",
+   "level": "K",
+   "homeStep": "kpi",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัส Contact",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อ Contact",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "รายละเอียด",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "kpipillar",
+   "label": "เสา KPI",
+   "physicalName": "con_master_kpipillar",
+   "scope": "ENT",
+   "level": "K",
+   "homeStep": "kpi",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสเสา",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อเสา",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "รายละเอียด",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "kpitask",
+   "label": "KPI",
+   "physicalName": "con_master_kpitask",
+   "scope": "ENT",
+   "level": "K",
+   "homeStep": "kpi",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัส Kpi",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อ Kpi",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "target_detail",
+     "label": "เป้าหมาย",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "target_operator",
+     "label": "ตัวดำเนินการเปรียบเทียบ",
+     "sql": "VARCHAR(20)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "equalto",
+      "notequalto",
+      "greaterthan",
+      "lessthan",
+      "greaterthanorequalto",
+      "lessthanorequalto",
+      "between"
+     ]
+    },
+    {
+     "name": "target_value",
+     "label": "ค่าข้อมูลเป้าหมาย",
+     "sql": "VARCHAR(100)",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "kpi_unitid",
+     "label": "หน่วยวัด KPI",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "kpiunit",
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "คำอธิบาย",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": []
+  },
+  {
+   "key": "kpipillartask",
+   "label": "หัวข้องาน KPI",
+   "physicalName": "con_master_kpipillartask",
+   "scope": "ENT",
+   "level": "K",
+   "homeStep": "kpi",
+   "columns": [
+    {
+     "name": "code",
+     "label": "รหัสหัวข้องาน",
+     "sql": "VARCHAR(20)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "name",
+     "label": "ชื่อหัวข้องาน",
+     "sql": "VARCHAR(100)",
+     "required": true,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "owner",
+     "label": "คนที่รับผิดชอบ",
+     "sql": "VARCHAR(30)",
+     "required": false,
+     "ref": null,
+     "options": [
+      "trader",
+      "marketing",
+      "bd",
+      "compliant",
+      "national_growth_team",
+      "cxat",
+      "product_owner_team",
+      "industry_standard_team",
+      "brand_reputation_team",
+      "account_performance_team"
+     ]
+    },
+    {
+     "name": "kpitasktypeid",
+     "label": "ประเภทงาน",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "kpitasktype",
+     "options": null
+    },
+    {
+     "name": "completion_date",
+     "label": "วันที่กำหนดเสร็จ",
+     "sql": "DATE",
+     "required": false,
+     "ref": null,
+     "options": null
+    },
+    {
+     "name": "pillarid",
+     "label": "เสา",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "kpipillar",
+     "options": null
+    },
+    {
+     "name": "productid",
+     "label": "ผลิตภัณฑ์",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "kpiproduct",
+     "options": null
+    },
+    {
+     "name": "levelid",
+     "label": "ความสำคัญ",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "kpilevel",
+     "options": null
+    },
+    {
+     "name": "contact_channelid",
+     "label": "ช่องทางการสื่อสาร",
+     "sql": "BIGINT",
+     "required": false,
+     "ref": "kpicontact",
+     "options": null
+    },
+    {
+     "name": "usagestatus",
+     "label": "สถานะการใช้งาน",
+     "sql": "VARCHAR(10)",
+     "required": true,
+     "ref": null,
+     "options": [
+      "release",
+      "draft",
+      "block"
+     ]
+    },
+    {
+     "name": "description",
+     "label": "คำอธิบาย",
+     "sql": "VARCHAR(500)",
+     "required": false,
+     "ref": null,
+     "options": null
+    }
+   ],
+   "items": [
+    {
+     "name": "kpipillartaskkpiitem",
+     "physicalName": "con_master_kpipillartaskkpiitem",
+     "parentColumn": "kpipillartaskid",
+     "columns": [
+      {
+       "name": "kpitaskid",
+       "label": "อ้างอิง kpi",
+       "sql": "BIGINT",
+       "required": false,
+       "ref": "kpitask",
+       "options": null
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "references": [
+  {
+   "holder": "businessentity",
+   "item": null,
+   "col": "entitygroupid",
+   "ref": "entitygroup",
+   "required": true,
+   "owner": "businessentity",
+   "ownerCol": null
+  },
+  {
+   "holder": "businessentity",
+   "item": null,
+   "col": "subdistrictid",
+   "ref": "subdistrict",
+   "required": false,
+   "owner": "businessentity",
+   "ownerCol": null
+  },
+  {
+   "holder": "businessentity",
+   "item": null,
+   "col": "districtid",
+   "ref": "district",
+   "required": false,
+   "owner": "businessentity",
+   "ownerCol": null
+  },
+  {
+   "holder": "businessentity",
+   "item": null,
+   "col": "provinceid",
+   "ref": "province",
+   "required": false,
+   "owner": "businessentity",
+   "ownerCol": null
+  },
+  {
+   "holder": "businessentity",
+   "item": null,
+   "col": "countryid",
+   "ref": "country",
+   "required": false,
+   "owner": "businessentity",
+   "ownerCol": null
+  },
+  {
+   "holder": "businessentity",
+   "item": null,
+   "col": "currencyid",
+   "ref": "currency",
+   "required": false,
+   "owner": "businessentity",
+   "ownerCol": null
+  },
+  {
+   "holder": "contacttype",
+   "item": null,
+   "col": "communicationtypeid",
+   "ref": "communicationtype",
+   "required": true,
+   "owner": "contacttype",
+   "ownerCol": null,
+   "extension": true
+  },
+  {
+   "holder": "attachfiletype",
+   "item": null,
+   "col": "contacttypeid",
+   "ref": "contacttype",
+   "required": true,
+   "owner": "attachfiletype",
+   "ownerCol": null,
+   "extension": true
+  },
+  {
+   "holder": "movementtypesettleruleitem",
+   "item": "movementtypesettleruleitem",
+   "col": "movementtype_settleid",
+   "ref": "movementtype",
+   "required": false,
+   "owner": "movementtype",
+   "ownerCol": "movementtypeid"
+  },
+  {
+   "holder": "customertype",
+   "item": null,
+   "col": "companytypeid",
+   "ref": "companytype",
+   "required": true,
+   "owner": "customertype",
+   "ownerCol": null
+  },
+  {
+   "holder": "positionorganize",
+   "item": null,
+   "col": "subsidiariesid",
+   "ref": "positionorganize",
+   "required": false,
+   "owner": "positionorganize",
+   "ownerCol": null
+  },
+  {
+   "holder": "positionorganizemanpoweritem",
+   "item": "positionorganizemanpoweritem",
+   "col": "positionid",
+   "ref": "position",
+   "required": false,
+   "owner": "positionorganize",
+   "ownerCol": "positionorganizeid"
+  },
+  {
+   "holder": "positionorganizemanpoweritem",
+   "item": "positionorganizemanpoweritem",
+   "col": "subsidairyofid",
+   "ref": "position",
+   "required": false,
+   "owner": "positionorganize",
+   "ownerCol": "positionorganizeid"
+  },
+  {
+   "holder": "position",
+   "item": null,
+   "col": "positionorganizeid",
+   "ref": "positionorganize",
+   "required": false,
+   "owner": "position",
+   "ownerCol": null
+  },
+  {
+   "holder": "position",
+   "item": null,
+   "col": "commander_position1id",
+   "ref": "position",
+   "required": false,
+   "owner": "position",
+   "ownerCol": null
+  },
+  {
+   "holder": "position",
+   "item": null,
+   "col": "commander_position2id",
+   "ref": "position",
+   "required": false,
+   "owner": "position",
+   "ownerCol": null
+  },
+  {
+   "holder": "positionbranchitem",
+   "item": "positionbranchitem",
+   "col": "branchid",
+   "ref": "branch",
+   "required": true,
+   "owner": "position",
+   "ownerCol": "positionid"
+  },
+  {
+   "holder": "positionparentpositionitem",
+   "item": "positionparentpositionitem",
+   "col": "parent_positionid",
+   "ref": "position",
+   "required": false,
+   "owner": "position",
+   "ownerCol": "positionid"
+  },
+  {
+   "holder": "employee",
+   "item": null,
+   "col": "departmentid",
+   "ref": "department",
+   "required": false,
+   "owner": "employee",
+   "ownerCol": null
+  },
+  {
+   "holder": "employee",
+   "item": null,
+   "col": "prefixid",
+   "ref": "prefix",
+   "required": false,
+   "owner": "employee",
+   "ownerCol": null
+  },
+  {
+   "holder": "employee",
+   "item": null,
+   "col": "provinceid",
+   "ref": "province",
+   "required": false,
+   "owner": "employee",
+   "ownerCol": null
+  },
+  {
+   "holder": "employee",
+   "item": null,
+   "col": "districtid",
+   "ref": "district",
+   "required": false,
+   "owner": "employee",
+   "ownerCol": null
+  },
+  {
+   "holder": "employee",
+   "item": null,
+   "col": "subdistrictid",
+   "ref": "subdistrict",
+   "required": false,
+   "owner": "employee",
+   "ownerCol": null
+  },
+  {
+   "holder": "employee",
+   "item": null,
+   "col": "home_provinceid",
+   "ref": "province",
+   "required": false,
+   "owner": "employee",
+   "ownerCol": null
+  },
+  {
+   "holder": "employee",
+   "item": null,
+   "col": "home_districtid",
+   "ref": "district",
+   "required": false,
+   "owner": "employee",
+   "ownerCol": null
+  },
+  {
+   "holder": "employee",
+   "item": null,
+   "col": "home_subdistrictid",
+   "ref": "subdistrict",
+   "required": false,
+   "owner": "employee",
+   "ownerCol": null
+  },
+  {
+   "holder": "employeecoverforitem",
+   "item": "employeecoverforitem",
+   "col": "cover_employeeid",
+   "ref": "employee",
+   "required": false,
+   "owner": "employee",
+   "ownerCol": "employeeid"
+  },
+  {
+   "holder": "employeesubpositionitem",
+   "item": "employeesubpositionitem",
+   "col": "positionid",
+   "ref": "position",
+   "required": false,
+   "owner": "employee",
+   "ownerCol": "employeeid"
+  },
+  {
+   "holder": "employeesystemitem",
+   "item": "employeesystemitem",
+   "col": "systemnameid",
+   "ref": "systemname",
+   "required": true,
+   "owner": "employee",
+   "ownerCol": "employeeid"
+  },
+  {
+   "holder": "employeebranchitem",
+   "item": "employeebranchitem",
+   "col": "ms_branch_id",
+   "ref": "branch",
+   "required": false,
+   "owner": "employee",
+   "ownerCol": "employeeid"
+  },
+  {
+   "holder": "salegroup",
+   "item": null,
+   "col": "branchid",
+   "ref": "branch",
+   "required": false,
+   "owner": "salegroup",
+   "ownerCol": null
+  },
+  {
+   "holder": "saleperson",
+   "item": null,
+   "col": "employeeid",
+   "ref": "employee",
+   "required": true,
+   "owner": "saleperson",
+   "ownerCol": null
+  },
+  {
+   "holder": "salepersonsalegroupitem",
+   "item": "salepersonsalegroupitem",
+   "col": "salegroupid",
+   "ref": "salegroup",
+   "required": true,
+   "owner": "saleperson",
+   "ownerCol": "salepersonid"
+  },
+  {
+   "holder": "activitystatus",
+   "item": null,
+   "col": "departmentid",
+   "ref": "department",
+   "required": false,
+   "owner": "activitystatus",
+   "ownerCol": null
+  },
+  {
+   "holder": "keyactivitytype",
+   "item": null,
+   "col": "kpiid",
+   "ref": "kpiunit",
+   "required": false,
+   "owner": "keyactivitytype",
+   "ownerCol": null
+  },
+  {
+   "holder": "activitygroup",
+   "item": null,
+   "col": "departmentid",
+   "ref": "department",
+   "required": false,
+   "owner": "activitygroup",
+   "ownerCol": null
+  },
+  {
+   "holder": "activitygroup",
+   "item": null,
+   "col": "conditionvalueid",
+   "ref": "activity",
+   "required": false,
+   "owner": "activitygroup",
+   "ownerCol": null
+  },
+  {
+   "holder": "activitygroup",
+   "item": null,
+   "col": "movementtypeid",
+   "ref": "movementtype",
+   "required": false,
+   "owner": "activitygroup",
+   "ownerCol": null
+  },
+  {
+   "holder": "activitygrouppositionitem",
+   "item": "activitygrouppositionitem",
+   "col": "positionid",
+   "ref": "position",
+   "required": false,
+   "owner": "activitygroup",
+   "ownerCol": "activitygroupid"
+  },
+  {
+   "holder": "activity",
+   "item": null,
+   "col": "keyactivitytypeid",
+   "ref": "keyactivitytype",
+   "required": false,
+   "owner": "activity",
+   "ownerCol": null
+  },
+  {
+   "holder": "activity",
+   "item": null,
+   "col": "departmentid",
+   "ref": "department",
+   "required": false,
+   "owner": "activity",
+   "ownerCol": null
+  },
+  {
+   "holder": "activity",
+   "item": null,
+   "col": "activitygroupid",
+   "ref": "activitygroup",
+   "required": false,
+   "owner": "activity",
+   "ownerCol": null
+  },
+  {
+   "holder": "activityconfigconfigitem",
+   "item": "activityconfigconfigitem",
+   "col": "activitygroup_fromid",
+   "ref": "activitygroup",
+   "required": false,
+   "owner": "activityconfig",
+   "ownerCol": "activityconfigid"
+  },
+  {
+   "holder": "activityconfigconfigitem",
+   "item": "activityconfigconfigitem",
+   "col": "activitystep_fromid",
+   "ref": "activity",
+   "required": false,
+   "owner": "activityconfig",
+   "ownerCol": "activityconfigid"
+  },
+  {
+   "holder": "activityconfigconfigitem",
+   "item": "activityconfigconfigitem",
+   "col": "activitygroup_toid",
+   "ref": "activitygroup",
+   "required": false,
+   "owner": "activityconfig",
+   "ownerCol": "activityconfigid"
+  },
+  {
+   "holder": "activityconfigconfigitem",
+   "item": "activityconfigconfigitem",
+   "col": "activitystep_toid",
+   "ref": "activity",
+   "required": false,
+   "owner": "activityconfig",
+   "ownerCol": "activityconfigid"
+  },
+  {
+   "holder": "activityinapp",
+   "item": null,
+   "col": "activitygroupid",
+   "ref": "activitygroup",
+   "required": false,
+   "owner": "activityinapp",
+   "ownerCol": null
+  },
+  {
+   "holder": "oppsharinggrouppositionitem",
+   "item": "oppsharinggrouppositionitem",
+   "col": "positionid",
+   "ref": "position",
+   "required": false,
+   "owner": "oppsharinggroup",
+   "ownerCol": "oppsharinggroupid"
+  },
+  {
+   "holder": "oppsharinggroupemployeeitem",
+   "item": "oppsharinggroupemployeeitem",
+   "col": "employeeid",
+   "ref": "employee",
+   "required": false,
+   "owner": "oppsharinggroup",
+   "ownerCol": "oppsharinggroupid"
+  },
+  {
+   "holder": "opportunityconfigconfigitem",
+   "item": "opportunityconfigconfigitem",
+   "col": "activitygroup_fromid",
+   "ref": "activitygroup",
+   "required": false,
+   "owner": "opportunityconfig",
+   "ownerCol": "opportunityconfigid"
+  },
+  {
+   "holder": "opportunityconfigconfigitem",
+   "item": "opportunityconfigconfigitem",
+   "col": "activity_fromid",
+   "ref": "activity",
+   "required": false,
+   "owner": "opportunityconfig",
+   "ownerCol": "opportunityconfigid"
+  },
+  {
+   "holder": "opportunityconfigconfigitem",
+   "item": "opportunityconfigconfigitem",
+   "col": "activitygroup_toid",
+   "ref": "activitygroup",
+   "required": false,
+   "owner": "opportunityconfig",
+   "ownerCol": "opportunityconfigid"
+  },
+  {
+   "holder": "opportunityconfigconfigitem",
+   "item": "opportunityconfigconfigitem",
+   "col": "activity_toid",
+   "ref": "activity",
+   "required": false,
+   "owner": "opportunityconfig",
+   "ownerCol": "opportunityconfigid"
+  },
+  {
+   "holder": "opportunityconfiggrouppipelineitem",
+   "item": "opportunityconfiggrouppipelineitem",
+   "col": "activitygroupid",
+   "ref": "activitygroup",
+   "required": true,
+   "owner": "opportunityconfig",
+   "ownerCol": "opportunityconfigid"
+  },
+  {
+   "holder": "opportunityconfiggrouppipelineitem",
+   "item": "opportunityconfiggrouppipelineitem",
+   "col": "slaunitid",
+   "ref": "kpiunit",
+   "required": false,
+   "owner": "opportunityconfig",
+   "ownerCol": "opportunityconfigid"
+  },
+  {
+   "holder": "opportunityconfigsteppipelineitem",
+   "item": "opportunityconfigsteppipelineitem",
+   "col": "activitygroupid",
+   "ref": "activitygroup",
+   "required": true,
+   "owner": "opportunityconfig",
+   "ownerCol": "opportunityconfigid"
+  },
+  {
+   "holder": "opportunityconfigsteppipelineitem",
+   "item": "opportunityconfigsteppipelineitem",
+   "col": "activityid",
+   "ref": "activity",
+   "required": true,
+   "owner": "opportunityconfig",
+   "ownerCol": "opportunityconfigid"
+  },
+  {
+   "holder": "opportunityconfigsteppipelineitem",
+   "item": "opportunityconfigsteppipelineitem",
+   "col": "slaunitid",
+   "ref": "kpiunit",
+   "required": false,
+   "owner": "opportunityconfig",
+   "ownerCol": "opportunityconfigid"
+  },
+  {
+   "holder": "opportunityconfigpeersharingitem",
+   "item": "opportunityconfigpeersharingitem",
+   "col": "activitygroupid",
+   "ref": "activitygroup",
+   "required": false,
+   "owner": "opportunityconfig",
+   "ownerCol": "opportunityconfigid"
+  },
+  {
+   "holder": "opportunityconfigsharinggroupitem",
+   "item": "opportunityconfigsharinggroupitem",
+   "col": "activityid",
+   "ref": "activity",
+   "required": false,
+   "owner": "opportunityconfig",
+   "ownerCol": "opportunityconfigid"
+  },
+  {
+   "holder": "opportunityconfigsharinggroupitem",
+   "item": "opportunityconfigsharinggroupitem",
+   "col": "sharinggroupid",
+   "ref": "oppsharinggroup",
+   "required": false,
+   "owner": "opportunityconfig",
+   "ownerCol": "opportunityconfigid"
+  },
+  {
+   "holder": "waitlistsharinggrouppositionitem",
+   "item": "waitlistsharinggrouppositionitem",
+   "col": "positionid",
+   "ref": "position",
+   "required": false,
+   "owner": "waitlistsharinggroup",
+   "ownerCol": "waitlistsharinggroupid"
+  },
+  {
+   "holder": "waitlistsharinggroupemployeeitem",
+   "item": "waitlistsharinggroupemployeeitem",
+   "col": "employeeid",
+   "ref": "employee",
+   "required": false,
+   "owner": "waitlistsharinggroup",
+   "ownerCol": "waitlistsharinggroupid"
+  },
+  {
+   "holder": "waitlist",
+   "item": null,
+   "col": "waitlisttypeid",
+   "ref": "waitlisttype",
+   "required": false,
+   "owner": "waitlist",
+   "ownerCol": null
+  },
+  {
+   "holder": "waitlistoppsharinggroupitem",
+   "item": "waitlistoppsharinggroupitem",
+   "col": "opp_sharing_groupid",
+   "ref": "oppsharinggroup",
+   "required": false,
+   "owner": "waitlist",
+   "ownerCol": "waitlistid"
+  },
+  {
+   "holder": "waitlistwaitsharinggroupitem",
+   "item": "waitlistwaitsharinggroupitem",
+   "col": "waitlist_sharing_groupid",
+   "ref": "waitlistsharinggroup",
+   "required": false,
+   "owner": "waitlist",
+   "ownerCol": "waitlistid"
+  },
+  {
+   "holder": "customergroup",
+   "item": null,
+   "col": "customertypeid",
+   "ref": "customertype",
+   "required": true,
+   "owner": "customergroup",
+   "ownerCol": null
+  },
+  {
+   "holder": "marketingchanel",
+   "item": null,
+   "col": "marketinggroupid",
+   "ref": "marketinggroup",
+   "required": false,
+   "owner": "marketingchanel",
+   "ownerCol": null
+  },
+  {
+   "holder": "district",
+   "item": null,
+   "col": "ms_province_id",
+   "ref": "province",
+   "required": true,
+   "owner": "district",
+   "ownerCol": null
+  },
+  {
+   "holder": "subdistrict",
+   "item": null,
+   "col": "ms_district_id",
+   "ref": "district",
+   "required": false,
+   "owner": "subdistrict",
+   "ownerCol": null
+  },
+  {
+   "holder": "exchangerate",
+   "item": null,
+   "col": "currencyid",
+   "ref": "currency",
+   "required": true,
+   "owner": "exchangerate",
+   "ownerCol": null
+  },
+  {
+   "holder": "paymentmethod",
+   "item": null,
+   "col": "bankbookid",
+   "ref": "bankbook",
+   "required": false,
+   "owner": "paymentmethod",
+   "ownerCol": null
+  },
+  {
+   "holder": "paymentmethod",
+   "item": null,
+   "col": "thirdpartyid",
+   "ref": "businesspartner",
+   "required": false,
+   "owner": "paymentmethod",
+   "ownerCol": null
+  },
+  {
+   "holder": "receivemethod",
+   "item": null,
+   "col": "bankbookid",
+   "ref": "bankbook",
+   "required": false,
+   "owner": "receivemethod",
+   "ownerCol": null
+  },
+  {
+   "holder": "receivemethod",
+   "item": null,
+   "col": "thirdpartyid",
+   "ref": "businesspartner",
+   "required": false,
+   "owner": "receivemethod",
+   "ownerCol": null
+  },
+  {
+   "holder": "material",
+   "item": null,
+   "col": "materialgroupid",
+   "ref": "materialgroup",
+   "required": true,
+   "owner": "material",
+   "ownerCol": null
+  },
+  {
+   "holder": "material",
+   "item": null,
+   "col": "baseunitid",
+   "ref": "unitofmeasure",
+   "required": true,
+   "owner": "material",
+   "ownerCol": null
+  },
+  {
+   "holder": "material",
+   "item": null,
+   "col": "weightunitid",
+   "ref": "unitofmeasure",
+   "required": false,
+   "owner": "material",
+   "ownerCol": null
+  },
+  {
+   "holder": "vendorgroup",
+   "item": null,
+   "col": "vendortypeid",
+   "ref": "vendortype",
+   "required": true,
+   "owner": "vendorgroup",
+   "ownerCol": null
+  },
+  {
+   "holder": "businesspartner",
+   "item": null,
+   "col": "customergroupid",
+   "ref": "customergroup",
+   "required": false,
+   "owner": "businesspartner",
+   "ownerCol": null
+  },
+  {
+   "holder": "businesspartner",
+   "item": null,
+   "col": "vendorgroupid",
+   "ref": "vendorgroup",
+   "required": false,
+   "owner": "businesspartner",
+   "ownerCol": null
+  },
+  {
+   "holder": "coupon",
+   "item": null,
+   "col": "branchid",
+   "ref": "branch",
+   "required": false,
+   "owner": "coupon",
+   "ownerCol": null
+  },
+  {
+   "holder": "coupon",
+   "item": null,
+   "col": "couponcompanyid",
+   "ref": "businesspartner",
+   "required": false,
+   "owner": "coupon",
+   "ownerCol": null
+  },
+  {
+   "holder": "coupon",
+   "item": null,
+   "col": "coupontypeid",
+   "ref": "coupontype",
+   "required": false,
+   "owner": "coupon",
+   "ownerCol": null
+  },
+  {
+   "holder": "coupon",
+   "item": null,
+   "col": "promotionid",
+   "ref": "promotion",
+   "required": false,
+   "owner": "coupon",
+   "ownerCol": null
+  },
+  {
+   "holder": "couponmembertypeitem",
+   "item": "couponmembertypeitem",
+   "col": "membertypeid",
+   "ref": "membertype",
+   "required": false,
+   "owner": "coupon",
+   "ownerCol": "couponid"
+  },
+  {
+   "holder": "couponcustomertypeitem",
+   "item": "couponcustomertypeitem",
+   "col": "customertypeid",
+   "ref": "customertype",
+   "required": false,
+   "owner": "coupon",
+   "ownerCol": "couponid"
+  },
+  {
+   "holder": "calendar",
+   "item": null,
+   "col": "calendartypeid",
+   "ref": "calendartype",
+   "required": false,
+   "owner": "calendar",
+   "ownerCol": null
+  },
+  {
+   "holder": "calendar",
+   "item": null,
+   "col": "employeeid",
+   "ref": "employee",
+   "required": false,
+   "owner": "calendar",
+   "ownerCol": null
+  },
+  {
+   "holder": "calendarsharedtoitem",
+   "item": "calendarsharedtoitem",
+   "col": "employeeid",
+   "ref": "employee",
+   "required": false,
+   "owner": "calendar",
+   "ownerCol": "calendarid"
+  },
+  {
+   "holder": "calendarsharedtoitem",
+   "item": "calendarsharedtoitem",
+   "col": "positionid",
+   "ref": "position",
+   "required": false,
+   "owner": "calendar",
+   "ownerCol": "calendarid"
+  },
+  {
+   "holder": "kpilevel",
+   "item": null,
+   "col": "kpi_unitid",
+   "ref": "kpiunit",
+   "required": false,
+   "owner": "kpilevel",
+   "ownerCol": null
+  },
+  {
+   "holder": "kpiproductlevelitem",
+   "item": "kpiproductlevelitem",
+   "col": "kpilevelid",
+   "ref": "kpilevel",
+   "required": false,
+   "owner": "kpiproduct",
+   "ownerCol": "kpiproductid"
+  },
+  {
+   "holder": "kpitask",
+   "item": null,
+   "col": "kpi_unitid",
+   "ref": "kpiunit",
+   "required": false,
+   "owner": "kpitask",
+   "ownerCol": null
+  },
+  {
+   "holder": "kpipillartask",
+   "item": null,
+   "col": "kpitasktypeid",
+   "ref": "kpitasktype",
+   "required": false,
+   "owner": "kpipillartask",
+   "ownerCol": null
+  },
+  {
+   "holder": "kpipillartask",
+   "item": null,
+   "col": "pillarid",
+   "ref": "kpipillar",
+   "required": false,
+   "owner": "kpipillartask",
+   "ownerCol": null
+  },
+  {
+   "holder": "kpipillartask",
+   "item": null,
+   "col": "productid",
+   "ref": "kpiproduct",
+   "required": false,
+   "owner": "kpipillartask",
+   "ownerCol": null
+  },
+  {
+   "holder": "kpipillartask",
+   "item": null,
+   "col": "levelid",
+   "ref": "kpilevel",
+   "required": false,
+   "owner": "kpipillartask",
+   "ownerCol": null
+  },
+  {
+   "holder": "kpipillartask",
+   "item": null,
+   "col": "contact_channelid",
+   "ref": "kpicontact",
+   "required": false,
+   "owner": "kpipillartask",
+   "ownerCol": null
+  },
+  {
+   "holder": "kpipillartaskkpiitem",
+   "item": "kpipillartaskkpiitem",
+   "col": "kpitaskid",
+   "ref": "kpitask",
+   "required": false,
+   "owner": "kpipillartask",
+   "ownerCol": "kpipillartaskid"
+  }
+ ]
+}

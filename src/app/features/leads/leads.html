@@ -1,0 +1,346 @@
+<div class="ld-layout" [class.has-detail]="store.selected()">
+  <section class="ld-main" aria-labelledby="ld-title">
+    <header class="ld-head">
+      <h1 id="ld-title">{{ t(view() === 'trash' ? 'app.leads.trashTitle' : 'app.leads.title') }}</h1>
+      @if (view() === 'trash') {
+        <div class="ld-actions">
+          <button type="button" class="ld-btn" (click)="showList()"><ts-icon name="chevronLeft" [size]="16" />{{ t('app.leads.backToList') }}</button>
+        </div>
+      } @else {
+      <div class="ld-actions">
+        @if (store.menu().trash) {
+          <button type="button" class="ld-btn" (click)="showTrash()"><ts-icon name="trash" [size]="16" />{{ t('app.leads.trash') }} ({{ store.trashRows().length }})</button>
+        }
+        @if (store.menu().export) {
+          <button type="button" class="ld-btn" (click)="store.exportCsv()"><ts-icon name="download" [size]="16" />{{ t('app.leads.export') }}</button>
+        }
+        @if (store.menu().import) {
+          <button type="button" class="ld-btn" (click)="store.open({ kind: 'import' })"><ts-icon name="upload" [size]="16" />{{ t('app.leads.import') }}</button>
+        }
+        @if (store.menu().create) {
+          <button type="button" class="ld-btn ld-btn-primary" (click)="store.open({ kind: 'form', leadId: null })"><ts-icon name="plus" [size]="16" />{{ t('app.leads.addNew') }}</button>
+        }
+      </div>
+      }
+    </header>
+
+    @if (view() === 'trash') {
+      <p class="ld-hint ld-trash-hint">{{ t('app.leads.trashHint') }}</p>
+      <div class="ld-table-wrap">
+        <table class="ld-table">
+          <thead>
+            <tr>
+              <th>{{ t('app.leads.trashedAt') }}</th>
+              <th>{{ t('app.leads.col.status') }}</th>
+              <th>{{ t('app.leads.col.name') }}</th>
+              <th>{{ t('app.leads.col.phone') }}</th>
+              <th>{{ t('app.leads.col.owner') }}</th>
+              <th>{{ t('app.leads.trashedBy') }}</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (l of store.trashRows(); track l.id) {
+              <tr>
+                <td>{{ dmy(l.trashedAt ?? '') }}</td>
+                <td><span class="ld-tag" [attr.data-status]="l.status">{{ store.statusLabel(l.status) }}</span></td>
+                <td class="ld-name">{{ l.name }}</td>
+                <td>{{ phone(l.phoneCode, l.phone) }}</td>
+                <td>{{ l.ownerCode ? store.ownerName(l.ownerCode) : t('app.leads.queueName') }}</td>
+                <td>{{ l.trashedBy || '-' }}</td>
+                <td><button type="button" class="ld-btn ld-btn-sm" (click)="store.restore(l.id)"><ts-icon name="undo" [size]="14" />{{ t('app.leads.restore') }}</button></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+        @if (!store.trashRows().length) {
+          <div class="ld-empty"><strong>{{ t('app.leads.trashEmpty') }}</strong></div>
+        }
+      </div>
+    } @else {
+    <div class="ld-bar">
+      <div class="ld-pills" role="tablist" [attr.aria-label]="t('app.leads.title')">
+        <button type="button" role="tab" class="ld-pill" [class.on]="store.status() === ''" [attr.aria-selected]="store.status() === ''" (click)="store.status.set('')">
+          {{ t('app.leads.all') }} ({{ store.counts().all }})
+        </button>
+        @for (s of statuses; track s) {
+          <button type="button" role="tab" class="ld-pill" [class.on]="store.status() === s" [attr.aria-selected]="store.status() === s" (click)="store.status.set(s)">
+            {{ store.statusLabel(s) }} ({{ store.counts()[s] }})
+          </button>
+        }
+      </div>
+      <div class="ld-tools">
+        <label class="ld-sort"
+          >{{ t('app.leads.sortBy') }}
+          <span class="ld-select">
+            <ts-icon name="listFilter" [size]="16" />
+            <select [value]="store.sort()" (change)="onSort($event)" [attr.aria-label]="t('app.leads.sortBy')">
+              <option value="newest">{{ t('app.leads.sortNewest') }}</option>
+              <option value="oldest">{{ t('app.leads.sortOldest') }}</option>
+              <option value="name">{{ t('app.leads.sortName') }}</option>
+            </select>
+          </span>
+        </label>
+        @if (searchOpen()) {
+          <input class="ld-search" type="search" [value]="store.search()" [placeholder]="t('app.leads.searchPlaceholder')" [attr.aria-label]="t('app.leads.search')" (input)="onSearch($event)" (keydown.escape)="closeSearch()" />
+        }
+        <button type="button" class="ld-icon-btn" [class.on]="searchOpen() || store.search() !== ''" [attr.aria-label]="t('app.leads.search')" (click)="toggleSearch()"><ts-icon name="search" [size]="20" /></button>
+        <div class="ld-pop-wrap">
+          <button type="button" class="ld-icon-btn" [class.on]="store.filterActive()" [attr.aria-label]="t('app.leads.filter')" [attr.aria-expanded]="filterOpen()" (click)="filterOpen.set(!filterOpen())"><ts-icon name="filter" [size]="20" /></button>
+          @if (filterOpen()) {
+            <div class="ld-pop" role="dialog" [attr.aria-label]="t('app.leads.filter')">
+              <div class="ld-pop-title">{{ t('app.leads.filter') }}</div>
+              @if (store.sources().length) {
+                <div class="ld-pop-group">{{ t('app.leads.source') }}</div>
+                @for (src of store.sources(); track src) {
+                  <label class="ld-check"><input type="checkbox" [checked]="store.filter().sources.includes(src)" (change)="toggleSource(src)" />{{ src }}</label>
+                }
+              }
+              <label class="ld-pop-group" for="ld-f-owner">{{ t('app.leads.owner') }}</label>
+              <select id="ld-f-owner" class="ld-input" [value]="store.filter().ownerCode" (change)="setFilter({ ownerCode: val($event) })">
+                <option value="">{{ t('app.leads.allOwners') }}</option>
+                @for (o of store.owners; track o.code) {
+                  <option [value]="o.code">{{ o.code }} {{ o.name }}</option>
+                }
+              </select>
+              <div class="ld-pop-group">{{ t('app.leads.createdDate') }}</div>
+              <div class="ld-range">
+                <input type="date" class="ld-input" [value]="store.filter().dateFrom" [attr.aria-label]="t('app.leads.dateFrom')" (change)="setFilter({ dateFrom: val($event) })" />
+                <input type="date" class="ld-input" [value]="store.filter().dateTo" [attr.aria-label]="t('app.leads.dateTo')" (change)="setFilter({ dateTo: val($event) })" />
+              </div>
+              <div class="ld-pop-foot">
+                <button type="button" class="ld-btn" (click)="clearFilter()">{{ t('app.leads.clearFilter') }}</button>
+                <button type="button" class="ld-btn ld-btn-primary" (click)="filterOpen.set(false)">{{ t('app.common.ok') }}</button>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="ld-table-wrap">
+      <table class="ld-table">
+        <thead>
+          <tr>
+            <th>{{ t('app.leads.col.created') }}</th>
+            <th>{{ t('app.leads.col.status') }}</th>
+            <th>{{ t('app.leads.col.name') }}</th>
+            <th>{{ t('app.leads.col.phone') }}</th>
+            <th>{{ t('app.leads.col.address') }}</th>
+            <th>{{ t('app.leads.col.owner') }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (l of store.rows(); track l.id) {
+            <tr tabindex="0" [class.sel]="store.selectedId() === l.id" (click)="store.select(l.id)" (keydown.enter)="store.select(l.id)">
+              <td>{{ dmy(l.createdDate) }}</td>
+              <td><span class="ld-tag" [attr.data-status]="l.status">{{ store.statusLabel(l.status) }}</span></td>
+              <td class="ld-name">{{ l.name }}</td>
+              <td><span class="ld-phone"><span class="ld-ico"><ts-icon name="phone" [size]="14" /></span>{{ phone(l.phoneCode, l.phone) }}</span></td>
+              <td>{{ areaOf(l) }}</td>
+              <td><span class="ld-owner"><span class="ld-avatar"><ts-icon name="user" [size]="14" /></span>{{ store.ownerName(l.ownerCode) }}</span></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+      @if (!store.rows().length) {
+        <div class="ld-empty">
+          <div class="ld-empty-art" aria-hidden="true"><ts-icon name="search" [size]="44" /></div>
+          <strong>{{ t(store.counts().all || store.search() || store.filterActive() ? 'app.leads.noResult' : 'app.leads.emptyTitle') }}</strong>
+          <p>{{ t(store.counts().all || store.search() || store.filterActive() ? 'app.leads.noResultHint' : 'app.leads.emptyHint') }}</p>
+        </div>
+      }
+    </div>
+    }
+  </section>
+
+  @if (view() === 'list' && store.selected(); as lead) {
+    <aside class="ld-detail" aria-labelledby="ld-detail-title">
+      <header class="ld-detail-head">
+        <h2 id="ld-detail-title">{{ t('app.leads.detailTitle') }}</h2>
+        <button type="button" class="ld-icon-btn" [attr.aria-label]="t('app.common.close')" (click)="store.select(null)"><ts-icon name="x" [size]="20" /></button>
+      </header>
+      <div class="ld-tabs" role="tablist">
+        @for (tb of tabs; track tb) {
+          @if (tb !== 'contacts' || store.menu().contactView) {
+            <button type="button" role="tab" class="ld-tab" [class.on]="tab() === tb" [attr.aria-selected]="tab() === tb" (click)="tab.set(tb)">{{ t('app.leads.tab.' + tb) }}</button>
+          }
+        }
+      </div>
+
+      @if (tab() === 'general') {
+        <div class="ld-body">
+          <div class="ld-row-top">
+            @if (store.statusChoices().length) {
+              <div class="ld-pop-wrap">
+                <button type="button" class="ld-tag ld-tag-btn" [attr.data-status]="lead.status" [attr.aria-expanded]="statusOpen()" (click)="statusOpen.set(!statusOpen())">
+                  {{ store.statusLabel(lead.status) }}<ts-icon name="chevronDown" [size]="14" />
+                </button>
+                @if (statusOpen()) {
+                  <div class="ld-menu" role="menu">
+                    @for (s of store.statusChoices(); track s) {
+                      <button type="button" role="menuitem" (click)="changeStatus(lead.id, s)"><span class="ld-tag" [attr.data-status]="s">{{ store.statusLabel(s) }}</span></button>
+                    }
+                  </div>
+                }
+              </div>
+            } @else {
+              <span class="ld-tag" [attr.data-status]="lead.status">{{ store.statusLabel(lead.status) }}</span>
+            }
+            <div class="ld-row-actions">
+              @if (store.actions()?.edit) {
+                <button type="button" class="ld-icon-btn ld-boxed" [attr.aria-label]="t('app.leads.edit')" (click)="store.open({ kind: 'form', leadId: lead.id })"><ts-icon name="pencil" [size]="18" /></button>
+              }
+              @if (store.actions()?.trash) {
+                <button type="button" class="ld-icon-btn ld-boxed" [attr.aria-label]="t('app.leads.delete')" (click)="store.remove(lead)"><ts-icon name="trash" [size]="18" /></button>
+              }
+            </div>
+          </div>
+          <h3 class="ld-person">{{ lead.name }}</h3>
+          <p class="ld-place"><ts-icon name="mapPin" [size]="14" />{{ areaOf(lead) }}</p>
+          <dl class="ld-dl">
+            <dt>{{ t('app.leads.leadNo') }}</dt><dd>{{ lead.code }}</dd>
+            <dt>{{ t('app.leads.col.phone') }}</dt><dd>{{ phone(lead.phoneCode, lead.phone) }}</dd>
+            <dt>{{ t('app.leads.firstContact') }}</dt><dd>{{ dmy(lead.firstContactDate) }}</dd>
+            <dt>{{ t('app.leads.source') }}</dt><dd><span class="ld-source">{{ lead.source }}</span></dd>
+            <dt>{{ t('app.leads.owner') }}</dt><dd>{{ store.ownerName(lead.ownerCode) }}</dd>
+          </dl>
+          @if (store.actions(); as r) {
+            @if (r.changeOwner || r.returnToQueue) {
+              <div class="ld-cta">
+                @if (r.changeOwner) {
+                  <button type="button" class="ld-btn ld-btn-sm" (click)="store.open({ kind: 'assign', mode: 'change', leadId: lead.id })"><ts-icon name="user" [size]="14" />{{ t('app.leads.changeOwner') }}</button>
+                }
+                @if (r.returnToQueue) {
+                  <button type="button" class="ld-btn ld-btn-sm" (click)="store.returnToQueue(lead.id)"><ts-icon name="undo" [size]="14" />{{ t('app.leads.returnToQueue') }}</button>
+                }
+              </div>
+            }
+          }
+          @if (lead.status === 'converted') {
+            <p class="ld-converted">{{ t('app.leads.convertedInfo', dmy(lead.convertedAt ?? ''), store.ownerName(lead.convertedOwner ?? lead.ownerCode)) }}</p>
+          }
+          @if (store.actions(); as act) {
+            @if (act.opportunity || act.convert) {
+              <div class="ld-cta">
+                @if (act.opportunity) {
+                  <button type="button" class="ld-btn ld-btn-primary" (click)="store.open({ kind: 'convert', mode: 'opportunity', leadId: lead.id })"><ts-icon name="plus" [size]="16" />{{ t('app.leads.createOpportunity') }}</button>
+                }
+                @if (act.convert) {
+                  <button type="button" class="ld-btn" (click)="askConvert(lead.id)"><ts-icon name="circlePlus" [size]="16" />{{ t('app.leads.saveProspect') }}</button>
+                }
+              </div>
+            }
+          }
+        </div>
+      }
+
+      @if (tab() === 'contacts') {
+        <div class="ld-body">
+          <section>
+            <div class="ld-sec-head">
+              <h3>{{ t('app.leads.appointments') }}</h3>
+              @if (store.actions(); as act) {
+                @if (act.appointment || act.task) {
+                  <div class="ld-pop-wrap">
+                    <button type="button" class="ld-link" [attr.aria-expanded]="addOpen()" (click)="addOpen.set(!addOpen())"><ts-icon name="circlePlus" [size]="16" />{{ t('app.leads.add') }}</button>
+                    @if (addOpen()) {
+                      <div class="ld-menu" role="menu">
+                        @if (act.appointment) {
+                          <button type="button" role="menuitem" (click)="openItem(lead.id, 'appointment')">{{ t('app.leads.addAppointment') }}</button>
+                        }
+                        @if (act.task) {
+                          <button type="button" role="menuitem" (click)="openItem(lead.id, 'task')">{{ t('app.leads.addTask') }}</button>
+                        }
+                      </div>
+                    }
+                  </div>
+                }
+              }
+            </div>
+            @for (it of lead.items; track it.id) {
+              <div class="ld-card">
+                <span class="ld-card-ico"><ts-icon name="calendar" [size]="20" /></span>
+                <div>
+                  <div class="ld-card-title">{{ it.title }}</div>
+                  <div class="ld-card-meta"><b>{{ dmy(it.date) }}</b> @if (!it.allDay && it.time) { <span><ts-icon name="clock" [size]="13" /> {{ it.time }}</span> } @else { <span>{{ t('app.leads.allDay') }}</span> }</div>
+                </div>
+              </div>
+            } @empty {
+              <p class="ld-hint">{{ t('app.leads.noItems') }}</p>
+            }
+          </section>
+          <section>
+            <div class="ld-sec-head">
+              <h3>{{ t('app.leads.history') }}</h3>
+              @if (store.actions()?.contact) {
+                <button type="button" class="ld-link" (click)="store.open({ kind: 'contact', leadId: lead.id })"><ts-icon name="circlePlus" [size]="16" />{{ t('app.leads.add') }}</button>
+              }
+            </div>
+            @for (c of lead.contacts; track c.id) {
+              <div class="ld-log">
+                <span class="ld-log-ico"><ts-icon [name]="contactIcon(c.kind)" [size]="14" /></span>
+                <div>
+                  <div class="ld-log-text">{{ c.text }}</div>
+                  <div class="ld-log-meta"><ts-icon name="clock" [size]="12" /> {{ dmy(c.at.slice(0, 10)) }} {{ c.at.slice(11) }} · {{ c.byCode }}</div>
+                </div>
+              </div>
+            } @empty {
+              <p class="ld-hint">{{ t('app.leads.noHistory') }}</p>
+            }
+          </section>
+        </div>
+      }
+
+      @if (tab() === 'extra') {
+        <div class="ld-body">
+          <dl class="ld-dl">
+            <dt>{{ t('app.leads.email') }}</dt><dd>{{ lead.email || '-' }}</dd>
+            <dt>{{ t('app.leads.address') }}</dt><dd>{{ lead.address || '-' }}</dd>
+            <dt>{{ t('app.leads.country') }}</dt><dd>{{ lead.country || '-' }}</dd>
+            <dt>{{ t('app.leads.province') }}</dt><dd>{{ lead.province || '-' }}</dd>
+            <dt>{{ t('app.leads.district') }}</dt><dd>{{ lead.district || '-' }}</dd>
+            <dt>{{ t('app.leads.subdistrict') }}</dt><dd>{{ lead.subdistrict || '-' }}</dd>
+            <dt>{{ t('app.leads.postcode') }}</dt><dd>{{ lead.postcode || '-' }}</dd>
+            <dt>{{ t('app.leads.taxId') }}</dt><dd>{{ lead.taxId || '-' }}</dd>
+          </dl>
+          <section>
+            <div class="ld-sec-head"><h3>{{ t('app.leads.assignHistory') }}</h3></div>
+            @for (h of lead.history ?? []; track $index) {
+              <div class="ld-log">
+                <span class="ld-log-ico"><ts-icon name="clock" [size]="14" /></span>
+                <div>
+                  <div class="ld-log-text">{{ historyLine(h) }}</div>
+                  <div class="ld-log-meta">{{ dmy(h.at.slice(0, 10)) }} {{ h.at.slice(11) }}@if (h.byCode) { · {{ h.byCode }} }</div>
+                </div>
+              </div>
+            } @empty {
+              <p class="ld-hint">{{ t('app.leads.noAssignHistory') }}</p>
+            }
+          </section>
+        </div>
+      }
+    </aside>
+  }
+</div>
+
+@switch (store.dialog()?.kind) {
+  @case ('form') {
+    <ts-lead-form-dialog />
+  }
+  @case ('import') {
+    <ts-lead-import-dialog />
+  }
+  @case ('convert') {
+    <ts-lead-convert-dialog />
+  }
+  @case ('contact') {
+    <ts-lead-contact-dialog />
+  }
+  @case ('item') {
+    <ts-lead-item-dialog />
+  }
+  @case ('assign') {
+    <ts-lead-assign-dialog />
+  }
+}

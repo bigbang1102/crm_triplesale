@@ -1,0 +1,48 @@
+// The rules template.xhtml of the Java app adds on top of SweetAlert (core/dom/swal.ts loads the library itself).
+// Copied from web/WEB-INF/pages/template.xhtml (<style> of the head) — keep identical.
+
+// a popup (swal) floats above everything in the system, including the custom dropdowns
+.swal-overlay {
+  z-index: 999999 !important;
+}
+
+// SweetAlert is appended directly to <body> and inherits its text colour: in Java that is layout-modify.css / dark_mode.css
+// (#191a1c / #E5E7EB), not the Angular shell's own body colour (--ts-text)
+.swal-overlay {
+  color: #191a1c;
+}
+html[data-theme='dark'] .swal-overlay {
+  color: #e5e7eb;
+}
+
+// the confirm button (save / ok): dark blue #0D61CF, not the library's light blue; a danger button (confirm delete) stays red
+.swal-button--confirm:not(.swal-button--danger) {
+  background-color: #0d61cf;
+}
+.swal-button--confirm:not(.swal-button--danger):hover {
+  background-color: #0a52b0;
+}
+.swal-button--confirm:not(.swal-button--danger):active {
+  background-color: #08459a;
+}
+.swal-button--confirm:not(.swal-button--danger):focus {
+  box-shadow:
+    0 0 0 1px #fff,
+    0 0 0 3px rgba(13, 97, 207, 0.29);
+}
+
+// topbar.xhtml of the Java app carries two more rules for SweetAlert (the top bar is part of every page): the buttons of the footer
+// are centred side by side instead of right-aligned (the library's default) — a dialog with buttons (confirm / error with OK) shows it
+.swal-footer {
+  text-align: center !important;
+  display: flex !important;
+  justify-content: center !important;
+  gap: 8px;
+}
+.swal-button-container {
+  margin: 0 !important;
+}
+// …and its buttons / text field keep the browser's own letter-spacing (normal) as in Java; the Angular reset makes a button inherit the body's (0.36px)
+.swal-overlay :is(button, input, textarea) {
+  letter-spacing: normal;
+}

@@ -1,0 +1,51 @@
+<!-- ชิ้นส่วนสำหรับ manual/index.html: หัวข้อ "Live adapter (เฟส B)" — แทรกก่อน <section id="appendix"> และเพิ่ม <li><a href="#live">Live adapter (เฟส B)</a></li> ใน TOC -->
+<section id="live">
+  <h2><span class="num">XX</span>Live adapter (เฟส B) — หน้าที่พอร์ตแล้วเรียก REST จริงแทน mock</h2>
+  <p>หลังตัดสินใจ "backend = REST API เท่านั้น ไม่มี Tomcat/BFF" (ADR-001) servlet ของ Java (<code>/board/*</code>, <code>/rvapi</code>, <code>/dashboardapi</code> …) ที่เคยถือ token ใน HttpSession แล้วเรียก <code>triplesale-service</code> ถูกแทนด้วยโค้ดในเบราว์เซอร์: หน้ายังเรียก URL เดิม (สัญญา <code>&lt;หน้า&gt;-backend.ts</code>) แต่ <b>live backend</b> (<code>&lt;หน้า&gt;.live.ts</code>) ตอบด้วย <code>Response</code> ที่ประกอบจากการเรียก REST ผ่าน HttpClient ของแอป (Bearer interceptor, 401 = session หมด, API log) และทำสิ่งที่ servlet เคยทำทั้งหมด: ตรวจ role, ใส่ param/default/clamp, เรียก upstream ตามลำดับ/encoding เดิม, แกะ envelope, ทำความสะอาด/แปลภาษา/เปลี่ยนชื่อ field, map status, ข้อความ/สถานะของทุกทางผิดพลาด</p>
+
+  <h3>โครงร่วม <code>src/app/core/live/</code></h3>
+  <table>
+    <thead><tr><th>ไฟล์</th><th>หน้าที่</th></tr></thead>
+    <tbody>
+      <tr><td><code>rest.ts</code>, <code>rest-deps.ts</code></td><td><code>RestDeps</code> (call, user, hasRole, lang, masterText, message, asset) · <code>get/service/sendBody/body200</code> (= <code>Data_API.sendGET</code> คืน body เฉพาะ 200; <code>sendPOST/PATCH</code> คืน body ทุก status) · <code>composeRoutes</code> · <code>restDepsOf(injector)</code> (host เรียกเฉพาะโหมด live)</td></tr>
+      <tr><td><code>org-json.ts</code>, <code>json-java.ts</code></td><td>JSON สองแบบที่ servlet ใช้: org.json (อ่านหลวม <code>optString/optLong/getInt</code> ของ string) และ Parsson/jakarta.json (เก็บข้อความตัวเลข <code>12.50</code>, ลำดับ key, <code>toString()</code> แบบ compact)</td></tr>
+      <tr><td><code>board-master.live.ts</code></td><td>servlet master-data ทั้งหมดของบอร์ด (movement-types, employees, sale-groups/persons, tags, provinces (กรองไทยล้วน), districts, sub-districts, metro-geo, fiscal-years, material-groups/materials, activity-groups, employees-by-activity-group, chat-master-data) + <code>MasterDataI18n</code></td></tr>
+      <tr><td><code>lead-core.live.ts</code>, <code>dashboard-api.live.ts</code></td><td><code>/board/lead</code> (+ <code>localizeProspectLocation</code>), <code>/board/schedule/add|edit</code>; <code>/dashboardapi?action=summary|schedules</code> (+ เติมรูปลูกค้า)</td></tr>
+      <tr><td><code>leads.live.ts</code>, <code>prospect*.live.ts</code>, <code>activities.live.ts</code>, <code>lead-actions.live.ts</code></td><td>ของครอบครัว leads / prospect / contact-activity+schedule / lead-detail ตามลำดับ (ดู <code>docs/integration/*-live.md</code>)</td></tr>
+      <tr><td><code>rest-fake.ts</code></td><td>service จำลองสำหรับ spec (<code>fakeRest</code>) บันทึกทุก call</td></tr>
+    </tbody>
+  </table>
+
+  <h3>วิธีพิสูจน์</h3>
+  <ul>
+    <li><b>spec</b> ต่อ route ด้วย <code>fakeRest</code>: URL/query ที่ยิง REST (ลำดับ, encoding, param ว่างไม่ส่ง), role gate, ทุกทางผิดพลาด (non-200, ไม่ใช่ JSON, ไม่มี result, status 0), การแปลง/ทำความสะอาด, TH/EN, default/clamp — expected มาจากการอ่านโค้ด Java ไม่ใช่จากการรันโค้ดของเรา</li>
+    <li><b><code>node tools/compare/run.mjs &lt;หน้า&gt; --live</code></b>: แอปรันแบบ <code>mock:false</code> ผ่าน proxy แบบ same-origin ไปยัง REST จำลอง (<code>page.upstream</code>) ที่ตอบ <i>ในรูปที่ service จริงส่ง</i> จากข้อมูล mock ชุดเดียวกับ replica Java — ถ้าพอร์ตผิด หน้าจะต่างจาก Java ทันที. scenario ที่ REST ทำไม่ได้ใส่ <code>live: false</code>; ที่ต้องเปลี่ยนที่อยู่/สถานการณ์ใส่ <code>live: {code, hook}</code></li>
+  </ul>
+
+  <h3>สถานะ</h3>
+  <table>
+    <thead><tr><th>หน้า</th><th>live</th><th>ผล <code>--live</code> (scenario)</th><th>หมายเหตุ</th></tr></thead>
+    <tbody>
+      <tr><td>Dashboard</td><td>ทำแล้ว (ก่อนหน้า)</td><td>—</td><td>ตรวจกับ service ที่เปิดสาธารณะของ UAT ด้วย session ปลอม</td></tr>
+      <tr><td>DrillDown</td><td>ทำแล้ว</td><td>161/161 (ข้าม 5)</td><td>GET เดียว + role gate; ทำ column planning ตาม dictionary</td></tr>
+      <tr><td>Report</td><td>ทำแล้ว ยกเว้น PDF</td><td>42 (ข้ามที่เปิด PDF)</td><td>PDF ไม่มี REST — ดูด้านล่าง</td></tr>
+      <tr><td>Prospects</td><td>ทำแล้ว</td><td>252/252 (ข้าม 3)</td><td>ไม่พอร์ต <code>ProspectUpdateServlet</code> (เขียน DB) และ <code>ensureForProspect</code></td></tr>
+      <tr><td>Opportunities</td><td>ทำแล้ว</td><td>232/232</td><td>filter state → sessionStorage ต่อผู้ใช้</td></tr>
+      <tr><td>Receipts + Receipt form</td><td>ทำแล้ว ยกเว้น PDF</td><td>183/183 · 302/302 (ข้าม 2)</td><td><code>/rvreport</code>, <code>/rvreceipt</code> ไม่มี REST</td></tr>
+      <tr><td>Activities + Schedule</td><td>ทำแล้ว</td><td>367/367 (ข้าม 1) · 593/593</td><td>REST ของ schedule ล้ม = ปฏิทินว่าง (เหมือน servlet)</td></tr>
+      <tr><td>Home</td><td>ทำแล้ว</td><td>309/309</td><td>ประกอบโมดูลที่มี ไม่มี servlet ใหม่</td></tr>
+      <tr><td>Lead detail</td><td>กำลังทำ</td><td>—</td><td>โมดูลใหม่ <code>lead-actions.live.ts</code></td></tr>
+      <tr><td>เอกสารงานขาย (QT/BK/OB/AQ/AD)</td><td>ไม่มี API ใน Java</td><td>—</td><td>บันทึกไม่ได้/รายการว่างเสมอ (เหมือน Java)</td></tr>
+      <tr><td>AI HUB · แชท · แปลเอกสาร · FAB</td><td>ยังไม่ได้ทำ</td><td>—</td><td>ยังเรียก path ของ BFF และต้องใช้ API key ซึ่งอยู่ในเบราว์เซอร์ไม่ได้</td></tr>
+    </tbody>
+  </table>
+
+  <h3>ข้อจำกัดที่ต้องรู้</h3>
+  <ul>
+    <li><b>ยังไม่เคยตรวจกับ service จริง</b>: UAT ต้อง Bearer ทุก endpoint, ไม่มี OpenAPI สาธารณะ และเรายังไม่มี test account. พิสูจน์ได้เพียง "ทำเหมือน servlet Java บน fixture ที่เขียนจากโค้ด Java" — ชื่อ field, envelope, paging ที่ fake สมมติอยู่ใน <code>docs/integration/*-live.md</code> ของแต่ละหน้า. ต้องทำ smoke test ด้วยบัญชีทดสอบจริง</li>
+    <li><b>PDF ของรายงาน / ใบรับเงิน</b> (<code>ReportPdfServlet</code>, <code>RvJasperReportServlet</code>, <code>RvReceiptPdfServlet</code>): servlet ประกอบ SQL WHERE ใน URL แล้วเรียก Jasper server แยก (ไม่มี token). ให้ browser ทำเองไม่ได้ (ผู้ใช้แก้ SQL ใน URL ได้) — ต้องให้ backend เปิด REST endpoint; ตอนนี้แท็บที่เปิดแสดงข้อความว่ายังไม่เชื่อมระบบรายงาน</li>
+    <li><b>cache ใน session ของ servlet</b> (จังหวัด, ประเทศ, master 30 นาที, enrich 120 วินาที) ไม่พอร์ต — เบราว์เซอร์ถามใหม่; filter state ที่ Java เก็บใน HttpSession เก็บใน sessionStorage ของแท็บ (ล้างตอน logout)</li>
+    <li><b>รูป <code>http://</code></b> ของ file server: ไม่มี <code>/docproxy</code> สำหรับ <code>&lt;img&gt;</code> — โหลดตรง; ต้องเป็น https + CORS หรือให้ gateway ทำ proxy</li>
+    <li>งานที่ servlet ทำหลาย call ต่อเนื่องในเซิร์ฟเวอร์ (เช่นบันทึกใบรับเงิน 4 call) ตอนนี้ทำจากเบราว์เซอร์ จึงช้าลงตาม round trip</li>
+  </ul>
+</section>

@@ -1,0 +1,248 @@
+<h1 class="ts-sr-only">Sales Forecast</h1>
+
+<!-- แถบบนของต้นแบบ : ตำแหน่งในเมนู ; บริษัท / บทบาทจำลองมีเฉพาะตอนใช้ข้อมูลตัวอย่าง (API จริงรู้จากผู้ใช้ที่ล็อกอิน) -->
+<header class="top">
+  <div class="crumb">
+    <span aria-hidden="true">▤</span>
+    @for (c of crumbs(); track $index; let last = $last) {
+      <span [class.cur]="last">{{ c }}</span>
+      @if (!last) {
+        <span class="sep">/</span>
+      }
+    }
+  </div>
+  @if (store.offline()) {
+    <div class="top-r">
+      <span class="chip c-warn" [title]="t('app.forecast.mock.hint')">{{ t('app.forecast.mock.badge') }}</span>
+      <span class="fc-sel">
+        <select class="sel" data-ods-nosearch="1" [attr.aria-label]="t('app.forecast.mock.company')" [tsFcValue]="store.mockCompany()" (tsFcChange)="store.setCompany($event)">
+          @for (c of store.mockCompanies; track c[0]) {
+            <option [value]="c[0]">{{ c[1] }}</option>
+          }
+        </select>
+      </span>
+      <span class="fc-sel">
+        <select class="sel" data-ods-nosearch="1" [attr.aria-label]="t('app.forecast.mock.role')" [tsFcValue]="store.mockRole()" (tsFcChange)="store.setRole($any($event))">
+          @for (r of store.mockRoles; track r[0]) {
+            <option [value]="r[0]">{{ r[1] }}</option>
+          }
+        </select>
+      </span>
+    </div>
+  }
+</header>
+
+<nav class="l1" role="tablist">
+  @for (tab of tabs; track tab.id) {
+    <button type="button" role="tab" [class.on]="store.l1() === tab.id" [attr.aria-selected]="store.l1() === tab.id" (click)="store.setL1(tab.id)">
+      <span aria-hidden="true">{{ tab.icon }}</span>{{ tab.label }}
+    </button>
+  }
+</nav>
+
+<section class="panel">
+  @if (!store.ready()) {
+    <div class="empty" role="status">{{ t('app.common.loading') }}</div>
+  } @else {
+    @switch (store.l1()) {
+      @case ('list') {
+        <ts-forecast-listing />
+      }
+      @case ('config') {
+        @if (store.inWs()) {
+          <ts-forecast-workspace />
+        } @else {
+          <div class="empty big">
+            {{ t('app.forecast.ws.none') }}
+            <div class="mt12"><button type="button" class="btn btn-p" (click)="store.setL1('list')">{{ t('app.forecast.ws.goList') }}</button></div>
+          </div>
+        }
+      }
+      @case ('overview') {
+        <ts-forecast-overview />
+      }
+      @case ('dashboard') {
+        <ts-forecast-dashboard />
+      }
+      @case ('history') {
+        <ts-forecast-history />
+      }
+    }
+  }
+</section>
+
+@if (store.modal(); as m) {
+  <div class="overlay" (click)="backdrop($event)">
+    <div class="dlg" role="dialog" aria-modal="true" [attr.aria-label]="title()">
+      <div class="dlg-h">
+        <h3>{{ title() }}</h3>
+        <span class="grow"></span>
+        <button type="button" class="ibtn" [attr.aria-label]="t('app.common.close')" (click)="store.closeModal()">✕</button>
+      </div>
+
+      @switch (m.kind) {
+        @case ('review') {
+          @let errs = store.validate();
+          @let ch = store.changes();
+          @let before = store.summarySaved()?.totals?.final ?? 0;
+          @let after = store.summaryPreview()?.totals?.final ?? 0;
+          <div class="dlg-b">
+            <div class="ba-wrap">
+              <div class="ba-c before">
+                <div class="l">{{ t('app.forecast.review.savedFinal') }}</div>
+                <div class="v">{{ B(before) }}</div>
+              </div>
+              <div class="ba-c after">
+                <div class="l">{{ t('app.forecast.review.newFinal') }}</div>
+                <div class="v">{{ B(after) }}</div>
+              </div>
+              <div class="ba-c">
+                <div class="l">{{ t('app.forecast.review.diff') }}</div>
+                <div class="v" [class]="dcls(after - before)">{{ sgn(after - before) }}</div>
+              </div>
+            </div>
+            @if (errs.length) {
+              <div class="warn">
+                <b>{{ t('app.forecast.review.fix', errs.length) }}</b>
+                @for (e of errs; track $index) {
+                  <br />{{ e }}
+                }
+              </div>
+            }
+            <div class="tw">
+              <table>
+                <thead>
+                  <tr>
+                    <th>{{ t('app.forecast.hist.type') }}</th>
+                    <th>{{ t('app.forecast.hist.item') }}</th>
+                    <th>{{ t('app.forecast.hist.old') }}</th>
+                    <th>{{ t('app.forecast.hist.new') }}</th>
+                    <th>{{ t('app.forecast.reason') }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (c of ch; track c.key) {
+                    @if (c.kind === 'judg') {
+                      <tr>
+                        <td><span class="chip c-blue">Judgment</span></td>
+                        <td>
+                          <b>{{ c.key }}</b>
+                        </td>
+                        <td class="sub">{{ store.descJ(c.a, c.key) }}</td>
+                        <td>
+                          <b>{{ store.descJ(c.b, c.key) }}</b>
+                        </td>
+                        <td>{{ c.b?.reason || '—' }}</td>
+                      </tr>
+                    } @else {
+                      <tr>
+                        <td><span class="chip">Adjustment</span></td>
+                        <td>{{ store.changeLabel(c) }}</td>
+                        <td class="sub">{{ sgn(c.a?.delta || 0) }}</td>
+                        <td>
+                          <b>{{ sgn(c.b?.delta || 0) }}</b>
+                        </td>
+                        <td>{{ c.b?.reason || '—' }}</td>
+                      </tr>
+                    }
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="dlg-f">
+            <button type="button" class="btn btn-g" (click)="store.closeModal()">{{ t('app.forecast.review.back') }}</button>
+            <button type="button" class="btn btn-p" [disabled]="errs.length > 0" (click)="store.commit()">{{ t('app.forecast.review.confirm', ch.length) }}</button>
+          </div>
+        }
+        @case ('leave') {
+          <div class="dlg-b">
+            <div>{{ t('app.forecast.leave.text', m.n) }}{{ leaveParts() }}</div>
+            <div class="sub">{{ t('app.forecast.leave.hint') }}</div>
+          </div>
+          <div class="dlg-f">
+            <button type="button" class="btn btn-g" (click)="store.closeModal()">{{ t('app.forecast.leave.stay') }}</button>
+            <button type="button" class="btn btn-d" (click)="store.leaveOk()">{{ t('app.forecast.leave.go') }}</button>
+          </div>
+        }
+        @case ('period') {
+          <div class="dlg-b">
+            @if (!m.open && store.changes().length) {
+              <div class="warn">{{ t('app.forecast.period.unsaved') }}</div>
+            }
+            <div>{{ t(m.open ? 'app.forecast.period.reopenText' : 'app.forecast.period.closeText') }}</div>
+            <div class="fld">
+              <span>{{ t('app.forecast.reason') }} *</span>
+              <input class="inp" [attr.aria-label]="t('app.forecast.reason')" [value]="reason()" (input)="reason.set($any($event.target).value)" (keydown.enter)="store.periodDo(reason())" />
+            </div>
+          </div>
+          <div class="dlg-f">
+            <button type="button" class="btn btn-g" (click)="store.closeModal()">{{ t('app.common.cancel') }}</button>
+            <button type="button" class="btn" [class]="m.open ? 'btn-d' : 'btn-p'" (click)="store.periodDo(reason())">{{ t(m.open ? 'app.forecast.period.reopen' : 'app.forecast.period.close') }}</button>
+          </div>
+        }
+        @case ('cfgst') {
+          @let c = cfgOf(m.id);
+          <div class="dlg-b">
+            <div>{{ t(m.to === 'block' ? 'app.forecast.cfgst.blockText' : 'app.forecast.cfgst.releaseText', store.year(c?.year ?? 0)) }}</div>
+            <div class="fld">
+              <span>{{ t('app.forecast.reason') }}{{ m.to === 'block' ? ' *' : '' }}</span>
+              <input class="inp" [attr.aria-label]="t('app.forecast.reason')" [value]="reason()" (input)="reason.set($any($event.target).value)" (keydown.enter)="store.cfgStatusDo(reason())" />
+            </div>
+          </div>
+          <div class="dlg-f">
+            <button type="button" class="btn btn-g" (click)="store.closeModal()">{{ t('app.common.cancel') }}</button>
+            <button type="button" class="btn" [class]="m.to === 'block' ? 'btn-d' : 'btn-p'" (click)="store.cfgStatusDo(reason())">{{ statusAction() }}</button>
+          </div>
+        }
+        @case ('cfghist') {
+          @let c = cfgOf(m.id);
+          <div class="dlg-b">
+            @if (store.versions(); as vs) {
+              @if (vs.length) {
+                <div class="tw">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Version</th>
+                        <th>{{ t('app.forecast.hist.at') }}</th>
+                        <th>{{ t('app.forecast.hist.by') }}</th>
+                        <th>{{ t('app.forecast.cfghist.what') }}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @for (v of vs; track v.versionNo) {
+                        <tr>
+                          <td>
+                            <b>v{{ v.versionNo }}</b>&ngsp;
+                            @if (v.versionNo === c?.versionNo) {
+                              <span class="chip c-good">{{ t('app.forecast.cfghist.current') }}</span>
+                            }
+                          </td>
+                          <td>{{ dateTime(v.createdAt) }}</td>
+                          <td>{{ v.createdBy }}</td>
+                          <td>{{ versionNote(v.changedFields) }}</td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
+              } @else {
+                <div class="empty">{{ t('app.forecast.cfghist.empty') }}</div>
+              }
+            } @else {
+              <div class="empty" role="status">{{ t('app.common.loading') }}</div>
+            }
+          </div>
+          <div class="dlg-f">
+            <button type="button" class="btn btn-g" (click)="store.closeModal()">{{ t('app.common.close') }}</button>
+          </div>
+        }
+      }
+    </div>
+  </div>
+}
+
+@if (store.toastText(); as text) {
+  <div class="toast" role="status">{{ text }}</div>
+}

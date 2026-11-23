@@ -1,0 +1,168 @@
+<div class="mf-field" [class.bad]="!!error()">
+  @if (field().control !== 'checkbox') {
+    <label class="mf-label" [class.ts-sr-only]="compact()" [for]="uid()" [id]="uid() + '-label'">
+      {{ field().label }}
+      @if (field().required && field().control !== 'file') { <span class="rq" [attr.title]="t('app.settings.form.required')">*</span> }
+    </label>
+  }
+
+  @switch (field().control) {
+    @case ('textarea') {
+      <textarea
+        class="ts-input"
+        rows="1"
+        [id]="uid()"
+        [value]="text()"
+        [disabled]="disabled()"
+        [attr.maxlength]="field().maxLength ?? null"
+        [attr.aria-invalid]="!!error()"
+        [attr.aria-describedby]="describedBy()"
+        (input)="setText($any($event.target).value)"
+      ></textarea>
+    }
+    @case ('number') {
+      <input
+        class="ts-input"
+        type="text"
+        inputmode="decimal"
+        [id]="uid()"
+        [value]="text()"
+        [disabled]="disabled()"
+        [attr.aria-invalid]="!!error()"
+        [attr.aria-describedby]="describedBy()"
+        (input)="setText($any($event.target).value)"
+      />
+    }
+    @case ('date') {
+      <input
+        class="ts-input"
+        type="date"
+        [id]="uid()"
+        [value]="text()"
+        [disabled]="disabled()"
+        [attr.aria-invalid]="!!error()"
+        [attr.aria-describedby]="describedBy()"
+        (input)="setText($any($event.target).value)"
+      />
+    }
+    @case ('select') {
+      <select
+        class="ts-input"
+        data-ods-skip="1"
+        [id]="uid()"
+        [disabled]="disabled()"
+        [attr.aria-invalid]="!!error()"
+        [attr.aria-describedby]="describedBy()"
+        (change)="setText($any($event.target).value)"
+      >
+        <option value="" [selected]="text() === ''">{{ t('app.settings.form.selectPlaceholder') }}</option>
+        @for (o of field().options ?? []; track o.value) {
+          <option [value]="o.value" [selected]="o.value === text()">{{ o.text }}</option>
+        }
+      </select>
+    }
+    @case ('segment') {
+      <div class="seg" role="radiogroup" [attr.aria-labelledby]="uid() + '-label'" [id]="uid()">
+        @for (o of field().options ?? []; track o.value) {
+          <button
+            type="button"
+            role="radio"
+            class="seg-o"
+            [class.on]="o.value === text()"
+            [attr.aria-checked]="o.value === text()"
+            [disabled]="disabled()"
+            (click)="setText(o.value)"
+          >{{ o.text }}</button>
+        }
+      </div>
+    }
+    @case ('radio') {
+      <!-- ปุ่มวิทยุจริง เรียงแนวนอน (mockup v33 : .radios) -->
+      <div class="radios" role="radiogroup" [attr.aria-labelledby]="uid() + '-label'" [id]="uid()">
+        @for (o of field().options ?? []; track o.value) {
+          <label>
+            <input type="radio" [name]="uid()" [value]="o.value" [checked]="o.value === text()" [disabled]="disabled()" (change)="setText(o.value)" />{{ o.text }}
+          </label>
+        }
+      </div>
+    }
+    @case ('checkbox') {
+      <label class="chk">
+        <input
+          type="checkbox"
+          [id]="uid()"
+          [checked]="checked()"
+          [disabled]="disabled()"
+          [attr.aria-describedby]="describedBy()"
+          (change)="setChecked($any($event.target).checked)"
+        />
+        <span>{{ field().label }}</span>
+      </label>
+    }
+    @case ('reference') {
+      <div class="ref">
+        <input
+          class="ts-input"
+          type="text"
+          role="combobox"
+          autocomplete="off"
+          [id]="uid()"
+          [value]="open() ? query() : label()"
+          [placeholder]="open() || !label() ? t('app.settings.form.searchPlaceholder') : ''"
+          [disabled]="disabled()"
+          [attr.aria-expanded]="open()"
+          [attr.aria-controls]="uid() + '-list'"
+          [attr.aria-invalid]="!!error()"
+          [attr.aria-describedby]="describedBy()"
+          (focus)="openList()"
+          (blur)="closeList()"
+          (input)="onQuery($any($event.target).value)"
+          (keydown)="onKey($event)"
+        />
+        @if (label() && !disabled() && !field().required) {
+          <button type="button" class="ref-x" [attr.aria-label]="t('app.settings.form.clear')" (mousedown)="$event.preventDefault()" (click)="clear()">×</button>
+        }
+        @if (open()) {
+          <ul class="ref-list" role="listbox" [id]="uid() + '-list'">
+            @for (o of items(); track o.id; let i = $index) {
+              <li role="option" [class.act]="i === active()" [attr.aria-selected]="o.id === value()" (mousedown)="$event.preventDefault(); pick(o)">{{ optionLabel(o) }}</li>
+            } @empty {
+              <li class="ref-empty">{{ busy() ? t('app.settings.form.loading') : t('app.settings.form.noOptions') }}</li>
+            }
+            @if (total() > items().length) {
+              <li class="ref-more">{{ t('app.settings.form.moreOptions', items().length, total()) }}</li>
+            }
+          </ul>
+        }
+      </div>
+    }
+    @case ('file') {
+      <div class="file-off" [id]="uid()">{{ t('app.settings.form.fileUnsupported') }}</div>
+    }
+    @case ('readonly') {
+      <!-- ฟิลด์ระบบ : ผู้ใช้แก้ไม่ได้ ไม่ส่งตอนบันทึก — ช่องสีเทา + ไอคอนกุญแจและข้อความ "ระบบใส่ให้…" ใต้ช่อง (spec F32) -->
+      <input class="ts-input sys" type="text" disabled readonly [id]="uid()" [value]="sysValue()" [placeholder]="sysPlaceholder()" [attr.aria-describedby]="sysNote() ? uid() + '-sys' : null" />
+      @if (sysNote(); as note) {
+        <p class="sys-note" [id]="uid() + '-sys'"><ts-icon name="lock" [size]="12" />{{ note }}</p>
+      }
+    }
+    @default {
+      <input
+        class="ts-input"
+        type="text"
+        [id]="uid()"
+        [value]="text()"
+        [disabled]="disabled()"
+        [attr.maxlength]="field().maxLength ?? null"
+        [attr.aria-invalid]="!!error()"
+        [attr.aria-describedby]="describedBy()"
+        (input)="setText($any($event.target).value)"
+      />
+    }
+  }
+
+  <!-- ไม่แสดงคำแนะนำใต้ช่อง (field.hint) และตัวนับอักขระ — mockup v30 ไม่มี ; แสดงเฉพาะข้อความผิดพลาด -->
+  @if (error(); as e) {
+    <p class="msg" role="alert" [id]="uid() + '-err'">{{ e }}</p>
+  }
+</div>

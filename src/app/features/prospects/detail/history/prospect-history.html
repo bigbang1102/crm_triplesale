@@ -1,0 +1,29 @@
+<section class="ph">
+  <h2>{{ t('app.prospects.detail.tabHistory') }}</h2>
+
+  <div class="ph-box" role="table" [attr.aria-label]="t('app.prospects.detail.tabHistory')">
+    <div class="ph-row ph-row--head" role="row">
+      <span role="columnheader">{{ t('app.prospects.detail.history.time') }}</span>
+      <span role="columnheader">{{ t('app.prospects.detail.history.field') }}</span>
+      <span role="columnheader">{{ t('app.prospects.detail.history.oldValue') }}</span>
+      <span role="columnheader" aria-hidden="true"></span>
+      <span role="columnheader">{{ t('app.prospects.detail.history.newValue') }}</span>
+      <span role="columnheader">{{ t('app.prospects.detail.history.editor') }}</span>
+    </div>
+    <!-- only the rows scroll: the header row stays where it is -->
+    <div class="ph-body">
+      @for (e of rows(); track e.id) {
+        <div class="ph-row" role="row">
+          <span role="cell">{{ time(e.at) }}</span>
+          <span role="cell">{{ shown(e.field) }}</span>
+          <span role="cell" class="ph-val">{{ shown(e.oldValue) }}</span>
+          <span role="cell" class="ph-arrow" aria-hidden="true"><i class="pi pi-arrow-right"></i></span>
+          <span role="cell" class="ph-val">{{ shown(e.newValue) }}</span>
+          <span role="cell">{{ shown(e.editor) }}</span>
+        </div>
+      } @empty {
+        <p class="ph-empty">{{ t('app.prospects.detail.noHistory') }}</p>
+      }
+    </div>
+  </div>
+</section>

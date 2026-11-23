@@ -1,0 +1,255 @@
+<!-- field of a card: label above, value below ('-' when empty) -->
+<ng-template #field let-label="label" let-value="value" let-wide="wide">
+  <div class="pd-field" [class.pd-field--wide]="wide">
+    <span class="pd-label">{{ label }}</span>
+    <span class="pd-value">{{ value }}</span>
+  </div>
+</ng-template>
+
+@if (!canViewPage()) {
+  <p class="pd-state" role="alert">{{ t('app.prospects.detail.noAccess') }}</p>
+} @else if (loading()) {
+  <p class="pd-state" role="status">{{ t('app.prospects.detail.loading') }}</p>
+} @else if (failed() || !c()) {
+  <p class="pd-state" role="alert">{{ t('app.prospects.detail.notFound') }}</p>
+} @else {
+  @let r = c()!;
+  <div class="pd-page" (click)="closeMenu()">
+    <!-- header -->
+    <section class="pd-head">
+      <button type="button" class="pd-back" (click)="back(); $event.stopPropagation()" [attr.aria-label]="t('app.prospects.detail.back')">
+        <i class="pi pi-arrow-left"></i>
+      </button>
+      <!-- no picture (or one that does not load): the default picture of the system -->
+      <img class="pd-avatar" [src]="avatar() || defaultAvatar" alt="" referrerpolicy="no-referrer" (error)="avatarFailed($event)" />
+      <div class="pd-head-main">
+        <div class="pd-title">
+          <h1>{{ dash(r.customer_name) }}</h1>
+          <span class="pd-status" [attr.data-status]="status()">{{ t('app.prospects.detail.status.' + status()) }}</span>
+        </div>
+        <div class="pd-meta">
+          <div class="pd-field"><span class="pd-label">{{ t('label.template.customer_code') }}:</span><b>{{ dash(r.customer_code) }}</b></div>
+          <div class="pd-field"><span class="pd-label">{{ t('label.template.tel') }}:</span><b>{{ phone() }}</b></div>
+          <div class="pd-field"><span class="pd-label">{{ t('label.qt.responsible') }}:</span><b>{{ owner() }}</b></div>
+          <div class="pd-field">
+            <span class="pd-label">{{ t('label.cmd.source_channel') }}:</span>
+            @if (r.marketingchanelname) { <span class="pd-chip">{{ r.marketingchanelname }}</span> } @else { <b>-</b> }
+          </div>
+        </div>
+      </div>
+      <div class="pd-actions">
+        @if (canMenu()) {
+        <div class="pd-menu-wrap">
+          <button type="button" class="pd-icon-btn" [attr.aria-label]="t('app.prospects.detail.more')" aria-haspopup="menu" [attr.aria-expanded]="menuOpen()"
+                  (click)="toggleMenu(); $event.stopPropagation()">
+            <i class="pi pi-ellipsis-v"></i>
+          </button>
+          @if (menuOpen()) {
+            <div class="pd-menu" role="menu" (click)="$event.stopPropagation()">
+              <!-- no API yet for these two (see docs/integration/prospect-form.md); the queue is in the owner bar below -->
+              @if (canSuspend()) {<button type="button" role="menuitem" disabled [title]="t('app.prospects.detail.notAvailable')"><i class="pi pi-ban"></i>{{ t('app.prospects.suspend') }}</button>}
+              @if (canTrash()) {<button type="button" role="menuitem" class="pd-danger" disabled [title]="t('app.prospects.detail.notAvailable')"><i class="pi pi-trash"></i>{{ t('label.cmd.delete_tip') }}</button>}
+            </div>
+          }
+        </div>
+        }
+        @if (access('PL-PR-DT-03') && !isTrash() && !queued()) {
+          <button type="button" class="pd-btn" (click)="edit(); $event.stopPropagation()"><i class="pi pi-pencil"></i>{{ t('app.prospects.detail.edit') }}</button>
+        }
+        @if (access('PL-PR-DT-04') && !queued()) {
+          <!-- the sample data only: the real service has no create-opportunity call yet -->
+          <button type="button" class="pd-btn pd-btn--primary" [disabled]="!canCreateOpportunity()" [title]="canCreateOpportunity() ? '' : t('app.prospects.detail.notAvailable')" (click)="openCreateOpportunity(); $event.stopPropagation()">{{ t('app.prospects.createOpportunity') }}</button>
+        }
+      </div>
+    </section>
+
+    @if (creating()) {
+      <ts-create-opportunity-dialog [prospectId]="prospectNumber()" [choices]="pipelines" (closed)="creating.set(false)" (created)="opportunityCreated($event)" />
+    }
+
+    <!-- who has the customer, "change owner" / "return to the queue", the history (a customer in the queue cannot be edited or get an opportunity until it is given) -->
+    @if (!isTrash()) {
+      <ts-queue-owner-bar class="pd-owner-bar" kind="prospect" [id]="id()" (changed)="onQueueChanged()" />
+    }
+
+    <!-- the tabs stay on top of the white card, the content of the tab scrolls inside it -->
+    <div class="pd-body">
+    <div class="pd-tabs" role="tablist">
+      <button type="button" role="tab" [attr.aria-selected]="tab() === 'main'" [class.is-active]="tab() === 'main'" (click)="selectTab('main')">{{ t('label.cmd.tab_main') }}</button>
+      @if (canExtra()) {
+        <button type="button" role="tab" [attr.aria-selected]="tab() === 'extra'" [class.is-active]="tab() === 'extra'" (click)="selectTab('extra')">{{ t('label.cmd.tab_additional') }}</button>
+      }
+      @if (canDocs()) {
+        <button type="button" role="tab" [attr.aria-selected]="tab() === 'docs'" [class.is-active]="tab() === 'docs'" (click)="selectTab('docs')">{{ t('label.contracts.tab_documents') }}</button>
+      }
+      @if (canOpps()) {
+        <button type="button" role="tab" [attr.aria-selected]="tab() === 'opps'" [class.is-active]="tab() === 'opps'" (click)="selectTab('opps')">{{ t('app.prospects.detail.tabOpps') }} ({{ opportunities().length }})</button>
+      }
+      <button type="button" role="tab" [attr.aria-selected]="tab() === 'history'" [class.is-active]="tab() === 'history'" (click)="selectTab('history')">{{ t('app.prospects.detail.tabHistory') }}</button>
+    </div>
+
+    <div class="pd-scroll">
+    <!-- main tab -->
+    @if (tab() === 'main') {
+      <section class="pd-card">
+        <button type="button" class="pd-card-head" [attr.aria-expanded]="isOpen('basic')" (click)="toggle('basic')">
+          <span>{{ t('label.cmd.sec_basic_info') }}</span><i class="pi" [class.pi-chevron-up]="isOpen('basic')" [class.pi-chevron-down]="!isOpen('basic')"></i>
+        </button>
+        @if (isOpen('basic')) {
+          <div class="pd-grid pd-grid--lead">
+            <ng-container *ngTemplateOutlet="field; context: { label: t('label.contracts.customer_type'), value: t(kind() === 'person' ? 'label.cmd.customer_type_individual' : 'label.cmd.customer_type_org') }" />
+            @if (kind() === 'person') {
+              <ng-container *ngTemplateOutlet="field; context: { label: t('label.contracts.gender'), value: dash(r.sex) }" />
+            }
+            <ng-container *ngTemplateOutlet="field; context: { label: t('label.cmd.country'), value: dash(r.country_name || r.country) }" />
+            <ng-container *ngTemplateOutlet="field; context: { label: t('label.contracts.convenient_time'), value: dash(r.convenient_text) }" />
+            <ng-container *ngTemplateOutlet="field; context: { label: t('label.contracts.convenient_method'), value: dash(r.contact_backname) }" />
+            <ng-container *ngTemplateOutlet="field; context: { label: t('label.cmd.remark'), value: dash(r.remark) }" />
+            <ng-container *ngTemplateOutlet="field; context: { label: t('label.cmd.first_contact_date'), value: dmy(r.date_save) }" />
+            <ng-container *ngTemplateOutlet="field; context: { label: t('label.contracts.recorder'), value: dash(r.salepersonname) }" />
+            <ng-container *ngTemplateOutlet="field; context: { label: t('label.template.team_sales'), value: dash(r.saleGroupName) }" />
+          </div>
+        }
+      </section>
+
+      <section class="pd-card">
+        <button type="button" class="pd-card-head" [attr.aria-expanded]="isOpen('contact')" (click)="toggle('contact')">
+          <span>{{ t('label.cmd.sec_contact_info') }}</span><i class="pi" [class.pi-chevron-up]="isOpen('contact')" [class.pi-chevron-down]="!isOpen('contact')"></i>
+        </button>
+        @if (isOpen('contact')) {
+          <div class="pd-grid">
+            <ng-container *ngTemplateOutlet="field; context: { label: t('label.cmd.mobile_1'), value: dash(r.prospect_phone1) }" />
+            <ng-container *ngTemplateOutlet="field; context: { label: t('label.cmd.mobile_2'), value: dash(r.prospect_phone2) }" />
+            <ng-container *ngTemplateOutlet="field; context: { label: t('label.cmd.mobile_3'), value: dash(r.prospect_phone3) }" />
+            <ng-container *ngTemplateOutlet="field; context: { label: t('label.cmd.tel_1'), value: dash(r.prospect_tel1) }" />
+            <ng-container *ngTemplateOutlet="field; context: { label: t('label.cmd.tel_2'), value: dash(r.prospect_tel2) }" />
+            <ng-container *ngTemplateOutlet="field; context: { label: t('label.cmd.tel_3'), value: dash(r.prospect_tel3) }" />
+            <ng-container *ngTemplateOutlet="field; context: { label: t('label.cmd.email'), value: dash(r.prospect_email) }" />
+            <ng-container *ngTemplateOutlet="field; context: { label: t('label.cmd.fax'), value: dash(r.prospect_fax) }" />
+          </div>
+          <div class="pd-social">
+            <h3>{{ t('app.prospects.socialChannels') }}</h3>
+            <p class="pd-hint">{{ t('app.prospects.socialHint') }}</p>
+            <div class="pd-social-grid">
+              @for (s of social(); track s.key) {
+                <div class="pd-social-card">
+                  <div class="pd-social-head">
+                    @if (s.key === 'x') {
+                      <!-- the X logo of the form (Font Awesome 5 has no X) -->
+                      <svg class="pd-soc-ic pd-soc-x" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    } @else {
+                      <i [class]="'pd-soc-ic pd-soc-' + s.key + ' ' + socialIcon(s.key)"></i>
+                    }
+                    <b>{{ t('app.prospects.detail.social.' + s.key) }}</b>
+                    <span class="pd-chip" [class.pd-chip--on]="s.value"><i class="fas fa-link"></i> {{ s.value ? t('app.prospects.detail.connected') : t('app.prospects.notConnected') }}</span>
+                  </div>
+                  <div class="pd-social-body">
+                    <div class="pd-field"><span class="pd-label">{{ t('app.prospects.detail.account') }}:</span><b>{{ dash(s.value) }}</b></div>
+                    <div class="pd-field"><span class="pd-label">social_id:</span><b>-</b></div>
+                    <div class="pd-field"><span class="pd-label">{{ t('app.prospects.connectedAt') }}:</span><b>-</b></div>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </section>
+
+      @if (kind() === 'person') {
+        <section class="pd-card">
+          <button type="button" class="pd-card-head" [attr.aria-expanded]="isOpen('person')" (click)="toggle('person')">
+            <span>{{ t('label.cmd.sec_individual') }}</span><i class="pi" [class.pi-chevron-up]="isOpen('person')" [class.pi-chevron-down]="!isOpen('person')"></i>
+          </button>
+          @if (isOpen('person')) {
+            <div class="pd-grid">
+              <ng-container *ngTemplateOutlet="field; context: { label: t('label.cmd.id_card_passport'), value: dash(r.id_card) }" />
+              <ng-container *ngTemplateOutlet="field; context: { label: t('label.cmd.birth_date'), value: dmy(r.birthdate) }" />
+              <ng-container *ngTemplateOutlet="field; context: { label: t('label.cmd.age'), value: dash(r.age) }" />
+              <ng-container *ngTemplateOutlet="field; context: { label: t('label.template.career'), value: dash(r.occupationname) }" />
+              <ng-container *ngTemplateOutlet="field; context: { label: t('label.cmd.nationality'), value: dash(r.nationality) }" />
+              <ng-container *ngTemplateOutlet="field; context: { label: t('label.cmd.workplace_name'), value: dash(r.workplace_name) }" />
+              <ng-container *ngTemplateOutlet="field; context: { label: t('label.cmd.position'), value: dash(r.workplace_position) }" />
+              <ng-container *ngTemplateOutlet="field; context: { label: t('label.cmd.workplace_tel'), value: dash(r.workplace_tel) }" />
+              <ng-container *ngTemplateOutlet="field; context: { label: t('label.cmd.workplace_address'), value: dash(r.workplace_address), wide: true }" />
+              <ng-container *ngTemplateOutlet="field; context: { label: t('label.cmd.reference_person'), value: dash(r.refferal) }" />
+              <ng-container *ngTemplateOutlet="field; context: { label: t('label.cmd.reference_tel'), value: dash(r.refferal_tel) }" />
+              <ng-container *ngTemplateOutlet="field; context: { label: t('label.cmd.relationship'), value: dash(r.refferal_relate) }" />
+            </div>
+          }
+        </section>
+      } @else {
+        <section class="pd-card">
+          <button type="button" class="pd-card-head" [attr.aria-expanded]="isOpen('org')" (click)="toggle('org')">
+            <span>{{ t('label.cmd.sec_organization') }}</span><i class="pi" [class.pi-chevron-up]="isOpen('org')" [class.pi-chevron-down]="!isOpen('org')"></i>
+          </button>
+          @if (isOpen('org')) {
+            <div class="pd-grid">
+              <ng-container *ngTemplateOutlet="field; context: { label: t('label.cmd.tax_id'), value: dash(r.taxid) }" />
+              <ng-container *ngTemplateOutlet="field; context: { label: t('label.cmd.company_contact_name'), value: dash(r.contract_business) }" />
+              <ng-container *ngTemplateOutlet="field; context: { label: t('label.cmd.registered_branch'), value: dash(r.taxbranch) }" />
+              <ng-container *ngTemplateOutlet="field; context: { label: t('label.cmd.contact_position'), value: dash(r.contract_position) }" />
+              <ng-container *ngTemplateOutlet="field; context: { label: t('label.cmd.business_type'), value: dash(r.businesstypename) }" />
+            </div>
+          }
+        </section>
+      }
+
+      <section class="pd-card">
+        <button type="button" class="pd-card-head" [attr.aria-expanded]="isOpen('address')" (click)="toggle('address')">
+          <span>{{ t('label.cmd.sec_address') }}</span><i class="pi" [class.pi-chevron-up]="isOpen('address')" [class.pi-chevron-down]="!isOpen('address')"></i>
+        </button>
+        @if (isOpen('address')) {
+          <div class="pd-addr">
+            <span class="pd-badge">{{ t('label.cmd.current_address') }}</span>
+            <div class="pd-grid pd-grid--flush">
+              <ng-container *ngTemplateOutlet="field; context: { label: t('label.cmd.current_address'), value: dash(r.current_address) }" />
+              <ng-container *ngTemplateOutlet="field; context: { label: t('label.template.province'), value: dash(r.current_city_name) }" />
+              <ng-container *ngTemplateOutlet="field; context: { label: t('label.cmd.country'), value: dash(r.current_country_name) }" />
+              <ng-container *ngTemplateOutlet="field; context: { label: t('label.cmd.district_area'), value: dash(r.current_district_name) }" />
+              <ng-container *ngTemplateOutlet="field; context: { label: t('label.cmd.subdistrict'), value: dash(r.current_sub_district_name) }" />
+              <ng-container *ngTemplateOutlet="field; context: { label: t('label.cmd.zipcode'), value: dash(r.current_postid) }" />
+            </div>
+          </div>
+          <div class="pd-addr">
+            <span class="pd-badge">{{ t('label.cmd.mailing_address') }}</span>
+            <div class="pd-grid pd-grid--flush">
+              <ng-container *ngTemplateOutlet="field; context: { label: t('label.cmd.mailing_address'), value: dash(r.senddoc_address) }" />
+              <ng-container *ngTemplateOutlet="field; context: { label: t('label.template.province'), value: dash(r.senddoc_city_name) }" />
+              <ng-container *ngTemplateOutlet="field; context: { label: t('label.cmd.country'), value: dash(r.senddoc_country_name) }" />
+              <ng-container *ngTemplateOutlet="field; context: { label: t('label.cmd.district_area'), value: dash(r.senddoc_district_name) }" />
+              <ng-container *ngTemplateOutlet="field; context: { label: t('label.cmd.subdistrict'), value: dash(r.senddoc_sub_district_name) }" />
+              <ng-container *ngTemplateOutlet="field; context: { label: t('label.cmd.zipcode'), value: dash(r.senddoc_postid) }" />
+            </div>
+          </div>
+        }
+      </section>
+    }
+
+    <!-- extra info tab: the form's own pane (generated, ./extra); kept once built so what was typed stays when another tab is shown -->
+    @if (extraOpened() && canExtra()) {
+      <div class="pd-extra" [hidden]="tab() !== 'extra'">
+        <ts-prospect-extra [id]="id()" [request]="extraRequest" [provinces]="provinces()" />
+        @if (access('PL-PR-DT-05')) {
+          <div class="ld2-ef-update-btn"><button id="ld2CsSaveBtn" type="button" (click)="saveExtra()">{{ t('label.cmd.update_data') }}</button></div>
+        }
+      </div>
+    }
+
+    <!-- documents tab: the form's own pane (generated, ./docs); kept once built -->
+    @if (docsOpened() && canDocs()) {
+      <div class="pd-docs-tab" [hidden]="tab() !== 'docs'">
+        <ts-prospect-docs [id]="id()" [docs]="docs()" [uploadAcceptExt]="uploadAcceptExt()" [request]="extraRequest" (reload)="reloadDocs()" (remove)="removeDoc($event)" />
+      </div>
+    }
+
+    <!-- opportunities / history: no API yet -->
+    @if (tab() === 'opps' && canOpps()) {
+      <ts-prospect-opportunities [items]="opportunities()" (open)="openOpportunity($event)" />
+    }
+    @if (tab() === 'history') {
+      <ts-prospect-history [entries]="history()" />
+    }
+    </div>
+    </div>
+  </div>
+}

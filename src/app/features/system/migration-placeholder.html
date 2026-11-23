@@ -1,0 +1,71 @@
+<article class="ts-card box">
+  <header>
+    <span class="badge">{{ t('app.ph.badge') }}</span>
+    <h1>{{ title() }}</h1>
+    <p class="lead">{{ t('app.ph.lead') }}</p>
+  </header>
+
+  <dl class="meta">
+    <div>
+      <dt>{{ t('app.ph.route') }}</dt>
+      <dd><code>/{{ page.route }}</code></dd>
+    </div>
+    <div>
+      <dt>{{ t('app.ph.requires') }}</dt>
+      <dd>
+        @if (page.requires) {
+          <code>{{ page.requires }}</code>
+        } @else {
+          {{ t('app.ph.none') }}
+        }
+      </dd>
+    </div>
+    <div>
+      <dt>{{ t('app.ph.phase') }}</dt>
+      <dd>{{ page.phase }} — {{ phase?.name }}</dd>
+    </div>
+    <div>
+      <dt>{{ t('app.ph.size') }}</dt>
+      <dd>
+        <span class="size" [attr.data-size]="page.size">{{ page.size }}</span>
+      </dd>
+    </div>
+    <div>
+      <dt>{{ t('app.ph.status') }}</dt>
+      <dd>{{ t('app.status.' + page.status) }}</dd>
+    </div>
+    <div>
+      <dt>{{ t('app.ph.feature') }}</dt>
+      <dd><code>src/app/features/{{ page.feature }}/</code></dd>
+    </div>
+  </dl>
+
+  <section>
+    <h2><ts-icon name="fileText" [size]="16" /> {{ t('app.ph.legacy') }}</h2>
+    <ul>
+      @for (file of page.legacy; track file) {
+        <li><code>{{ file }}</code></li>
+      }
+    </ul>
+  </section>
+
+  @if (page.apis.length) {
+    <section>
+      <h2><ts-icon name="terminal" [size]="16" /> {{ t('app.ph.apis') }}</h2>
+      <ul>
+        @for (api of page.apis; track api) {
+          <li><code>{{ api }}</code></li>
+        }
+      </ul>
+    </section>
+  }
+
+  @if (page.notes) {
+    <section>
+      <h2><ts-icon name="info" [size]="16" /> {{ t('app.ph.notes') }}</h2>
+      <p>{{ page.notes }}</p>
+    </section>
+  }
+
+  <footer>{{ t('app.ph.manual') }}</footer>
+</article>

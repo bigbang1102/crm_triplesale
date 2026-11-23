@@ -1,0 +1,32 @@
+<!-- ชิ้นส่วนสำหรับ manual/index.html — วางเป็นหัวข้อใหม่ (เลขหัวข้อให้ผู้ประสานงานกำหนด) ถัดจาก §24 Dashboard และเพิ่มลิงก์ใน sidebar: <li><a href="#receipts">ใบรับเงิน RV (พอร์ตแล้ว)</a></li> -->
+<section id="receipts">
+  <h2><span class="num">NN</span>ใบรับเงิน RV — รายการ + ฟอร์ม (พอร์ตแล้ว เฟส A — เหมือนของเดิม 1:1)</h2>
+  <p>สองหน้าของเมนู "งานขาย": <code>/sales/receipts</code> (<code>pages/sales_doc_rv_list.xhtml</code> + <code>resources/support/sd2_list.css</code> + <code>drag_scroll</code>) และ <code>/sales/receipts/:id</code> (<code>pages/sales_doc_rv.xhtml</code>) — แท็บ "งานขาย" บนแถบบน (<code>components/sales_doc_tabs.xhtml</code>) เป็นของ shell (<code>nav.config.ts</code> กลุ่ม <code>sale</code>). สร้างด้วย <code>npm run receipts:sync</code> (<code>tools/sync-receipts.mjs</code>) และ <code>npm run receipt-form:sync</code> (<code>tools/sync-receipt-form.mjs</code>) — <b>ห้ามแก้ไฟล์ที่สร้าง</b> ให้แก้สคริปต์แล้วรันใหม่ (swap ที่ไม่ตรงต้นฉบับ = สคริปต์หยุด). ตรรกะร่วมของกลุ่มงานขาย (แกะหน้า Facelets, แท็บ, EL ในสตริง, replica) อยู่ที่ <code>tools/lib/sales-doc.mjs</code> — ใช้ต่อกับใบเสนอราคา/ใบจอง/ใบส่งสินค้า/รถยนต์ได้</p>
+
+  <div class="table-wrap"><table class="data">
+    <thead><tr><th>ไฟล์</th><th>ที่มา / หน้าที่</th></tr></thead>
+    <tbody>
+      <tr><td><code>features/receipts/receipts.{html,scss,engine.ts}</code></td><td>markup / <code>sd2_list.css</code> / สคริปต์ของ <code>sales_doc_rv_list.xhtml</code> (ตาราง 10 คอลัมน์ โหลด 500 แถวครั้งเดียว ค้นหา/กรอง/เรียงฝั่ง client · dialog อนุมัติ · popover รายงาน PDF/PNG · modal รายละเอียด) — <code>startReceipts(env)</code> คืน destroy</td></tr>
+      <tr><td><code>features/receipts/receipt-form.{html,scss,engine.ts}</code></td><td>markup / <code>&lt;style&gt;</code> / สคริปต์ของ <code>sales_doc_rv.xhtml</code> (ตารางรายการ + ภาษี/หัก ณ ที่จ่าย · ตัวเลือกสินค้า · numpad ชำระเงิน · เอกสารแนบ · บันทึก → ยืนยัน → POST → กล่องผล · prefill จาก lead) — <code>startReceiptForm(env)</code></td></tr>
+      <tr><td><code>receipts.ts</code> · <code>receipts-view.ts</code> · <code>receipt-form.ts</code> · <code>receipt-form-view.ts</code></td><td>host ที่เขียนเอง: route component (เปลี่ยนภาษา = view ใหม่ เหมือน <code>location.reload()</code>; โหมดไม่ใช่ mock = <code>&lt;ts-live-missing /&gt;</code>), host ที่ให้ <code>env</code> แก่ engine (ข้อความ, สิทธิ์, fetch, <code>window.open</code> ผ่านไฟล์ที่ backend ทำ, นำทางด้วย router, SweetAlert จริง, <code>ts-pref</code>), เริ่ม <code>startDragScroll</code></td></tr>
+      <tr><td><code>receipts-backend.ts</code></td><td>สัญญา: <code>fetch(url, init)</code> (<code>/rvapi?action=…</code>, <code>/board/…</code>) + <code>file(url)</code> (<code>/rvreport</code>, <code>/rvreceipt</code>) — รูปคำตอบของ <code>RvApiServlet</code> ทุก action</td></tr>
+      <tr><td><code>receipts.mock.ts</code> · <code>receipts.files.ts</code> · <code>receipts.logic.ts</code></td><td>backend จำลอง (ไม่พึ่ง Angular — harness โหลดใน Node): 40 ใบรับเงินจากตัวละครกลาง (<code>crm-seed</code>), master ทั้งชุด, สร้างใบใหม่ (verify), อนุมัติ, lead/prospect prefill, PDF/PNG ที่ valid จริง, fault ผ่าน <code>?mock=</code>; <code>receipts.logic.ts</code> = ตรรกะฝั่ง server ที่ย้ายมาเป็น TS (<code>normalizeRvDetail</code> ของ <code>RvDetailNormalizer</code>, ผลอนุมัติ) พร้อมเทสต์</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>ผลการตรวจเทียบกับหน้า Java จริง (<code>node tools/compare/run.mjs receipts</code> · <code>receipt-form</code>)</h3>
+  <ul>
+    <li>รายการ: <b>183 สถานการณ์ เหมือนทุกบรรทัด</b> — หน้าแรก สว่าง/มืด × 390/768/1024/1280/1920 · ไทย/อังกฤษ · A A A · สถานะ loading/ว่าง/error · เรียง 8 คอลัมน์ ↑↓ · ค้นหา (pill, ปุ่ม, Enter, Esc, ล้าง) · ตัวกรองสถานะ · ผลิตภัณฑ์ (และค่าที่จำไว้ข้ามการเปิด) · อนุมัติ (เปิด/ปิด/ทุกผลลัพธ์ของ backend รวม 403/500/ไม่ตอบ) · popover รายงาน (PDF/รูปของใบ sync ERP แล้ว/ยัง — เปิดไฟล์จริงและเทียบไบต์) · modal รายละเอียด (skeleton, ทุกรูปแบบข้อมูล, ฟอร์ม RV-01) · การนำทาง · ลากเลื่อนตาราง</li>
+    <li>ฟอร์ม: <b>304 สถานการณ์ เหมือนทุกบรรทัด</b> — ทุกส่วนของหน้า (หัวเอกสาร, สกุลเงิน, สาขา, ตัวเลือกลูกค้า, ตารางรายการ + ตัวเลือกสินค้า, ชำระเงินทุกวิธี + numpad + คีย์บอร์ดจริง, เอกสารแนบ, ทุกข้อความตรวจสอบก่อนบันทึก, ยืนยัน, ทุกผลของการบันทึก, prefill จาก lead ทุกกรณี) × สว่าง/มืด × ขนาดจอ × ไทย/อังกฤษ — และ <b>payload ที่ส่งไป backend ตรงกันทุกไบต์</b> (ผ่าน fault <code>create-echo</code>)</li>
+    <li><b>ความต่างที่เหลือ = สภาพแวดล้อมล้วน ๆ</b>: ไบต์ของรูปใบรับเงินที่วาดบน canvas (Java ไม่ประกาศฟอนต์ <code>"Noto Sans Thai"</code> จึงใช้ฟอนต์ระบบ — harness เทียบขนาดภาพแทน) · address ที่ escape พัง (<code>?leadId=%2</code>) ที่ router ของ Angular ไม่รับ (ไม่มีใครสร้าง URL แบบนี้) — ดู <code>INTEGRATION.md</code> ข้อ 4</li>
+    <li><b>เทสต์ในโปรเจกต์</b> (100 ข้อ): <code>receipts.logic.spec.ts</code> · <code>receipts.mock.spec.ts</code> (รูปคำตอบ ตัวกรอง แบ่งหน้า สร้าง/อนุมัติ fault ไฟล์ PDF/PNG ที่ valid) · <code>receipts.spec.ts</code> · <code>receipt-form.spec.ts</code> (หน้าทั้งหน้าใน jsdom: markup, master, คำนวณ VAT/หัก ณ ที่จ่าย, numpad, ตรวจก่อนบันทึก, ผลบันทึก, ไฟล์แนบ, prefill, เปลี่ยนภาษา, เก็บกวาดตอนออก, live-missing)</li>
+  </ul>
+
+  <h3>ที่ต่างจาก Java (ตั้งใจ)</h3>
+  <ul>
+    <li>แท็บ "ใบรับเงิน / ใบเสนอราคา / …" วาดโดย shell จาก <code>nav.config.ts</code> (Java ฉีดด้วยสคริปต์ของ <code>sales_doc_tabs.xhtml</code>) — generator เทียบรายการแท็บกับ Java และเตือนถ้าต่าง (ตอนนี้ต่าง 1 จุด: ชื่อแท็บ "ใบรับเงิน" vs "ใบรับเงิน (RV)")</li>
+    <li>การ์ดแนะนำลูกค้าใต้ช่องค้นหาของรายการ <b>ไม่ทำงานใน Java จริง</b> (<code>open_down_select.js</code> โหลดหลังสคริปต์ของหน้า) — พอร์ตคงพฤติกรรมเดิม (<code>env.suggestCustomers = false</code>)</li>
+    <li>ไฟล์ที่ <code>window.open</code> เปิด (PDF/PNG ของ <code>/rvreport</code>, <code>/rvreceipt</code>) ในโหมด mock เป็น blob URL ของไฟล์ที่ mock ประกอบ — พฤติกรรมฝั่งเบราว์เซอร์ (เปิดแท็บใหม่ในจังหวะคลิก) เหมือนเดิม</li>
+    <li><code>:id</code> ของฟอร์มไม่มีผล — สร้างใหม่เท่านั้น (แก้ไขหลังสร้างไม่ได้); query <code>leadId</code> · <code>activityGroupId</code> · <code>listMaterialId</code> อ่านจาก address เหมือนเดิม</li>
+  </ul>
+</section>

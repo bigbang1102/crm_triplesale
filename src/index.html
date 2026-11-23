@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <title>Triple Sale</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    /* Noto Sans Thai (variable, OFL) — real 100–900 weights; URL is relative to <base href>. */
+    @font-face {
+      font-family: 'Noto Sans Thai';
+      src: url('assets/fonts/noto-sans-thai/NotoSansThai-Variable.ttf') format('truetype');
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+    }
+    /* Same file under the family name the Java CSS uses ("NotoSansThai", project_root.css). Like the original it
+       declares no weight range, so bold text in it is the browser's synthetic bold — the AI HUB stylesheet is
+       copied from Java and asks for this family by name. */
+    @font-face {
+      font-family: 'NotoSansThai';
+      src: url('assets/fonts/noto-sans-thai/NotoSansThai-Variable.ttf') format('truetype');
+      font-display: swap;
+    }
+    /* IBM Plex Sans (OFL, latin + latin-ext) — the body font of the Java theme (layout-modify.css: body { font-family:
+       "IBM Plex Sans" }). Text that sets no family of its own inherits it there, e.g. the search box of the system
+       dropdown (open_down_select.js); the files are the ones the Java theme ships. */
+    @font-face { font-family: 'IBM Plex Sans'; font-style: normal; font-weight: 400; src: url('assets/fonts/ibm-plex-sans/ibm-plex-sans-v7-latin-ext_latin-regular.woff2') format('woff2'); }
+    @font-face { font-family: 'IBM Plex Sans'; font-style: normal; font-weight: 500; src: url('assets/fonts/ibm-plex-sans/ibm-plex-sans-v7-latin-ext_latin-500.woff2') format('woff2'); }
+    @font-face { font-family: 'IBM Plex Sans'; font-style: normal; font-weight: 600; src: url('assets/fonts/ibm-plex-sans/ibm-plex-sans-v7-latin-ext_latin-600.woff2') format('woff2'); }
+    @font-face { font-family: 'IBM Plex Sans'; font-style: normal; font-weight: 700; src: url('assets/fonts/ibm-plex-sans/ibm-plex-sans-v7-latin-ext_latin-700.woff2') format('woff2'); }
+    /* Be Vietnam Pro (OFL, latin, 600–900) — the headings of the Dashboard page (web/pages/dashboard.xhtml asks Google Fonts for it). */
+    @font-face { font-family: 'Be Vietnam Pro'; font-style: normal; font-weight: 600; font-display: swap; src: url('assets/fonts/be-vietnam-pro/be-vietnam-pro-latin-600-normal.woff2') format('woff2'); }
+    @font-face { font-family: 'Be Vietnam Pro'; font-style: normal; font-weight: 700; font-display: swap; src: url('assets/fonts/be-vietnam-pro/be-vietnam-pro-latin-700-normal.woff2') format('woff2'); }
+    @font-face { font-family: 'Be Vietnam Pro'; font-style: normal; font-weight: 800; font-display: swap; src: url('assets/fonts/be-vietnam-pro/be-vietnam-pro-latin-800-normal.woff2') format('woff2'); }
+    @font-face { font-family: 'Be Vietnam Pro'; font-style: normal; font-weight: 900; font-display: swap; src: url('assets/fonts/be-vietnam-pro/be-vietnam-pro-latin-900-normal.woff2') format('woff2'); }
+    /* Inter (OFL, variable 100–900, latin) — the Java login page asks Google Fonts for it (web/index.xhtml: "Username" /
+       "Password" labels and the version tag are set in it); same family, served from here so the sign-in works offline. */
+    @font-face {
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 100 900;
+      font-display: swap;
+      src: url('assets/fonts/inter/inter-latin-wght-normal.woff2') format('woff2-variations');
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+    }
+  </style>
+  <script>
+    // Apply the saved theme before first paint (avoids a light flash in dark mode).
+    try {
+      var t = localStorage.getItem('ts.theme');
+      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    } catch (e) { /* storage blocked – default light */ }
+  </script>
+</head>
+<body>
+  <ts-root></ts-root>
+</body>
+</html>

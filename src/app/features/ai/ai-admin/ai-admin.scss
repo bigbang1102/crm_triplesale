@@ -1,0 +1,692 @@
+// AI HUB › Admin (token governance). Global (ViewEncapsulation.None) — every class starts with `aad-`.
+// Look = the dashboard (`/dashboard`, features/sales-dashboard): a tinted page, white cards with no border, pill tab strip, 38px controls.
+// The `--aad-*` tokens below carry the same values as the `--db-*` tokens of that page (its CSS is generated and scoped to its own root, so the
+// values are repeated here); dark theme + the A A A font steps (`--ts-fs-adj`) follow it.
+
+.aad-root {
+  --aad-primary: #00c08b;
+  --aad-primary-hover: #0aa77c;
+  --aad-secondary: #35236a;
+  --aad-secondary-fg: #35236a;
+  --aad-secondary-line: #b7a4ef;
+  --aad-secondary-100: rgba(127, 99, 210, 0.2);
+  --aad-bg: #e7e9f2;
+  --aad-bg-2: #edf1f8;
+  --aad-card: #ffffff;
+  --aad-card-2: #f4f5f9;
+  --aad-input-bg: #ffffff;
+  --aad-line: #eaeaea;
+  --aad-border: #d1d5db;
+  --aad-table-head: #eaeaea;
+  --aad-hover: rgba(203, 210, 219, 0.3);
+  --aad-text: #383838;
+  --aad-text-2: #7c848d;
+  --aad-text-disabled: #969696;
+  --aad-success: #02a36a;
+  --aad-pending: #eda721;
+  --aad-cancel: #ea2828;
+  --aad-shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --aad-shadow-strong: 0 12px 28px rgba(0, 0, 0, 0.1);
+  --aad-radius: 14px;
+  --aad-fs-cap: calc(12px + var(--ts-fs-adj, 0px));
+  --aad-fs-sm: calc(13px + var(--ts-fs-adj, 0px));
+  --aad-fs-md: calc(14px + var(--ts-fs-adj, 0px));
+  --aad-fs-title: calc(16px + var(--ts-fs-adj, 0px));
+  --aad-fs-lg: calc(18px + var(--ts-fs-adj, 0px));
+  --aad-fs-xl: calc(24px + var(--ts-fs-adj, 0px));
+
+  box-sizing: border-box;
+  min-height: calc(100vh - var(--ts-topbar-h) - var(--ts-footer-h) - 2 * var(--ts-content-pad));
+  margin-bottom: calc(-1 * (var(--ts-content-pad) + var(--ts-footer-h)));
+  padding: 16px 18px calc(24px + var(--ts-footer-h));
+  background: var(--aad-bg);
+  color: var(--aad-text);
+  font-size: var(--aad-fs-md);
+  line-height: 1.45;
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+}
+
+html[data-theme='dark'] .aad-root {
+  --aad-secondary: #7f63d2;
+  --aad-secondary-fg: #b7a4ef;
+  --aad-secondary-line: #4e339d;
+  --aad-bg: #161616;
+  --aad-bg-2: #1c1c1c;
+  --aad-card: #252525;
+  --aad-card-2: #1c1c1c;
+  --aad-input-bg: #1c1c1c; // darker than the card (#252525), so a field stands out inside a popup / card
+  --aad-line: #454545;
+  --aad-border: #4d4d4d;
+  --aad-table-head: #454545;
+  --aad-text: #ffffff;
+  --aad-text-2: #a9a9a9;
+  --aad-text-disabled: #545151;
+  --aad-shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --aad-shadow-strong: 0 12px 28px rgba(0, 0, 0, 0.5);
+
+  color-scheme: dark;
+}
+
+.aad-h1 {
+  margin: 0;
+  font-size: var(--aad-fs-lg);
+  font-weight: 600;
+  color: var(--aad-text);
+}
+.aad-h2 {
+  margin: 4px 0 12px;
+  font-size: var(--aad-fs-lg);
+  font-weight: 600;
+  color: var(--aad-text);
+}
+.aad-h3 {
+  margin: 0 0 10px;
+  font-size: var(--aad-fs-title);
+  font-weight: 600;
+  color: var(--aad-text);
+}
+.aad-h4 {
+  margin: 16px 0 6px;
+  font-size: var(--aad-fs-md);
+  font-weight: 600;
+  color: var(--aad-text);
+}
+.aad-gap {
+  margin-top: 18px;
+}
+.aad-muted {
+  color: var(--aad-text-2);
+}
+.aad-hint {
+  margin: 0 0 8px;
+  font-size: var(--aad-fs-sm);
+}
+.aad-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.aad-nowrap {
+  white-space: nowrap;
+}
+
+/* ---- header + tabs ---- */
+.aad-header {
+  margin-bottom: 14px;
+}
+.aad-header p {
+  margin: 2px 0 10px;
+}
+/* the tab strip of the dashboard: a rounded tray, the chosen tab filled dark, its icon in a small chip */
+.aad-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border: 1px solid var(--aad-border);
+  border-radius: 14px;
+  background: var(--aad-bg-2);
+}
+.aad-tab {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 12px 0 5px;
+  border-radius: 10px;
+  color: var(--aad-text-2);
+  text-decoration: none;
+  font-weight: 500;
+
+  i {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    color: var(--aad-secondary-fg);
+    background: color-mix(in srgb, var(--aad-secondary-fg) 13%, var(--aad-card));
+  }
+  &:hover {
+    background: var(--aad-hover);
+    color: var(--aad-text);
+  }
+  &.is-active {
+    color: #fff;
+    background: var(--aad-secondary);
+
+    i {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.18);
+    }
+  }
+  &:focus-visible {
+    outline: 2px solid var(--aad-secondary-line);
+    outline-offset: 0;
+  }
+}
+
+/* ---- layout ---- */
+/* minmax(0, 1fr): a wide table scrolls inside its card instead of stretching the column past the screen */
+.aad-section {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+}
+.aad-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px 16px;
+}
+.aad-toolbar-end {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.aad-card {
+  min-width: 0;
+  padding: 14px 16px 16px;
+  border-radius: var(--aad-radius);
+  background: var(--aad-card);
+  box-shadow: var(--aad-shadow-soft);
+}
+.aad-card-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+
+  .aad-h3 {
+    margin: 0;
+  }
+}
+.aad-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+  gap: 14px;
+}
+.aad-warn-card {
+  background: color-mix(in srgb, var(--aad-pending) 14%, var(--aad-card));
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--aad-pending) 45%, var(--aad-card)),
+    var(--aad-shadow-soft);
+}
+.aad-warn-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+
+  li {
+    display: grid;
+    grid-template-columns: minmax(120px, 220px) 1fr;
+    align-items: center;
+    gap: 10px;
+  }
+}
+
+/* ---- crumbs / links / buttons ---- */
+.aad-crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+}
+.aad-crumb-sep {
+  font-size: 10px;
+  color: var(--aad-text-2);
+}
+.aad-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--aad-secondary-fg);
+  font: inherit;
+  text-align: left;
+  text-decoration: underline;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--aad-text);
+  }
+  &:focus-visible {
+    outline: 2px solid var(--aad-secondary-line);
+    outline-offset: 2px;
+  }
+}
+.aad-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 38px;
+  padding: 0 14px;
+  border: 1px solid var(--aad-border);
+  border-radius: 10px;
+  background: var(--aad-card);
+  color: var(--aad-text);
+  font: inherit;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    background: var(--aad-hover);
+  }
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+  &:focus-visible {
+    outline: 2px solid var(--aad-secondary-line);
+    outline-offset: 0;
+  }
+  &.is-primary {
+    border-color: transparent;
+    background: var(--aad-primary);
+    color: #fff;
+
+    &:hover:not(:disabled) {
+      background: var(--aad-primary-hover);
+    }
+  }
+  &.is-danger {
+    color: var(--aad-cancel);
+  }
+}
+.aad-btn-icon {
+  min-width: 34px;
+  min-height: 34px;
+  padding: 0 6px;
+  border-radius: 9px;
+  color: var(--aad-text-2);
+
+  &:hover:not(:disabled) {
+    color: var(--aad-text);
+  }
+  &.is-danger {
+    color: var(--aad-cancel);
+  }
+}
+
+/* ---- month picker (a pill, like the date range of the dashboard) ---- */
+.aad-month {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.aad-month-label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-width: 112px;
+  justify-content: center;
+  min-height: 38px;
+  padding: 0 14px;
+  border: 1px solid var(--aad-border);
+  border-radius: 999px;
+  background: var(--aad-card);
+  color: var(--aad-secondary-fg);
+  font-weight: 500;
+
+  input[type='month'] {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+  }
+  &:hover {
+    border-color: var(--aad-secondary-line);
+  }
+  &:focus-within {
+    outline: 2px solid var(--aad-secondary-line);
+  }
+}
+
+/* ---- tiles (the KPI cards of the dashboard) ---- */
+.aad-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+.aad-tile {
+  padding: 12px 14px;
+  border: 1px solid var(--aad-line);
+  border-radius: 12px;
+  background: var(--aad-card);
+  box-shadow: var(--aad-shadow-soft);
+
+  dt {
+    color: var(--aad-text-2);
+    font-size: var(--aad-fs-sm);
+  }
+  dd {
+    margin: 2px 0 0;
+    color: var(--aad-text);
+    font-size: var(--aad-fs-xl);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .aad-tile-hint {
+    color: var(--aad-text-2);
+    font-size: var(--aad-fs-sm);
+    font-weight: 400;
+  }
+}
+
+/* ---- quota ---- */
+.aad-quota {
+  display: grid;
+  gap: 4px;
+  min-width: 150px;
+}
+.aad-quota-track {
+  height: 10px;
+  border-radius: 999px;
+  background: var(--aad-card-2);
+  overflow: hidden;
+}
+.aad-quota-fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--aad-success);
+}
+.aad-quota.is-warn .aad-quota-fill {
+  background: var(--aad-pending);
+}
+.aad-quota.is-full .aad-quota-fill {
+  background: var(--aad-cancel);
+}
+.aad-quota-text {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  font-size: var(--aad-fs-sm);
+  font-variant-numeric: tabular-nums;
+}
+/* the status pills of the dashboard (.pill.good / .warn / .bad) */
+.aad-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: var(--aad-fs-sm);
+  font-weight: 600;
+  background: color-mix(in srgb, var(--aad-success) 14%, var(--aad-card));
+  color: var(--aad-success);
+
+  &.is-warn {
+    background: color-mix(in srgb, var(--aad-pending) 18%, var(--aad-card));
+    color: color-mix(in srgb, var(--aad-pending) 70%, var(--aad-text));
+  }
+  &.is-full {
+    background: color-mix(in srgb, var(--aad-cancel) 12%, var(--aad-card));
+    color: var(--aad-cancel);
+  }
+}
+.aad-chain {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+
+  li {
+    display: grid;
+    grid-template-columns: minmax(160px, 260px) 1fr;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border: 1px solid var(--aad-line);
+    border-radius: 10px;
+    background: var(--aad-card-2);
+
+    &.is-blocking {
+      border-color: color-mix(in srgb, var(--aad-pending) 45%, var(--aad-card));
+      background: color-mix(in srgb, var(--aad-pending) 14%, var(--aad-card));
+    }
+  }
+}
+.aad-chain-name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ---- tables ---- */
+.aad-table-wrap {
+  overflow-x: auto;
+}
+.aad-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--aad-fs-sm);
+
+  th,
+  td {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--aad-line);
+    text-align: left;
+    vertical-align: middle;
+  }
+  thead th {
+    background: var(--aad-table-head);
+    color: var(--aad-text);
+    font-weight: 600;
+    white-space: nowrap;
+
+    &:first-child {
+      border-top-left-radius: 10px;
+    }
+    &:last-child {
+      border-top-right-radius: 10px;
+    }
+  }
+  tbody th {
+    font-weight: 600;
+    color: var(--aad-text);
+  }
+  tbody tr:hover {
+    background: var(--aad-hover);
+  }
+  .num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  small {
+    display: block;
+    font-weight: 400;
+  }
+}
+.aad-table-wide {
+  min-width: 980px;
+}
+.aad-cell-quota {
+  min-width: 190px;
+}
+.aad-note {
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.aad-actions {
+  white-space: nowrap;
+}
+.aad-pager {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+/* ---- popup (add / edit a quota) ---- */
+.aad-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.45);
+}
+.aad-modal {
+  width: min(640px, 100%);
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  padding: 16px 18px 18px;
+  border-radius: var(--aad-radius);
+  background: var(--aad-card);
+  color: var(--aad-text);
+  box-shadow: var(--aad-shadow-strong);
+}
+.aad-modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+
+  .aad-h3 {
+    margin: 0;
+  }
+}
+
+/* ---- forms ---- */
+.aad-form {
+  margin-top: 16px;
+  padding-top: 8px;
+  border-top: 1px solid var(--aad-line);
+}
+.aad-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px 14px;
+  align-items: end;
+}
+.aad-picker,
+ts-aad-scope-picker {
+  // inside a form grid the selects are the grid items themselves
+  display: contents;
+}
+.aad-form-grid label,
+.aad-picker label,
+.aad-readonly,
+.aad-inline-field,
+.aad-toolbar .aad-picker label {
+  display: grid;
+  gap: 4px;
+  font-size: var(--aad-fs-sm);
+  color: var(--aad-text-2);
+}
+.aad-toolbar ts-aad-scope-picker {
+  display: block;
+}
+.aad-toolbar .aad-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.aad-wide {
+  grid-column: 1 / -1;
+}
+.aad-inline-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.aad-check {
+  display: flex !important; // a checkbox sits beside its text (the grid rule above would stack them)
+  align-items: center;
+  grid-auto-flow: column;
+}
+.aad-root select,
+.aad-root input[type='text'],
+.aad-root input[type='search'],
+.aad-root input[type='number'] {
+  min-height: 38px;
+  width: 100%;
+  padding: 0 12px;
+  border: 1px solid var(--aad-border);
+  border-radius: 10px;
+  background: var(--aad-input-bg);
+  color: var(--aad-text);
+  font: inherit;
+
+  &:focus-visible {
+    outline: 2px solid var(--aad-secondary-line);
+    outline-offset: 0;
+  }
+  &[aria-invalid='true'] {
+    border-color: var(--aad-cancel);
+  }
+}
+.aad-root input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--aad-primary);
+}
+.aad-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.aad-error {
+  color: var(--aad-cancel);
+  font-size: var(--aad-fs-sm);
+}
+.aad-alert {
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--aad-card);
+  box-shadow: var(--aad-shadow-soft);
+
+  &.is-error {
+    background: color-mix(in srgb, var(--aad-cancel) 12%, var(--aad-card));
+    color: var(--aad-cancel);
+  }
+}
+.aad-readonly strong {
+  color: var(--aad-text);
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 640px) {
+  .aad-root {
+    padding: 12px 16px calc(20px + var(--ts-footer-h));
+  }
+  .aad-warn-list li,
+  .aad-chain li {
+    grid-template-columns: 1fr;
+  }
+}

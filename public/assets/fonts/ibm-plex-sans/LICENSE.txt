@@ -1,0 +1,7 @@
+IBM Plex Sans — latin + latin-ext subset (woff2), weights 400 / 500 / 600 / 700.
+
+Copyright © 2017 IBM Corp. with Reserved Font Name "Plex".
+Licensed under the SIL Open Font License, Version 1.1 — https://openfontlicense.org/open-font-license-official-text/
+
+These are the files the Java project ships in resources/pandora-layout/fonts/ (the body font of its theme,
+layout-modify.css); they are copied here unchanged so that text which inherits the body font looks the same.

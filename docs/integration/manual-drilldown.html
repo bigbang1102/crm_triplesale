@@ -1,0 +1,27 @@
+<!-- ชิ้นส่วนสำหรับ manual/index.html (ผู้ประสานงานนำไปใส่เป็นหัวข้อใหม่ต่อจาก §24 Dashboard และเติมลิงก์ในสารบัญ) — หัวข้อ DrillDown -->
+<section id="drilldown">
+  <h2><span class="num">NN</span>DrillDown (พอร์ตแล้ว — เหมือนของเดิม 1:1, โหมด mock)</h2>
+  <p>หน้า <code>/crm/drilldown/:code</code> (<code>pages/drilldown.xhtml</code> + <code>resources/support/crm_list.css</code> + <code>drag_scroll.{css,js}</code>) — รายงาน 11 ชุด <code>T-CS-01</code> · <code>T-PLS-01..03</code> · <code>T-LS-01..05</code> · <code>T-LE-01</code> · <code>T-FI-01</code> อยู่หน้าเดียว คอลัมน์มาจาก server (ไม่ตายตัว), ตัวกรองรายคอลัมน์ฝั่ง client (รายการติ๊ก หรือปฏิทินสำหรับคอลัมน์วันที่), ตรึงคอลัมน์ซ้ายถึง "ชื่อ-นามสกุล", แบ่งหน้าเลขกลางการ์ด (100 แถว/หน้า), ส่งออก CSV (BOM + CRLF) สร้างด้วย <code>npm run drilldown:sync</code> (<code>tools/sync-drilldown.mjs</code>) — <b>ห้ามแก้ไฟล์ที่สร้าง</b> ให้แก้สคริปต์แล้วรันใหม่ (swap ที่ไม่ตรงกับต้นฉบับ = สคริปต์หยุด)</p>
+
+  <div class="table-wrap"><table class="data">
+    <thead><tr><th>ไฟล์</th><th>ที่มา / หน้าที่</th></tr></thead>
+    <tbody>
+      <tr><td><code>features/drilldown/drilldown.html</code></td><td>markup ของ <code>drilldown.xhtml</code> (การ์ด + เมนูกรองรายคอลัมน์) — <code>#{commonBean.msg[…]}</code> → <code>t('…')</code>; ที่เหลือตามต้นฉบับ</td></tr>
+      <tr><td><code>features/drilldown/drilldown.scss</code></td><td><code>crm_list.css</code> (ที่หน้า <code>&lt;link&gt;</code>) + <code>&lt;style&gt;</code> ของหน้าตามต้นฉบับ + บล็อก "Angular adaptation" + dark_mode.css ของ Java เฉพาะกฎที่แตะหน้านี้ (28 กฎ)</td></tr>
+      <tr><td><code>features/drilldown/drilldown.engine.ts</code></td><td>สคริปต์ของหน้า <code>startDrilldown(env)</code> คืนฟังก์ชัน destroy — สิ่งที่เปลี่ยนมีแค่: ข้อความ/ภาษา/URL ของ servlet/รหัสรายงาน (Java: <code>?code=</code>, ที่นี่: <code>:code</code> ของ route)/ชื่อหน้าต่าง ถูกฉีดผ่าน <code>env</code>; listener/ResizeObserver/timer/blob URL ถูกเก็บกวาดตอนออกจากหน้า</td></tr>
+      <tr><td><code>features/drilldown/drilldown.reports.ts</code></td><td><b>สร้างจาก</b> <code>DrilldownApiService.java</code>: ทะเบียนรายงาน 11 ชุด, พจนานุกรมชื่อคอลัมน์ (<code>LABELS_*</code>), คอลัมน์รวม (Profile), ชื่อคอลัมน์ที่ซ่อน — ใช้ร่วมกับ live adapter ภายหลัง</td></tr>
+      <tr><td><code>drilldown.columns.ts</code></td><td>พอร์ตของ <code>ReportDef.planColumns / mockColumns</code>, <code>normalizeKey</code>, <code>humanize</code>, <code>findReport</code></td></tr>
+      <tr><td><code>drilldown.ts</code> · <code>drilldown-view.ts</code></td><td>host ที่เขียนเอง: route component (รับ <code>:code</code>; <b>เปลี่ยนภาษา/เปลี่ยนรายงาน = สร้างหน้าใหม่</b> เหมือน Java โหลดหน้าใหม่), เริ่ม/หยุด engine และ drag-scroll ของตาราง; โหมดไม่ใช่ mock แสดง <code>&lt;ts-live-missing&gt;</code></td></tr>
+      <tr><td><code>drilldown-backend.ts</code> · <code>drilldown.mock.ts</code></td><td>สัญญา: <code>fetch('/board/drilldown?action=data&amp;code=&amp;page=&amp;pageSize=')</code> ตอบ <code>{success, message, data}</code> เหมือน servlet · mock = โหมดข้อมูลตัวอย่างของ Java (<code>drilldown.mock=true</code>: <code>DrilldownMockData</code>) แถวตามจำนวนเดิม (64 + (index×23 mod 180)), ค่าเลือกจากชื่อคอลัมน์, คนจาก <code>crm-seed</code>, "วันนี้" = 2026-10-20; รหัสพิเศษ <code>X-…</code> ไว้ทดสอบสถานะ error/ว่าง/ช้า</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>ผลการตรวจเทียบกับหน้า Java จริง (<code>node tools/compare/run.mjs drilldown</code>)</h3>
+  <p>166 สถานการณ์ เทียบ DOM + ข้อความ + computed style + ตำแหน่ง/ขนาด ทั้งสองฝั่งได้ข้อมูลชุดเดียวกัน — <b>เหมือนทุกสถานการณ์</b>: หน้าแรก สว่าง/มืด × 9 ขนาดจอ · ไทย/อังกฤษ · ปุ่ม A A A · ทั้ง 11 รายงาน · ตรึงคอลัมน์ + เลื่อนซ้าย-ขวา/บน-ล่าง · ลากเลื่อน · แบ่งหน้า (รวมหน้าต่างเลขหน้า 13 หน้า) · skeleton ระหว่างโหลด · สถานะ error (403/500/ตอบกลับไม่ใช่ JSON/บริการล้ม/ไม่รู้จักรายงาน/ว่าง) · ตัวกรองรายการติ๊ก (ค้นหา, หลายค่า, ล้าง, ไม่พบ, ช่องว่าง) · ตัวกรองปฏิทิน (เดือนก่อน/ถัดไป ข้ามปี, เลือกวัน, วันนี้, ล้าง, ไทย/อังกฤษ) · ปิดเมนูด้วย Esc/คลิกนอก/เลื่อน/ปรับขนาด · ส่งออก CSV (ไฟล์ถูก stub แล้วเขียนเนื้อหาลง DOM)</p>
+  <h3>ที่ต่างจาก Java (ตั้งใจ)</h3>
+  <ul>
+    <li>รหัสรายงานมาจาก <code>:code</code> ของ route (Java: <code>?code=</code>); ไม่มีรหัส → <code>javaLinkToRoute</code> ใส่ <code>T-CS-01</code> ให้ (ค่าเริ่มต้นเดียวกับหน้า Java)</li>
+    <li><code>document.title</code> ตั้งผ่าน <code>Title</code> ของ Angular ("DrillDown &lt;code&gt;" เหมือนเดิม)</li>
+    <li>ไม่มี servlet: <code>/board/drilldown</code> เป็นสัญญาของ <code>DrilldownBackend</code> (mock ในเฟสนี้) — live adapter (เรียก <code>/api/v1/drilldown/&lt;apiPath&gt;</code> พร้อม Bearer แล้วใช้ <code>planColumns</code>) เป็นงานเฟสถัดไป</li>
+  </ul>
+</section>

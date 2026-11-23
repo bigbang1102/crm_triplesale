@@ -1,0 +1,231 @@
+<section class="aad-section" [attr.aria-busy]="state.loading()">
+  <div class="aad-toolbar">
+    <ts-aad-scope-picker [month]="month()" [depth]="3" [(value)]="scope" />
+    <div class="aad-toolbar-end">
+      <ts-aad-month [(month)]="month" />
+    </div>
+  </div>
+
+  @if (state.error(); as message) {
+    <p class="aad-alert is-error" role="alert">{{ message }}</p>
+  }
+  @if (state.loading() && !data()) {
+    <p class="aad-muted" role="status">{{ t('app.aiAdmin.loading') }}</p>
+  }
+
+  @if (data(); as d) {
+    <h2 class="aad-h2">
+      {{ d.name }}
+      <small class="aad-muted">{{ t('app.aiAdmin.level.' + d.level) }}</small>
+    </h2>
+    <ts-aad-tiles [tiles]="tiles()" />
+
+    <div class="aad-card">
+      <h3 class="aad-h3">{{ t('app.aiAdmin.detail.quotaOfScope') }}</h3>
+      <ts-aad-quota-bar [quota]="d.quota" />
+      @if (d.quotaChain.length > 0) {
+        <h4 class="aad-h4">{{ t('app.aiAdmin.detail.chain') }}</h4>
+        <p class="aad-muted aad-hint">{{ t('app.aiAdmin.detail.chainRule') }}</p>
+        <ul class="aad-chain">
+          @for (item of d.quotaChain; track item.level + item.key) {
+            <li [class.is-blocking]="blocking() === item">
+              <span class="aad-chain-name">
+                <small class="aad-muted">{{ t('app.aiAdmin.quota.level.' + item.level) }}</small>
+                <strong>{{ item.name }}</strong>
+                @if (blocking() === item) {
+                  <span class="aad-chip is-warn"
+                    ><i class="fa-solid fa-hourglass-half" aria-hidden="true"></i
+                    >{{ t('app.aiAdmin.detail.blocksFirst') }}</span
+                  >
+                }
+              </span>
+              <ts-aad-quota-bar [quota]="item.quota" />
+            </li>
+          }
+        </ul>
+      }
+    </div>
+
+    <div class="aad-grid-2">
+      <div class="aad-card">
+        <h3 class="aad-h3">{{ t('app.aiAdmin.detail.byTool') }}</h3>
+        <ts-bar-chart [items]="toolBars()" [ariaLabel]="t('app.aiAdmin.detail.chartTools')" />
+      </div>
+      <div class="aad-card">
+        <h3 class="aad-h3">{{ t('app.aiAdmin.detail.byGroup') }}</h3>
+        <ts-donut-chart
+          [items]="groupItems()"
+          [centerText]="formatTokens(d.totals.tokens)"
+          [ariaLabel]="t('app.aiAdmin.detail.chartGroups')"
+        />
+        <h3 class="aad-h3 aad-gap">{{ t('app.aiAdmin.detail.byModel') }}</h3>
+        <ts-donut-chart
+          [items]="modelItems()"
+          [centerText]="formatTokens(d.totals.tokens)"
+          [ariaLabel]="t('app.aiAdmin.detail.chartModels')"
+        />
+      </div>
+    </div>
+
+    <div class="aad-card">
+      <h3 class="aad-h3">{{ t('app.aiAdmin.detail.toolTable') }}</h3>
+      <div class="aad-table-wrap">
+        <table class="aad-table">
+          <caption class="aad-sr">
+            {{
+              t('app.aiAdmin.detail.toolTable')
+            }}
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">{{ t('app.aiAdmin.col.tool') }}</th>
+              <th scope="col">{{ t('app.aiAdmin.col.module') }}</th>
+              <th scope="col" class="num">{{ t('app.aiAdmin.tile.total') }}</th>
+              <th scope="col" class="num">{{ t('app.aiAdmin.tile.input') }}</th>
+              <th scope="col" class="num">{{ t('app.aiAdmin.tile.output') }}</th>
+              <th scope="col" class="num">{{ t('app.aiAdmin.tile.runs') }}</th>
+              <th scope="col" class="num">{{ t('app.aiAdmin.col.users') }}</th>
+              <th scope="col" class="num">{{ t('app.aiAdmin.col.share') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (tool of d.byTool; track tool.toolId) {
+              <tr>
+                <th scope="row">{{ tool.title }}</th>
+                <td>{{ tool.groupTitle }}</td>
+                <td class="num">{{ formatNumber(tool.tokens) }}</td>
+                <td class="num">{{ formatNumber(tool.inputTokens) }}</td>
+                <td class="num">{{ formatNumber(tool.outputTokens) }}</td>
+                <td class="num">{{ formatNumber(tool.runs) }}</td>
+                <td class="num">{{ tool.users }}</td>
+                <td class="num">{{ formatPercent(tool.share) }}</td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="8" class="aad-muted">{{ t('app.aiAdmin.empty') }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="aad-card">
+      <h3 class="aad-h3">{{ t('app.aiAdmin.detail.modelTable') }}</h3>
+      <div class="aad-table-wrap">
+        <table class="aad-table">
+          <caption class="aad-sr">
+            {{
+              t('app.aiAdmin.detail.modelTable')
+            }}
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">{{ t('app.aiAdmin.col.model') }}</th>
+              <th scope="col" class="num">{{ t('app.aiAdmin.tile.total') }}</th>
+              <th scope="col" class="num">{{ t('app.aiAdmin.tile.input') }}</th>
+              <th scope="col" class="num">{{ t('app.aiAdmin.tile.output') }}</th>
+              <th scope="col" class="num">{{ t('app.aiAdmin.tile.runs') }}</th>
+              <th scope="col" class="num">{{ t('app.aiAdmin.col.share') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (model of d.byModel; track model.modelKey) {
+              <tr>
+                <th scope="row">{{ model.label }}</th>
+                <td class="num">{{ formatNumber(model.tokens) }}</td>
+                <td class="num">{{ formatNumber(model.inputTokens) }}</td>
+                <td class="num">{{ formatNumber(model.outputTokens) }}</td>
+                <td class="num">{{ formatNumber(model.runs) }}</td>
+                <td class="num">{{ formatPercent(model.share) }}</td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="6" class="aad-muted">{{ t('app.aiAdmin.empty') }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      @if (matrix().rows.length > 0) {
+        <h4 class="aad-h4">{{ t('app.aiAdmin.detail.toolModel') }}</h4>
+        <div class="aad-table-wrap">
+          <table class="aad-table">
+            <caption class="aad-sr">
+              {{
+                t('app.aiAdmin.detail.toolModel')
+              }}
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">{{ t('app.aiAdmin.col.tool') }}</th>
+                @for (model of matrix().models; track model.modelKey) {
+                  <th scope="col" class="num">{{ model.label }}</th>
+                }
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of matrix().rows; track row.tool.toolId) {
+                <tr>
+                  <th scope="row">{{ row.tool.title }}</th>
+                  @for (cell of row.cells; track $index) {
+                    <td class="num">{{ cell > 0 ? formatNumber(cell) : '–' }}</td>
+                  }
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+
+    <div class="aad-card">
+      <h3 class="aad-h3">{{ t('app.aiAdmin.usage.daily') }}</h3>
+      <ts-line-chart
+        [labels]="dailyLabels()"
+        [series]="dailySeries()"
+        [format]="formatTokens"
+        [ariaLabel]="t('app.aiAdmin.usage.chartDaily')"
+      />
+    </div>
+
+    @if (d.children.length > 0) {
+      <div class="aad-card">
+        <h3 class="aad-h3">{{ t('app.aiAdmin.detail.children', t(childKindKey())) }}</h3>
+        <div class="aad-table-wrap">
+          <table class="aad-table">
+            <caption class="aad-sr">
+              {{
+                t('app.aiAdmin.detail.children', t(childKindKey()))
+              }}
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">{{ t('app.aiAdmin.col.name') }}</th>
+                <th scope="col" class="num">{{ t('app.aiAdmin.tile.total') }}</th>
+                <th scope="col">{{ t('app.aiAdmin.col.quota') }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (child of d.children; track child.key) {
+                <tr>
+                  <th scope="row">
+                    <button type="button" class="aad-link" (click)="openChild(child)">
+                      {{ child.name }}
+                    </button>
+                  </th>
+                  <td class="num">{{ formatNumber(child.tokens) }}</td>
+                  <td class="aad-cell-quota">
+                    <ts-aad-quota-bar [quota]="child.quota" [compact]="true" />
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
+  }
+
+  <ts-ai-admin-quota [month]="month()" [scope]="scope()" (changed)="reload()" />
+</section>

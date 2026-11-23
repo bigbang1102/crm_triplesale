@@ -1,0 +1,152 @@
+@if (store.cfgEdit(); as c) {
+  <div class="ph">
+    <div>
+      <h1>Configuration<ts-forecast-tip k="pg_setup" /></h1>
+      <p>{{ t('app.forecast.cfg.sub', store.year(c.year)) }}</p>
+    </div>
+    <div class="r">
+      @if (!ed()) {
+        <span class="chip c-grey">{{ t(c.status === 'block' ? 'app.forecast.cfg.blockReadonly' : 'app.forecast.readonly') }}</span>
+      }
+    </div>
+  </div>
+
+  @if (c.status === 'release' && ed()) {
+    <div class="note">{{ t('app.forecast.cfg.releaseNote', c.versionNo + 1, c.versionNo) }}</div>
+  }
+
+  <div class="card">
+    <div class="card-b">
+      <div class="cfg">
+        <div class="grp-t">{{ t('app.forecast.cfg.general') }}<ts-forecast-tip k="g_general" /></div>
+        <div class="cf">
+          <span class="lab">{{ t('app.forecast.col.code') }} *<ts-forecast-tip k="cfg_code" /></span>
+          <input class="inp" [attr.aria-label]="t('app.forecast.col.code')" [value]="c.code" [disabled]="!ed()" (input)="store.editCfg('code', $any($event.target).value)" />
+        </div>
+        <div class="cf">
+          <span class="lab">{{ t('app.forecast.col.name') }} *<ts-forecast-tip k="cfg_name" /></span>
+          <input class="inp" [attr.aria-label]="t('app.forecast.col.name')" [value]="c.name" [disabled]="!ed()" (input)="store.editCfg('name', $any($event.target).value)" />
+        </div>
+        <div class="cf">
+          <span class="lab">{{ t('app.forecast.fiscalYear') }} *<ts-forecast-tip k="cfg_year" /></span>
+          <select class="sel" data-ods-nosearch="1" [attr.aria-label]="t('app.forecast.fiscalYear')" [disabled]="!ed() || c.everReleased" [tsFcValue]="c.year" (tsFcChange)="store.editCfg('year', +$event)">
+            @for (y of years(); track y) {
+              <option [value]="y">{{ store.year(y) }}</option>
+            }
+          </select>
+        </div>
+        <div class="cf">
+          <span class="lab">{{ t('app.forecast.field.periodType') }}<ts-forecast-tip k="cfg_period" /></span>
+          <select class="sel" data-ods-nosearch="1" [attr.aria-label]="t('app.forecast.field.periodType')" [disabled]="!ed()" [tsFcValue]="c.periodType" (tsFcChange)="store.editCfg('periodType', $any($event))">
+            <option value="monthly">{{ t('app.forecast.period.monthly') }}</option>
+            <option value="quarterly">{{ t('app.forecast.period.quarterly') }}</option>
+          </select>
+        </div>
+
+        <div class="grp-t">{{ t('app.forecast.cfg.calc') }}<ts-forecast-tip k="g_calc" /></div>
+        <div class="cf">
+          <span class="lab">{{ t('app.forecast.field.hierarchyType') }}<ts-forecast-tip k="cfg_hier" /></span>
+          <select class="sel" data-ods-nosearch="1" [attr.aria-label]="t('app.forecast.field.hierarchyType')" [disabled]="!ed()" [tsFcValue]="c.hierarchyType" (tsFcChange)="store.editCfg('hierarchyType', $any($event))">
+            <option value="orgchart">Entity Organize Chart</option>
+            <option value="salegroup">Sale Group</option>
+          </select>
+        </div>
+        <div class="cf">
+          <span class="lab">{{ t('app.forecast.cfg.creditTo') }}<ts-forecast-tip k="cfg_credit" /></span>
+          <input class="inp" disabled [attr.aria-label]="t('app.forecast.cfg.creditTo')" [value]="t(c.hierarchyType === 'salegroup' ? 'app.forecast.cfg.creditSale' : 'app.forecast.cfg.creditOwner')" />
+        </div>
+        <div class="cf">
+          <span class="lab">{{ t('app.forecast.cfg.formula') }}<ts-forecast-tip k="cfg_formula" /></span>
+          <select class="sel" data-ods-nosearch="1" [attr.aria-label]="t('app.forecast.cfg.formula')" [disabled]="!ed()" [tsFcValue]="c.openFormula" (tsFcChange)="store.editCfg('openFormula', $any($event))">
+            <option value="weighted">Weighted (Amount × %)</option>
+            <option value="full">Full Amount</option>
+          </select>
+        </div>
+        <div class="cf">
+          <span class="lab">{{ t('app.forecast.cfg.overdue') }}<ts-forecast-tip k="cfg_overdue" /></span>
+          <select class="sel" data-ods-nosearch="1" [attr.aria-label]="t('app.forecast.cfg.overdue')" [disabled]="!ed()" [tsFcValue]="c.overdueRule" (tsFcChange)="store.editCfg('overdueRule', $any($event))">
+            <option value="separate">{{ t('app.forecast.overdue.separate') }}</option>
+            <option value="current">{{ t('app.forecast.overdue.current') }}</option>
+            <option value="exclude">{{ t('app.forecast.overdue.exclude') }}</option>
+          </select>
+        </div>
+
+        <div class="grp-t">{{ t('app.forecast.cfg.adjust') }}<ts-forecast-tip k="g_adj" /></div>
+        <label class="sw">
+          <input type="checkbox" [checked]="c.allowJudgment" [disabled]="!ed()" (change)="store.editCfg('allowJudgment', $any($event.target).checked)" />
+          <span>Opportunity Judgment</span>
+          <ts-forecast-tip k="cfg_judg" />
+        </label>
+        <label class="sw">
+          <input type="checkbox" [checked]="c.allowCategoryOverride" [disabled]="!ed()" (change)="store.editCfg('allowCategoryOverride', $any($event.target).checked)" />
+          <span>{{ t('app.forecast.cfg.catOverride') }}</span>
+          <ts-forecast-tip k="cfg_catovr" />
+        </label>
+        <label class="sw">
+          <input type="checkbox" [checked]="c.allowManagerAdjustment" [disabled]="!ed()" (change)="store.editCfg('allowManagerAdjustment', $any($event.target).checked)" />
+          <span>Manager Adjustment</span>
+          <ts-forecast-tip k="cfg_mgr" />
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="ro-sec">
+    <div class="ro-row">
+      <button type="button" class="ro-h" [class.open]="store.roOpen()" [attr.aria-expanded]="store.roOpen()" (click)="store.roOpen.set(!store.roOpen())">
+        <span class="car">▸</span>{{ t('app.forecast.cfg.reference') }}
+      </button>
+      <ts-forecast-tip k="g_ro" />
+      <span class="sub ro-hint">{{ t(store.roOpen() ? 'app.forecast.cfg.collapse' : 'app.forecast.cfg.expand') }}</span>
+    </div>
+    @if (store.roOpen()) {
+      <div class="cfg">
+        <div class="cf">
+          <span class="lab">Data Source<ts-forecast-tip k="cfg_src" /></span>
+          <input class="inp" disabled aria-label="Data Source" [value]="t('app.forecast.cfg.srcValue')" />
+        </div>
+        <div class="cf">
+          <span class="lab">{{ t('app.forecast.cfg.pipelineCounted') }}<ts-forecast-tip k="cfg_pipe_ro" /></span>
+          <input class="inp" disabled [attr.aria-label]="t('app.forecast.cfg.pipelineCounted')" [value]="t('app.forecast.cfg.pipelineValue')" />
+        </div>
+        <div class="cf">
+          <span class="lab">Measurement<ts-forecast-tip k="cfg_meas" /></span>
+          <input class="inp" disabled aria-label="Measurement" value="Revenue" />
+        </div>
+        <div class="cf">
+          <span class="lab">{{ t('app.forecast.cfg.currency') }}<ts-forecast-tip k="cfg_cur" /></span>
+          <input class="inp" disabled [attr.aria-label]="t('app.forecast.cfg.currency')" [value]="company()" />
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-h">
+          <h3>{{ t('app.forecast.cfg.mapping') }}<ts-forecast-tip k="cfg_map" /></h3>
+          <span class="sub">{{ t('app.forecast.cfg.mappingFrom') }}</span>
+        </div>
+        <div class="card-b">
+          <div class="tw">
+            <table>
+              <thead>
+                <tr>
+                  <th>Activity Step</th>
+                  <th class="n">Probability</th>
+                  <th>Forecast Category</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (r of store.lookups()?.stepMapping ?? []; track r.step) {
+                  <tr>
+                    <td>{{ r.step }}</td>
+                    <td class="n">{{ r.probability }}%</td>
+                    <td><span class="chip" [class]="CATEGORY_CHIP[r.category]">{{ CATEGORY_LABEL[r.category] }}</span></td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="warn">{{ t('app.forecast.cfg.pendingNote') }}</div>
+    }
+  </div>
+}

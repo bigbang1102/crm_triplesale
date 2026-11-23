@@ -1,0 +1,2727 @@
+{
+ "source": "master-setup_role-permission_v4.html (Permission, กลุ่ม, Role มาตรฐาน, ตำแหน่งตัวอย่าง) + Default_Role_by_Action_v8.xlsx ชีต Position (ตำแหน่งงาน 25 ตำแหน่ง)",
+ "groups": [
+  {
+   "id": "mod",
+   "name": "โมดูล",
+   "hint": "เข้าใช้งานแต่ละโมดูล · MODULE_* และ AI_ACCESS_USE"
+  },
+  {
+   "id": "entity",
+   "name": "Entity Permission",
+   "hint": "สิทธิ์ครอบทั้งบริษัท · View_All / Master_Edit_All / Transaction_Edit_All / Config_All"
+  },
+  {
+   "id": "lead",
+   "name": "Lead",
+   "hint": ""
+  },
+  {
+   "id": "prospect",
+   "name": "Prospect",
+   "hint": ""
+  },
+  {
+   "id": "opp",
+   "name": "Opportunity",
+   "hint": ""
+  },
+  {
+   "id": "sch",
+   "name": "นัดหมายและงาน",
+   "hint": "Appointment และ Task"
+  },
+  {
+   "id": "other",
+   "name": "Dashboard Access · Wait List · Forecast",
+   "hint": ""
+  },
+  {
+   "id": "doc",
+   "name": "เอกสารงานขาย",
+   "hint": "7 ประเภทเอกสาร"
+  },
+  {
+   "id": "chat",
+   "name": "แชท",
+   "hint": ""
+  },
+  {
+   "id": "dash",
+   "name": "กราฟแดชบอร์ด",
+   "hint": "1 สิทธิ์ต่อ 1 กราฟ"
+  },
+  {
+   "id": "ai",
+   "name": "AI Hub",
+   "hint": "เครื่องมือ AI และสิทธิ์ผู้ดูแล"
+  }
+ ],
+ "permissions": [
+  {
+   "code": "MODULE_DASHBOARD",
+   "group": "mod",
+   "description": "เข้าสู่ Triple Sales Module Dashbord"
+  },
+  {
+   "code": "MODULE_Pipeline",
+   "group": "mod",
+   "description": "เข้าสู่ Triple Sales Module Pipeline"
+  },
+  {
+   "code": "MODULE_Smart_Doc",
+   "group": "mod",
+   "description": "เข้าสู่ Triple Sales Module Smart Doc"
+  },
+  {
+   "code": "MODULE_Chat_Box",
+   "group": "mod",
+   "description": "เข้าสู่ Triple Sales Module Chat Box"
+  },
+  {
+   "code": "MODULE_Report",
+   "group": "mod",
+   "description": "เข้าสู่ Triple Sales Module Report"
+  },
+  {
+   "code": "AI_ACCESS_USE",
+   "group": "mod",
+   "description": "ผู้ใช้งานสามารถเข้าเมนู AI Hub และหน้าเครื่องมือได้ ต้องมีสิทธิ์ของเครื่องมือนั้นควบคู่ด้วยจึงจะเห็นและใช้เครื่องมือได้ · เห็นประวัติผลลัพธ์ของตัวเองเท่านั้น"
+  },
+  {
+   "code": "Pipeline_Dashboard_Access",
+   "group": "other",
+   "description": "ผู้ใช้งานสามารถเข้าใช้งาน Dashboard ของโมดูล Triple Sales Pipeline ได้"
+  },
+  {
+   "code": "Pipeline_Lead_View",
+   "group": "lead",
+   "description": "ผู้ใช้งานสามารถมองเห็นรายชื่อ Lead และรายละเอียด Lead ในฟีตเจอร์ต่างๆของ Triple Sales ดังนี้\n- Lead\n- Lead Detail\n- Wait List"
+  },
+  {
+   "code": "Pipeline_Lead_Customer_PDPA_Data",
+   "group": "lead",
+   "description": "ผู้ใช้งานสามารถเข้าถึงข้อมูลระเอียดอ่อนตาม พระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล ของลูกค้า ที่ Lead ได้\nหมายเหตุ: ข้อมูลที่เข้าถึงได้อาจมีการเปลี่ยนแปลงตามการตั้งค่าของบริษัท"
+  },
+  {
+   "code": "Pipeline_Lead_Customer_Critical_Data",
+   "group": "lead",
+   "description": "ผู้ใช้งานสามารถเข้าถึงข้อมูลด้านความปลอดภัย ของลูกค้า ที่ Lead ได้\nหมายเหตุ: ข้อมูลที่เข้าถึงได้อาจมีการเปลี่ยนแปลงตามการตั้งค่าของบริษัท"
+  },
+  {
+   "code": "Pipeline_Lead_Company_Financial_Data",
+   "group": "lead",
+   "description": "ผู้ใช้งานสามารถเข้าถึงข้อมูลด้านการเงินของบริษัท เช่น มูลค่าดีล ยอดขาย ที่ Lead ได้\nหมายเหตุ: ข้อมูลที่เข้าถึงได้อาจมีการเปลี่ยนแปลงตามการตั้งค่าของบริษัท"
+  },
+  {
+   "code": "Pipeline_Lead_Company_Strategic_Data",
+   "group": "lead",
+   "description": "ผู้ใช้งานสามารถเข้าถึงข้อมูลเชิงกลยุทธ์ของบริษัท ที่ Lead ได้\nหมายเหตุ: ข้อมูลที่เข้าถึงได้อาจมีการเปลี่ยนแปลงตามการตั้งค่าของบริษัท"
+  },
+  {
+   "code": "Pipeline_Lead_Create",
+   "group": "lead",
+   "description": "ผู้ใช้งานสามารถสร้าง Lead จากช่องทางต่างๆ ดังนี้\n- User Upload\n- คีย์แบบ Manaual ที่ Triple Sales Pipeline\n- คีย์แบบ Manaual ที่ Triple Sales Chat Box"
+  },
+  {
+   "code": "Pipeline_Lead_Edit",
+   "group": "lead",
+   "description": "ผู้ใช้งานสามารถแก้ไขรายละเอียดของ Lead สามารถอัพเดทสถานะ Lead ได้ ยกเว้น trash"
+  },
+  {
+   "code": "Pipeline_Lead_Attachment_View",
+   "group": "lead",
+   "description": "ผู้ใช้งานสามารถมองเห็นรายการเอกสารแนบ และเปิดดูเอกสารแนบภายใต้ Lead ได้ \nหมายเหตุ: ต้องมีสิทธิ์ Pipeline_Lead_View ด้วย"
+  },
+  {
+   "code": "Pipeline_Lead_Attachment_Download",
+   "group": "lead",
+   "description": "ผู้ใช้งานสามารถดาวน์โหลดเอกสารแนบภายใต้ Lead ได้ \nหมายเหตุ: ต้องมีสิทธิ์ Pipeline_Lead_Attachment_View ด้วย"
+  },
+  {
+   "code": "Pipeline_Lead_Attachment_Delete",
+   "group": "lead",
+   "description": "ผู้ใช้งานสามารถลบเอกสารแนบภายใต้ Lead ได้ \nหมายเหตุ: ต้องมีสิทธิ์ Pipeline_Lead_Attachment_View ด้วย"
+  },
+  {
+   "code": "Pipeline_Lead_Attachment_Upload",
+   "group": "lead",
+   "description": "ผู้ใช้งานสามารถแนบไฟล์ใหม่ภายใต้ Lead ได้ \nหมายเหตุ: ต้องมีสิทธิ์ Pipeline_Lead_Attachment_View ด้วย"
+  },
+  {
+   "code": "Pipeline_Lead_Contact_View",
+   "group": "lead",
+   "description": "ผู้ใช้สามารถมองเห็น ประวัติการติดต่อของ Lead"
+  },
+  {
+   "code": "Pipeline_Lead_Contact_Activity_Create",
+   "group": "lead",
+   "description": "ผู้ใช้สามารถสร้าง ประวัติการติดต่อของ Lead"
+  },
+  {
+   "code": "Pipeline_Lead_Contact_Activity_Delete",
+   "group": "lead",
+   "description": "ผู้ใช้สามารถสร้าง ลบประวัติการติดต่อของ Lead ที่ตนเองเป็นผู้สร้างเท่านั้น โดยสามารถลบได้ภายในระยะเวลาที่กำหนดเท่านั้น"
+  },
+  {
+   "code": "Pipeline_Lead_Assign",
+   "group": "lead",
+   "description": "ผู้ใช้งานสามารถระบุผู้รับผิดชอบของ Lead ที่ยังไม่มีผู้รับผิดชอบได้ โดยผู้ใช้สามารถดำเนินการมอบหมาย Lead ได้ที่ Wait List"
+  },
+  {
+   "code": "Pipeline_Lead_Change_Assign",
+   "group": "lead",
+   "description": "ผู้ใช้งานสามารถเปลี่ยนผู้รับผิดชอบของ Lead ที่มีผู้รับผิดชอบอยู่แล้วได้ โดยมอบหมายให้ผู้รับผิดชอบคนอื่นหรือส่ง Lead คืนเข้า Wait List"
+  },
+  {
+   "code": "Pipeline_Lead_Close",
+   "group": "lead",
+   "description": "ผู้ใช้งานสามารถปิด Lead ที่ผู้ใช้งานคิดว่าไม่มีศักยภาพในการแปลง Lead เป็น Prospect"
+  },
+  {
+   "code": "Pipeline_Lead_Trash",
+   "group": "lead",
+   "description": "ผู้ใช้งานสามารถลบเอกสาร Lead ได้ โดยเอกสารที่ถูกลบจะหายไปอยู่ใน Trash Bin ซึ่งผู้ใช้งานที่มีสิทธิ์นี้จะมองเห็น Lead ใน Trash Bin เช่นกัน รวมทั้งสามารถย้อน Lead ออกจาก Trash Bin ได้"
+  },
+  {
+   "code": "Pipeline_Lead_Convert_Prospect",
+   "group": "lead",
+   "description": "ผู้ใช้งานสามารถแปลง Lead เป็น Prospect ได้"
+  },
+  {
+   "code": "Pipeline_Prospect_View",
+   "group": "prospect",
+   "description": "ผู้ใช้งานสามารมองเห็นรายชื่อ Prospect และรายละเอียด Prospect ในฟีตเจอร์ต่างๆของ Triple Sales ดังนี้\n- Prospect\n- Prospect Detail\n- Wait List"
+  },
+  {
+   "code": "Pipeline_Prospect_Customer_PDPA_Data",
+   "group": "prospect",
+   "description": "ผู้ใช้งานสามารถเข้าถึงข้อมูลระเอียดอ่อนตาม พระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล ของลูกค้า ที่ Prospect ได้\nหมายเหตุ: ข้อมูลที่เข้าถึงได้อาจมีการเปลี่ยนแปลงตามการตั้งค่าของบริษัท"
+  },
+  {
+   "code": "Pipeline_Prospect_Customer_Critical_Data",
+   "group": "prospect",
+   "description": "ผู้ใช้งานสามารถเข้าถึงข้อมูลด้านความปลอดภัย ของลูกค้า ที่ Prospect ได้\nหมายเหตุ: ข้อมูลที่เข้าถึงได้อาจมีการเปลี่ยนแปลงตามการตั้งค่าของบริษัท"
+  },
+  {
+   "code": "Pipeline_Prospect_Company_Financial_Data",
+   "group": "prospect",
+   "description": "ผู้ใช้งานสามารถเข้าถึงข้อมูลด้านการเงินของบริษัท เช่น มูลค่าดีล ยอดขาย ที่ Prospect ได้\nหมายเหตุ: ข้อมูลที่เข้าถึงได้อาจมีการเปลี่ยนแปลงตามการตั้งค่าของบริษัท"
+  },
+  {
+   "code": "Pipeline_Prospect_Company_Strategic_Data",
+   "group": "prospect",
+   "description": "ผู้ใช้งานสามารถเข้าถึงข้อมูลเชิงกลยุทธ์ของบริษัท ที่ Prospect ได้\nหมายเหตุ: ข้อมูลที่เข้าถึงได้อาจมีการเปลี่ยนแปลงตามการตั้งค่าของบริษัท"
+  },
+  {
+   "code": "Pipeline_Prospect_Create",
+   "group": "prospect",
+   "description": "ผู้ใช้งานสามารถสร้าง Prospect จากช่องทางต่างๆ ดังนี้\n- User Upload\n- คีย์แบบ Manaual ที่ Triple Sales Pipeline\n- คีย์แบบ Manaual ที่ Triple Sales Chat Box"
+  },
+  {
+   "code": "Pipeline_Prospect_Edit",
+   "group": "prospect",
+   "description": "ผู้ใช้งานสามารถแก้ไขรายละเอียดของ Prospect สามารถอัพเดทสถานะ prospect ได้ ยกเว้น trash"
+  },
+  {
+   "code": "Pipeline_Prospect_Attachment_View",
+   "group": "prospect",
+   "description": "ผู้ใช้งานสามารถมองเห็นรายการเอกสารแนบ และเปิดดูเอกสารแนบภายใต้ Prospect ได้ \nหมายเหตุ: ต้องมีสิทธิ์ Pipeline_Prospect_View ด้วย"
+  },
+  {
+   "code": "Pipeline_Prospect_Attachment_Download",
+   "group": "prospect",
+   "description": "ผู้ใช้งานสามารถดาวน์โหลดเอกสารแนบภายใต้ Prospect ได้ \nหมายเหตุ: ต้องมีสิทธิ์ Pipeline_Prospect_Attachment_View ด้วย"
+  },
+  {
+   "code": "Pipeline_Prospect_Attachment_Delete",
+   "group": "prospect",
+   "description": "ผู้ใช้งานสามารถลบเอกสารแนบภายใต้ Prospect ได้ \nหมายเหตุ: ต้องมีสิทธิ์ Pipeline_Prospect_Attachment_View ด้วย"
+  },
+  {
+   "code": "Pipeline_Prospect_Attachment_Upload",
+   "group": "prospect",
+   "description": "ผู้ใช้งานสามารถแนบไฟล์ใหม่ภายใต้ Prospect ได้ \nหมายเหตุ: ต้องมีสิทธิ์ Pipeline_Prospect_Attachment_View ด้วย"
+  },
+  {
+   "code": "Pipeline_Prospect_Assign",
+   "group": "prospect",
+   "description": "ผู้ใช้งานสามารถระบุผู้รับผิดชอบของ Prospect ที่ยังไม่มีผู้รับผิดชอบได้ โดยผู้ใช้สามารถดำเนินการมอบหมาย Prospect ได้ที่ Wait List"
+  },
+  {
+   "code": "Pipeline_Prospect_Change_Assign",
+   "group": "prospect",
+   "description": "ผู้ใช้งานสามารถเปลี่ยนผู้รับผิดชอบของ Prospect ที่มีผู้รับผิดชอบอยู่แล้วได้ โดยมอบหมายให้ผู้รับผิดชอบคนอื่นหรือส่ง Prospect คืนเข้า Wait List"
+  },
+  {
+   "code": "Pipeline_Prospect_Trash",
+   "group": "prospect",
+   "description": "ผู้ใช้งานสามารถลบเอกสาร Prospect ได้ โดยเอกสารที่ถูกลบจะหายไปอยู่ใน Trash Bin ซึ่งผู้ใช้งานที่มีสิทธิ์นี้จะมองเห็น Prospect ใน Trash Bin เช่นกัน รวมทั้งสามารถย้อน Prospect ออกจาก Trash Bin ได้"
+  },
+  {
+   "code": "Pipeline_Opportunity_View",
+   "group": "opp",
+   "description": "ผู้ใช้งานสามารมองเห็นรายชื่อ Opportunity และรายละเอียด Opportunity ในฟีตเจอร์ต่างๆของ Triple Sales ดังนี้\n- Opportunity\n- Opportunity Detail\n- Wait List"
+  },
+  {
+   "code": "Pipeline_Opportunity_Create",
+   "group": "opp",
+   "description": "ผู้ใช้งานสามารถสร้าง Opportunity จากช่องทางต่างๆ ดังนี้ \n- User Upload \n- คีย์แบบ Manual ที่ Triple Sales Pipeline  \nหมายเหตุ: โดยต้องระบุพนักงานขายเจ้าของ Opportunity ทุกครั้ง ซึ่งถือเป็นการกำหนดพนักงานขายครั้งแรก หากไม่ระบุจะไม่สามารถบันทึกได้"
+  },
+  {
+   "code": "Pipeline_Opportunity_Edit",
+   "group": "opp",
+   "description": "ผู้ใช้งานสามารถแก้ไขรายละเอียดของ Opportunity ได้ดังนี้\n- เป้าหมายเดือน\n- มูลค่าดีล\n- เพิ่ม/แก้ไข Tag\n- สถานะการขาย (New/Hot/Warm/Cold/Inactive)\n- ความต้องการ\n- เพิ่ม/ลบ ผลิตภัณฑ์\nหมายเหตุ: ผู้ใช้งานจะสามารถแก้ไข \"มูลค่าดีล\" ได้ในกรณีที่ได้รับสิทธิ์ Pipeline_Opportunity_Company_Financial_Data"
+  },
+  {
+   "code": "Pipeline_Opportunity_Attachment_View",
+   "group": "opp",
+   "description": "ผู้ใช้งานสามารถมองเห็นรายการเอกสารแนบ และเปิดดูเอกสารแนบภายใต้ Opportunity ได้ \nหมายเหตุ: ต้องมีสิทธิ์ Pipeline_Opportunity_View ด้วย"
+  },
+  {
+   "code": "Pipeline_Opportunity_Attachment_Download",
+   "group": "opp",
+   "description": "ผู้ใช้งานสามารถดาวน์โหลดเอกสารแนบภายใต้ Opportunity ได้ \nหมายเหตุ: ต้องมีสิทธิ์ Pipeline_Opportunity_Attachment_View ด้วย"
+  },
+  {
+   "code": "Pipeline_Opportunity_Attachment_Delete",
+   "group": "opp",
+   "description": "ผู้ใช้งานสามารถลบเอกสารแนบภายใต้ Opportunity ได้ \nหมายเหตุ: ต้องมีสิทธิ์ Pipeline_Opportunity_Attachment_View ด้วย"
+  },
+  {
+   "code": "Pipeline_Opportunity_Attachment_Upload",
+   "group": "opp",
+   "description": "ผู้ใช้งานสามารถแนบไฟล์ใหม่ภายใต้ Opportunity ได้ \nหมายเหตุ: ต้องมีสิทธิ์ Pipeline_Opportunity_Attachment_View ด้วย"
+  },
+  {
+   "code": "Pipeline_Opportunity_Contact_View",
+   "group": "opp",
+   "description": "ผู้ใช้สามารถมองเห็น ประวัติการติดต่อของ Opportunity"
+  },
+  {
+   "code": "Pipeline_Opportunity_Contact_Activity_Create",
+   "group": "opp",
+   "description": "ผู้ใช้สามารถสร้าง ประวัติการติดต่อของ Opportunity"
+  },
+  {
+   "code": "Pipeline_Opportunity_Contact_Activity_Delete",
+   "group": "opp",
+   "description": "ผู้ใช้สามารถสร้าง ลบประวัติการติดต่อของ Opportunity ที่ตนเองเป็นผู้สร้างเท่านั้น โดยสามารถลบได้ภายในระยะเวลาที่กำหนดเท่านั้น"
+  },
+  {
+   "code": "Pipeline_Opportunity_Assign",
+   "group": "opp",
+   "description": "ผู้ใช้งานสามารถระบุผู้รับผิดชอบของ Opportunity ที่ยังไม่มีผู้รับผิดชอบได้ โดยผู้ใช้สามารถดำเนินการมอบหมาย Opportunity ได้ที่ Wait List"
+  },
+  {
+   "code": "Pipeline_Opportunity_Change_Assign",
+   "group": "opp",
+   "description": "ผู้ใช้งานสามารถเปลี่ยนผู้รับผิดชอบของ Opportunity ที่มีผู้รับผิดชอบอยู่แล้วได้ โดยมอบหมายให้ผู้รับผิดชอบคนอื่นหรือส่ง Opportunity คืนเข้า Wait List ในกรณีที่ตนเองเป็นผู้รับผิดชอบปัจจุบัน หรือเป็นหัวหน้าของผู้รับผิดชอบปัจจุบันตาม Entity Organization Chart\nหมายเหตุ: ไม่สามารถทำผ่านการได้รับแชร์ (Sharing Employee / Sharing Group / Peer Sharing / Ex Responsible Person) หรือผ่านสิทธิ์ Customer Support"
+  },
+  {
+   "code": "Pipeline_Opportunity_Change_Sales_Person",
+   "group": "opp",
+   "description": "ผู้ใช้งานสามารถเปลี่ยนพนักงานขายเจ้าของ Opportunity ได้ ในกรณีที่ตนเองเป็นผู้รับผิดชอบปัจจุบัน หรือเป็นหัวหน้าของผู้รับผิดชอบปัจจุบันตาม Entity Organization Chart \nหมายเหตุ: ไม่สามารถทำผ่านการได้รับแชร์ (Sharing Employee / Sharing Group / Peer Sharing / Ex Responsible Person) หรือผ่านสิทธิ์ Customer Support · การกำหนดพนักงานขายครั้งแรกทำตอนสร้าง Opportunity ด้วยสิทธิ์ Pipeline_Opportunity_Create"
+  },
+  {
+   "code": "Pipeline_Opportunity_Share_Sharing_Employee",
+   "group": "opp",
+   "description": "ผู้ใช้งานสามารถแชร์สิทธิ์การเข้าถึง Opportunity กับพนักงานรายอื่นได้ ในกรณีที่ตนเองเป็นผู้รับผิดชอบปัจจุบัน หรือเป็นหัวหน้าของผู้รับผิดชอบปัจจุบันตาม Entity Organization Chart \nหมายเหตุ: ไม่สามารถทำผ่านการได้รับแชร์ หรือผ่านสิทธิ์ Customer Support"
+  },
+  {
+   "code": "Pipeline_Opportunity_Revoke_Sharing_Employee",
+   "group": "opp",
+   "description": "ผู้ใช้งานสามารถยกเลิกการแชร์สิทธิ์การเข้าถึง Opportunity กับ พนักงานรายอื่นได้ ในกรณีที่ตนเองเป็นผู้รับผิดชอบปัจจุบัน หรือเป็นหัวหน้าของผู้รับผิดชอบปัจจุบันตาม Entity Organization Chart \nหมายเหตุ: ไม่สามารถทำผ่านการได้รับแชร์ หรือผ่านสิทธิ์ Customer Support"
+  },
+  {
+   "code": "Pipeline_Opportunity_Revoke_OPP_Sharing_Group",
+   "group": "opp",
+   "description": "ผู้ใช้งานสามารถยกเลิกการแชร์สิทธิ์การเข้าถึง Opportunity กับ Sharing Group โดยถอด Sharing Group ทั้งกลุ่มออกจาก Opportunity นั้นได้ ในกรณีที่ตนเองเป็นผู้รับผิดชอบปัจจุบัน หรือเป็นหัวหน้าของผู้รับผิดชอบปัจจุบันตาม Entity Organization Chart \nหมายเหตุ: ไม่สามารถทำผ่านการได้รับแชร์ หรือผ่านสิทธิ์ Customer Support"
+  },
+  {
+   "code": "Pipeline_Opportunity_Revoke_Latest_Peering",
+   "group": "opp",
+   "description": "ผู้ใช้งานสามารถยกเลิกการแชร์สิทธิ์การเข้าถึง Opportunity กับ พนักงานในตำแหน่งเดียวกันกับ ผู้รับผิดชอบของ Opportunity ได้ ในกรณีที่ตนเองเป็นผู้รับผิดชอบปัจจุบัน หรือเป็นหัวหน้าของผู้รับผิดชอบปัจจุบันตาม Entity Organization Chart \nหมายเหตุ: ไม่สามารถทำผ่านการได้รับแชร์ หรือผ่านสิทธิ์ Customer Support"
+  },
+  {
+   "code": "Pipeline_Opportunity_Revoke_Ex_Responsible_Person",
+   "group": "opp",
+   "description": "ผู้ใช้งานสามารถยกเลิกการแชร์สิทธิ์การเข้าถึง Opportunity กับ พนักงานที่เป็นผู้รับผิดชอบคนเก่าของ Opportunity ได้ ในกรณีที่ตนเองเป็นผู้รับผิดชอบปัจจุบัน หรือเป็นหัวหน้าของผู้รับผิดชอบปัจจุบันตาม Entity Organization Chart \nหมายเหตุ: ไม่สามารถทำผ่านการได้รับแชร์ หรือผ่านสิทธิ์ Customer Support"
+  },
+  {
+   "code": "Pipeline_Opportunity_Customer_PDPA_Data",
+   "group": "opp",
+   "description": "ผู้ใช้งานสามารถเข้าถึงข้อมูลระเอียดอ่อนตาม พระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล ของลูกค้า ที่ Opportunity ได้\nหมายเหตุ: ข้อมูลที่เข้าถึงได้อาจมีการเปลี่ยนแปลงตามการตั้งค่าของบริษัท"
+  },
+  {
+   "code": "Pipeline_Opportunity_Customer_Critical_Data",
+   "group": "opp",
+   "description": "ผู้ใช้งานสามารถเข้าถึงข้อมูลด้านความปลอดภัย ของลูกค้า ที่ Opportunity ได้\nหมายเหตุ: ข้อมูลที่เข้าถึงได้อาจมีการเปลี่ยนแปลงตามการตั้งค่าของบริษัท"
+  },
+  {
+   "code": "Pipeline_Opportunity_Company_Financial_Data",
+   "group": "opp",
+   "description": "ผู้ใช้งานสามารถเข้าถึงข้อมูลด้านการเงินของบริษัท เช่น มูลค่าดีล ยอดขาย ที่ Opportunity ได้\nหมายเหตุ: ข้อมูลที่เข้าถึงได้อาจมีการเปลี่ยนแปลงตามการตั้งค่าของบริษัท"
+  },
+  {
+   "code": "Pipeline_Opportunity_Company_Strategic_Data",
+   "group": "opp",
+   "description": "ผู้ใช้งานสามารถเข้าถึงข้อมูลเชิงกลยุทธ์ของบริษัท ที่ Opportunity ได้\nหมายเหตุ: ข้อมูลที่เข้าถึงได้อาจมีการเปลี่ยนแปลงตามการตั้งค่าของบริษัท"
+  },
+  {
+   "code": "Pipeline_Opportunity_WorkflowStep_Rework",
+   "group": "opp",
+   "description": "สามารถส่ง Workflow Step ย้อนกลับตามเส้นทางได้ ในกรณีที่ตนเองเป็นผู้รับผิดชอบปัจจุบัน หรือเป็นหัวหน้าของผู้รับผิดชอบปัจจุบันตาม Entity Organization Chart"
+  },
+  {
+   "code": "Pipeline_Opportunity_WorkflowStep_Close",
+   "group": "opp",
+   "description": "สามารถปิด Workflow Step ที่กำลังดำเนินการได้ ในกรณีที่ตนเองเป็นผู้รับผิดชอบปัจจุบัน หรือเป็นหัวหน้าของผู้รับผิดชอบปัจจุบันตาม Entity Organization Chart"
+  },
+  {
+   "code": "Pipeline_Opportunity_Close",
+   "group": "opp",
+   "description": "ผู้ใช้งานสามารถปิด Opportunity เป็นสถานะ Sold หรือ Loss ได้ ในกรณีที่ตนเองเป็นผู้รับผิดชอบปัจจุบัน หรือเป็นหัวหน้าของผู้รับผิดชอบปัจจุบันตาม Entity Organization Chart"
+  },
+  {
+   "code": "Pipeline_Opportunity_Activity_Group_Admin",
+   "group": "opp",
+   "description": "ผู้ใช้งานสามารถกรอง Activity Group ได้ทุก Group ที่หน้า Opportunity List หากไม่มีสิทธิ์นี้ จะกรองได้เฉพาะงานที่ค้างใน Activity Group ของตนเอง หมายเหตุ: สิทธิ์นี้เป็นตัวกรองบนหน้าจอเท่านั้น ไม่ได้เพิ่มการมองเห็น Opportunity · Opportunity อื่นที่ผู้ใช้เข้าถึงได้ รวมถึงการมองเห็นของหัวหน้าตาม Entity Organization Chart ให้ดูที่แท็บ รายการที่ถูกแชร์มาหาเรา"
+  },
+  {
+   "code": "Pipeline_Schedule_Appointment_View",
+   "group": "sch",
+   "description": "ผู้ใช้สามารถมองเห็น Schedule ประเภท Appointment ที่ฟีตเจอร์เหล่านี้ \n1. Lead \n2. Opportunity \n3. ประวัติการติดต่อ \n4. ปฏิทินงาน\nหมายเหตุ: \n- ผู้รับผิดชอบปัจจุบันของเอกสาร และหัวหน้าของผู้รับผิดชอบปัจจุบันตาม Entity Organization Chart เห็นทุก Schedule ของเอกสารนั้น\n- Opportunity: ผู้ที่ได้รับแชร์ (Sharing Employee / Sharing Group / Peer Sharing) และ Ex Responsible Person เห็นทุก Schedule ของ Opportunity เมื่อได้ View APPOINTMENT ในสิทธิ์บนใบ (Data Action Role)\n- ผู้ใช้อื่น เช่น ผู้ถูกมอบนัดหรือผู้รับผิดชอบคนเดิม เห็นเฉพาะ Schedule ที่เป็นชื่อตนเอง ไม่มีลิงก์เข้าเอกสาร และข้อมูลลับถูกปิดตามสิทธิ์ของผู้ใช้\n- เอกสารที่ถูกระงับ: Schedule ถูกซ่อนจากทุกคน ยกเว้น Entity Viewer / Entity Admin / System Viewer / System Admin\n- เอกสารที่อยู่ใน Wait List: เห็นเฉพาะเจ้าของ Schedule\n- การแจ้งเตือนปิดข้อมูลลับตามสิทธิ์ของผู้รับแจ้งเตือน"
+  },
+  {
+   "code": "Pipeline_Schedule_Appointment_Add_Edit",
+   "group": "sch",
+   "description": "ผู้ใช้สามารถสร้าง และแก้ไข Schedule ประเภท Appointment ให้ตนเองได้เท่านั้น ที่ฟีตเจอร์เหล่านี้\n1. Lead\n2. Opportunity\n3. ประวัติการติดต่อ\n4. ปฏิทินงาน"
+  },
+  {
+   "code": "Pipeline_Schedule_Appointment_Add_Edit_For_Other",
+   "group": "sch",
+   "description": "ผู้ใช้สามารถสร้าง และแก้ไข Schedule ประเภท Appointment ให้ผู้อื่นและตนเองได้ ที่ฟีตเจอร์เหล่านี้\n1. Lead\n2. Opportunity\n3. ประวัติการติดต่อ\n4. ปฏิทินงาน"
+  },
+  {
+   "code": "Pipeline_Schedule_Task_View",
+   "group": "sch",
+   "description": "ผู้ใช้สามารถมองเห็นมองเห็น Schedule ประเภท Task ที่ฟีตเจอร์เหล่านี้\n1. Lead \n2. Opportunity \n3. ประวัติการติดต่อ \n4. ปฏิทินงาน\nหมายเหตุ: \n- ผู้รับผิดชอบปัจจุบันของเอกสาร และหัวหน้าของผู้รับผิดชอบปัจจุบันตาม Entity Organization Chart เห็นทุก Schedule ของเอกสารนั้น\n- Opportunity: ผู้ที่ได้รับแชร์ (Sharing Employee / Sharing Group / Peer Sharing) และ Ex Responsible Person เห็นทุก Schedule ของ Opportunity เมื่อได้ View Task ในสิทธิ์บนใบ (Data Action Role)\n- ผู้ใช้อื่น เช่น ผู้ถูกมอบนัดหรือผู้รับผิดชอบคนเดิม เห็นเฉพาะ Schedule ที่เป็นชื่อตนเอง ไม่มีลิงก์เข้าเอกสาร และข้อมูลลับถูกปิดตามสิทธิ์ของผู้ใช้\n- เอกสารที่ถูกระงับ: Schedule ถูกซ่อนจากทุกคน ยกเว้น Entity Viewer / Entity Admin / System Viewer / System Admin\n- เอกสารที่อยู่ใน Wait List: เห็นเฉพาะเจ้าของ Schedule\n- การแจ้งเตือนปิดข้อมูลลับตามสิทธิ์ของผู้รับแจ้งเตือน"
+  },
+  {
+   "code": "Pipeline_Schedule_Task_Add_Edit",
+   "group": "sch",
+   "description": "ผู้ใช้สามารถมองเห็นมองเห็น Schedule ประเภท Task ที่ฟีตเจอร์เหล่านี้\n1. Lead\n2. Opportunity\n3. ประวัติการติดต่อ\n4. ปฏิทินงาน"
+  },
+  {
+   "code": "Pipeline_Schedule_Task_Add_Edit_For_Other",
+   "group": "sch",
+   "description": "ผู้ใช้สามารถมองเห็นมองเห็น Schedule ประเภท Task ที่ฟีตเจอร์เหล่านี้\n1. Lead\n2. Opportunity\n3. ประวัติการติดต่อ\n4. ปฏิทินงาน"
+  },
+  {
+   "code": "Pipeline_Wait_list_Access",
+   "group": "other",
+   "description": "ผู้ใช้งานสามารถเข้าถึงฟีตเจอร์ Wait List ได้ โดยจะมองเห็นเอกสารใน Wait List เมื่อมีครบ 3 เงื่อนไข \n1. มีสิทธิ์นี้ \n2. มีสิทธิ์ View ของเอกสารประเภทนั้น (Pipeline_Lead_View / Pipeline_Prospect_View / Pipeline_Opportunity_View) \n3. มีรายชื่ออยู่ใน Waitlist Sharing Group ของ Wait List Type นั้น \nหากต้องการมอบหมายผู้รับผิดชอบ ต้องมีสิทธิ์ Assign ของเอกสารประเภทนั้นเพิ่ม \n1. Pipeline_Lead_Assign\n2. Pipeline_Prospect_Assign\n3. Pipeline_Opportunity_Assign ซึ่งครอบคลุม Opportunity ทั้งที่ใช้และไม่ใช้ Workflow Step\nโดยผู้รับมอบหมายต้องเป็นสมาชิกใน Waitlist Sharing Group ของ Wait List Type นั้นเท่านั้น"
+  },
+  {
+   "code": "Pipeline_Document_LetterofIntent_View",
+   "group": "doc",
+   "description": "ผู้ใช้งานสามารถมองเห็นรายการ ใบเจตจำนงค์"
+  },
+  {
+   "code": "Pipeline_Document_LetterofIntent_Create",
+   "group": "doc",
+   "description": "ผู้ใช้งานสามารถสร้างเอกสาร ใบเจตจำนงค์"
+  },
+  {
+   "code": "Pipeline_Document_LetterofIntent_Edit",
+   "group": "doc",
+   "description": "ผู้ใช้งานสามารถแก้ไขเอกสาร ใบเจตจำนงค์"
+  },
+  {
+   "code": "Pipeline_Document_LetterofIntent_Block",
+   "group": "doc",
+   "description": "ผู้ใช้งานสามารถระงับการใช้งานเอกสาร ใบเจตจำนงค์ ที่ถูกเลือกได้"
+  },
+  {
+   "code": "Pipeline_Document_LegalCreditServiceRequest_View",
+   "group": "doc",
+   "description": "ผู้ใช้งานสามารถมองเห็นรายการ ใบขอใช้บริการนิติกรรมและสินเชื่อ"
+  },
+  {
+   "code": "Pipeline_Document_LegalCreditServiceRequest_Create",
+   "group": "doc",
+   "description": "ผู้ใช้งานสามารถสร้างเอกสาร ใบขอใช้บริการนิติกรรมและสินเชื่อ"
+  },
+  {
+   "code": "Pipeline_Document_LegalCreditServiceRequest_Edit",
+   "group": "doc",
+   "description": "ผู้ใช้งานสามารถแก้ไขเอกสาร ใบขอใช้บริการนิติกรรมและสินเชื่อ"
+  },
+  {
+   "code": "Pipeline_Document_LegalCreditServiceRequest_Block",
+   "group": "doc",
+   "description": "ผู้ใช้งานสามารถระงับการใช้งานเอกสาร ใบขอใช้บริการนิติกรรมและสินเชื่อ ที่ถูกเลือกได้"
+  },
+  {
+   "code": "Pipeline_Document_Servicecontract_View",
+   "group": "doc",
+   "description": "ผู้ใช้งานสามารถมองเห็นรายการ Servicecontract"
+  },
+  {
+   "code": "Pipeline_Document_Servicecontract_Create",
+   "group": "doc",
+   "description": "ผู้ใช้งานสามารถสร้างเอกสาร Servicecontract"
+  },
+  {
+   "code": "Pipeline_Document_Servicecontract_Edit",
+   "group": "doc",
+   "description": "ผู้ใช้งานสามารถแก้ไขเอกสาร Servicecontract"
+  },
+  {
+   "code": "Pipeline_Document_Servicecontract_Block",
+   "group": "doc",
+   "description": "ผู้ใช้งานสามารถระงับการใช้งานเอกสาร Servicecontract ที่ถูกเลือกได้"
+  },
+  {
+   "code": "Pipeline_Document_LoanAgreement_View",
+   "group": "doc",
+   "description": "ผู้ใช้งานสามารถมองเห็นรายการ สัญญาเงินกู้"
+  },
+  {
+   "code": "Pipeline_Document_LoanAgreement_Create",
+   "group": "doc",
+   "description": "ผู้ใช้งานสามารถสร้างเอกสาร สัญญาเงินกู้"
+  },
+  {
+   "code": "Pipeline_Document_LoanAgreement_Edit",
+   "group": "doc",
+   "description": "ผู้ใช้งานสามารถแก้ไขเอกสาร สัญญาเงินกู้"
+  },
+  {
+   "code": "Pipeline_Document_LoanAgreement_Block",
+   "group": "doc",
+   "description": "ผู้ใช้งานสามารถระงับการใช้งานเอกสาร สัญญาเงินกู้ ที่ถูกเลือกได้"
+  },
+  {
+   "code": "Pipeline_Document_PreliminaryCreditApproval_View",
+   "group": "doc",
+   "description": "ผู้ใช้งานสามารถมองเห็นรายการ ใบอนุมัติวงเงินเบื้องต้น"
+  },
+  {
+   "code": "Pipeline_Document_PreliminaryCreditApproval_Create",
+   "group": "doc",
+   "description": "ผู้ใช้งานสามารถสร้างเอกสาร ใบอนุมัติวงเงินเบื้องต้น"
+  },
+  {
+   "code": "Pipeline_Document_PreliminaryCreditApproval_Edit",
+   "group": "doc",
+   "description": "ผู้ใช้งานสามารถแก้ไขเอกสาร ใบอนุมัติวงเงินเบื้องต้น"
+  },
+  {
+   "code": "Pipeline_Document_PreliminaryCreditApproval_Block",
+   "group": "doc",
+   "description": "ผู้ใช้งานสามารถระงับการใช้งานเอกสาร ใบอนุมัติวงเงินเบื้องต้น ที่ถูกเลือกได้"
+  },
+  {
+   "code": "Pipeline_Document_PropertyProjectContract_View",
+   "group": "doc",
+   "description": "ผู้ใช้งานสามารถมองเห็นรายการ สัญญาโครงการอสังหาริมทรัพย์"
+  },
+  {
+   "code": "Pipeline_Document_PropertyProjectContract_Create",
+   "group": "doc",
+   "description": "สามารถสร้างเอกสาร สัญญาโครงการอสังหาริมทรัพย์"
+  },
+  {
+   "code": "Pipeline_Document_PropertyProjectContract_Edit",
+   "group": "doc",
+   "description": "ผู้ใช้งานสามารถแก้ไขเอกสาร สัญญาโครงการอสังหาริมทรัพย์"
+  },
+  {
+   "code": "Pipeline_Document_PropertyProjectContract_Block",
+   "group": "doc",
+   "description": "ผู้ใช้งานสามารถระงับการใช้งานเอกสาร สัญญาโครงการอสังหาริมทรัพย์ ที่ถูกเลือกได้"
+  },
+  {
+   "code": "Pipeline_Document_CreditApplication_View",
+   "group": "doc",
+   "description": "ผู้ใช้งานสามารถมองเห็นรายการ ใบคำขอสินเชื่อ"
+  },
+  {
+   "code": "Pipeline_Document_CreditApplication_Create",
+   "group": "doc",
+   "description": "ผู้ใช้งานสามารถสร้างเอกสาร ใบคำขอสินเชื่อ"
+  },
+  {
+   "code": "Pipeline_Document_CreditApplication_Edit",
+   "group": "doc",
+   "description": "ผู้ใช้งานสามารถแก้ไขเอกสาร ใบคำขอสินเชื่อ"
+  },
+  {
+   "code": "Pipeline_Document_CreditApplication_Block",
+   "group": "doc",
+   "description": "ผู้ใช้งานสามารถระงับการใช้งานเอกสาร ใบคำขอสินเชื่อ ที่ถูกเลือกได้"
+  },
+  {
+   "code": "Forecast_Setup",
+   "group": "other",
+   "description": ""
+  },
+  {
+   "code": "Chat_View_Unassigned",
+   "group": "chat",
+   "description": "ผู้ใช้งานสามารถมองเห็นแชท และห้องแชทของลูกค้าใหม่ทั้งหมดภายในบริษัทที่เข้าใช้งานอยู่ ที่ยังไม่มีการนำแชทไปเชื่อมต่อกับเอกสารใดๆ ในระบบ"
+  },
+  {
+   "code": "Chat_Reply_Unassigned",
+   "group": "chat",
+   "description": "ผู้ใช้งานสามารถตอบกลับข้อความในห้องแชทของลูกค้าใหม่ทั้งหมดภายในบริษัทที่เข้าใช้งานอยู่ ที่ยังไม่มีการนำแชทไปเชื่อมต่อกับเอกสารใดๆ ในระบบ"
+  },
+  {
+   "code": "Chat_New_Assigner",
+   "group": "chat",
+   "description": "ผู้ใช้งานสามารถผูกแชทใหม่กับ Lead หรือ Prospect ที่มีอยู่ในระบบได้ หรือนำแชทไปสร้าง Lead หรือ Prospect ใหม่ กรณีที่ยังไม่เคยมีลูกค้านี้ในระบบ\nหมายเหตุ:\n- การสร้างเอกสารใหม่ ต้องมีสิทธิ์ Pipeline_Lead_Create หรือ Pipeline_Prospect_Create ด้วย\n- การค้นหาเอกสารเพื่อผูกแชท ค้นได้ทั้งบริษัทที่เข้าใช้งานอยู่ แต่แสดงเฉพาะชื่อลูกค้าและเลขที่เอกสาร และปิดข้อมูลลับ 4 กลุ่มตามสิทธิ์ของผู้ค้น\n- Lead และ Prospect ที่เชื่อมกัน (Prospect ที่แปลงมาจาก Lead) ใช้การเชื่อมต่อแชทเดียวกัน\n- Opportunity ใช้การเชื่อมต่อแชทของ Prospect ที่เป็นเอกสารแม่ ส่วนการมองเห็นและตอบแชทใน Opportunity เป็นไปตามสิทธิ์บนใบ (Data Action Role)"
+  },
+  {
+   "code": "Chat_Change_Assigned",
+   "group": "chat",
+   "description": "ผู้ใช้งานสามารถย้ายแชทที่ผูกกับ Lead หรือ Prospect อยู่แล้ว ไปผูกกับ Lead หรือ Prospect รายอื่น หรือนำไปสร้าง Lead หรือ Prospect ใหม่ได้\nหมายเหตุ:\n- ทำได้เฉพาะผู้รับผิดชอบของเอกสารที่แชทผูกอยู่ หรือหัวหน้าของผู้รับผิดชอบตาม Entity Organization Chart ไม่สามารถทำผ่านการได้รับแชร์\n- การสร้างเอกสารใหม่ ต้องมีสิทธิ์ Create ของเอกสารประเภทนั้นด้วย\n- การเชื่อมต่อของ Lead/Prospect ที่เชื่อมกัน และของ Opportunity ภายใต้ Prospect จะเปลี่ยนตาม"
+  },
+  {
+   "code": "Chat_Revoke_Assigned",
+   "group": "chat",
+   "description": "ผู้ใช้งานสามารถยกเลิกการผูกแชทกับ Lead หรือ Prospect ให้แชทนั้นกลับไปเป็นแชทใหม่ที่ยังไม่เชื่อมต่อกับเอกสารใดๆ\nหมายเหตุ:\n- ทำได้เฉพาะผู้รับผิดชอบของเอกสารที่แชทผูกอยู่ หรือหัวหน้าของผู้รับผิดชอบตาม Entity Organization Chart ไม่สามารถทำผ่านการได้รับแชร์\n- การเชื่อมต่อของ Lead/Prospect ที่เชื่อมกัน และของ Opportunity ภายใต้ Prospect จะถูกยกเลิกตาม"
+  },
+  {
+   "code": "Chat_View_Assigned",
+   "group": "chat",
+   "description": "ผู้ใช้งานสามารถมองเห็นแชท และห้องแชทที่ผูกกับเอกสาร \n- Lead \n- Prospect \n- Opportunity โดยเห็นเฉพาะแชทของเอกสารที่ผู้ใช้เกี่ยวข้องอยู่ในขณะนั้น \nหมายเหตุ: Lead และ Prospect ดูตามสิทธิ์การมองเห็นเอกสาร (default_permission) ส่วน Opportunity ต้องได้ View CHAT ในสิทธิ์บนใบ (Data Action Role) ด้วย"
+  },
+  {
+   "code": "Chat_Reply_Assigned",
+   "group": "chat",
+   "description": "ผู้ใช้งานสามารถตอบกลับข้อความในห้องแชทที่ผูกกับเอกสาร\n- Lead \n- Prospect \n- Opportunity โดยตอบได้เฉพาะแชทของเอกสารที่ผู้ใช้เกี่ยวข้องอยู่ในขณะนั้น \nหมายเหตุ: Lead และ Prospect ดูตามสิทธิ์การมองเห็นเอกสาร (default_permission) ส่วน Opportunity ต้องได้ AWS Chat ในสิทธิ์บนใบ (Data Action Role) ด้วย"
+  },
+  {
+   "code": "Chat_Open_AI_Chat_Bot",
+   "group": "chat",
+   "description": "ผู้ใช้งานสามารถเปิดปิดการใช้งานของ ChatBot ในห้องแชทได้ และสามารถเปิด/ปิดแชทบอทของทั้งช่องทางโซเชียล"
+  },
+  {
+   "code": "Chat_Open_AI_Analytics_AI",
+   "group": "chat",
+   "description": "ผู้ใช้งานสามารถใช้งานปุ่ม เปิด/ปิด AI ผู้ช่วยได้ซึ่งถ้าหากไม่มีสิทธิ์นี้จะไม่สามารถใช้งาน ฟีตเจอร์ AI ผู้ช่วยได้เลย"
+  },
+  {
+   "code": "View_All",
+   "group": "entity",
+   "description": "ผู้ใช้งานสามารถมองเห็นข้อมูลทุกรายการภายในบริษัท (Entity) ที่ตนเองสังกัด ทั้งข้อมูล Master (รวม Lead และ Prospect) และเอกสาร Transaction (Opportunity / เอกสารงานขาย / นัดหมายและงาน / ประวัติการติดต่อ / ไฟล์แนบ) รวมถึงรายการที่ถูกระงับ (Block) และแชททั้งหมด โดยไม่ขึ้นกับ Organization Chart การเป็นผู้รับผิดชอบ หรือการได้รับแชร์ และไม่ต้องมีสิทธิ์ View ของแต่ละโมดูล"
+  },
+  {
+   "code": "Master_Edit_All",
+   "group": "entity",
+   "description": "ผู้ใช้งานสามารถมองเห็นและทำรายการได้ทุก Action กับข้อมูล Master ทุกรายการของบริษัท รวม Lead และ Prospect ได้แก่ สร้าง แก้ไข เปลี่ยนสถานะ (Draft · Release · Block) ลบไป Trash Bin และกู้คืน มอบหมาย เปลี่ยนผู้รับผิดชอบ และแปลง Lead เป็น Prospect โดยไม่ต้องเป็นผู้รับผิดชอบหรือหัวหน้า และไม่ต้องมีสิทธิ์ Action ของแต่ละโมดูล"
+  },
+  {
+   "code": "Transaction_Edit_All",
+   "group": "entity",
+   "description": "ผู้ใช้งานสามารถมองเห็นและทำรายการได้ทุก Action กับเอกสาร Transaction ทุกใบภายในบริษัท ได้แก่ Opportunity เอกสารงานขาย นัดหมายและงาน ประวัติการติดต่อ และไฟล์แนบ (รวมที่อยู่ใต้ Lead และ Prospect) เช่น สร้าง แก้ไข ปิด ลบ มอบหมาย เปลี่ยนผู้รับผิดชอบหรือพนักงานขาย แชร์และยกเลิกแชร์ ดำเนินขั้นตอน Workflow รวมถึงมองเห็น ตอบ และจัดการแชททั้งหมด (ผูกแชทกับเอกสาร เปลี่ยนหรือถอนผู้ดูแลแชท เปิด/ปิด AI ในห้องแชท) โดยไม่ต้องเป็นผู้รับผิดชอบ หัวหน้า หรือได้รับแชร์ และไม่ต้องมีสิทธิ์ Action ของแต่ละโมดูล"
+  },
+  {
+   "code": "Config_All",
+   "group": "entity",
+   "description": "ผู้ใช้งานสามารถเข้าถึง มองเห็น และแก้ไขหน้าตั้งค่าทั้งหมดของบริษัท เช่น Pipeline Config, Activity Group, Workflow Config, Opportunity Config, Wait List, Waitlist Sharing Group และการจัดการ Role ของตำแหน่ง"
+  },
+  {
+   "code": "Dashboard_Overview_KeyMetrics",
+   "group": "dash",
+   "description": "ผู้ใช้งานสามารถมองเห็นกราฟ \"ตัวชี้วัดหลัก\" ในแท็บ ภาพรวม ของแดชบอร์ด · Win Rate คือ % ของ Opportunity ที่ติดต่อครั้งแรกในช่วงที่เลือกแล้วเก็บเงินได้ (เหตุการณ์สำเร็จของ Entity นี้) ระยะเวลาปิดดีลเฉลี่ยคือจำนวนวันตั้งแต่ติดต่อครั้งแรกจนเก็บเงิน เทียบกับช่วงก่อนหน้าที่ยาวเท่ากัน คลิกแต่ละช่องเพื่อดูรายการ\nหมายเหตุ: ข้อมูลในกราฟแสดงตามขอบเขตการเห็นข้อมูลของผู้ใช้งาน"
+  },
+  {
+   "code": "Dashboard_Overview_MonthlyClosedSales",
+   "group": "dash",
+   "description": "ผู้ใช้งานสามารถมองเห็นกราฟ \"ยอดปิดได้รายเดือน\" ในแท็บ ภาพรวม ของแดชบอร์ด · ยอดเงินที่เก็บได้จริงแต่ละเดือน (ยอดจากใบรับเงิน RV ของ Opportunity ที่เก็บเงินแล้ว) เทียบกัน เพื่อเห็นฤดูกาลและแนวโน้มรายได้\nหมายเหตุ: ข้อมูลในกราฟแสดงตามขอบเขตการเห็นข้อมูลของผู้ใช้งาน"
+  },
+  {
+   "code": "Dashboard_Overview_DailyOpportunityTrend",
+   "group": "dash",
+   "description": "ผู้ใช้งานสามารถมองเห็นกราฟ \"แนวโน้ม Opportunity รายวัน\" ในแท็บ ภาพรวม ของแดชบอร์ด · จำนวน Opportunity ใหม่ในแต่ละวัน (นับตามวันติดต่อครั้งแรก) ใช้ดูว่าช่วงไหน Opportunity เข้ามามากผิดปกติ เช่น หลังยิงโฆษณาหรือจัดงาน คลิกจุดเพื่อดูรายชื่อ Opportunity ของวันนั้น (ใช้รูปแบบของ SUN แทนกราฟแนวโน้มรายเดือนเดิม)\nหมายเหตุ: ข้อมูลในกราฟแสดงตามขอบเขตการเห็นข้อมูลของผู้ใช้งาน"
+  },
+  {
+   "code": "Dashboard_Marketing_BySource",
+   "group": "dash",
+   "description": "ผู้ใช้งานสามารถมองเห็นกราฟ \"แบ่งลูกค้าตามแหล่งที่มา\" ในแท็บ Opportunity & การตลาด ของแดชบอร์ด · สัดส่วน Opportunity จากแต่ละแหล่งที่มา ใช้ตัดสินใจว่าจะลงงบการตลาดกับช่องทางใด (ใช้รูปแบบโดนัทของ SUN)\nหมายเหตุ: ข้อมูลในกราฟแสดงตามขอบเขตการเห็นข้อมูลของผู้ใช้งาน"
+  },
+  {
+   "code": "Dashboard_Marketing_ConversionFunnel",
+   "group": "dash",
+   "description": "ผู้ใช้งานสามารถมองเห็นกราฟ \"Funnel การแปลง Opportunity\" ในแท็บ Opportunity & การตลาด ของแดชบอร์ด · ดูว่า Opportunity หลุดหายที่ขั้นไหนมากที่สุด ตั้งแต่ Opportunity ใหม่จนปิดการขาย เพื่อแก้ขั้นตอนที่เป็นคอขวด\nหมายเหตุ: ข้อมูลในกราฟแสดงตามขอบเขตการเห็นข้อมูลของผู้ใช้งาน"
+  },
+  {
+   "code": "Dashboard_Marketing_Uncontacted",
+   "group": "dash",
+   "description": "ผู้ใช้งานสามารถมองเห็นกราฟ \"Opportunity ที่ยังไม่ได้ติดต่อ\" ในแท็บ Opportunity & การตลาด ของแดชบอร์ด · ดู Opportunity ที่ถูกปล่อยทิ้งและความเร็วในการตอบกลับครั้งแรก ยิ่งตอบเร็วโอกาสปิดการขายยิ่งสูง ใช้เร่งให้เซลติดต่อ Opportunity ที่ค้าง\nหมายเหตุ: ข้อมูลในกราฟแสดงตามขอบเขตการเห็นข้อมูลของผู้ใช้งาน"
+  },
+  {
+   "code": "Dashboard_Marketing_MonthlyConversionRate",
+   "group": "dash",
+   "description": "ผู้ใช้งานสามารถมองเห็นกราฟ \"อัตราแปลง Opportunity รายเดือน\" ในแท็บ Opportunity & การตลาด ของแดชบอร์ด · ติดตามว่า % ของ Opportunity แต่ละเดือนที่กลายเป็นลูกค้าดีขึ้นหรือแย่ลง ใช้วัดคุณภาพ Opportunity และประสิทธิภาพการติดตาม (เดือนล่าสุดยังมีเวลาแปลงไม่ครบ)\nหมายเหตุ: ข้อมูลในกราฟแสดงตามขอบเขตการเห็นข้อมูลของผู้ใช้งาน"
+  },
+  {
+   "code": "Dashboard_Pipeline_PipelineValueByStepGroup",
+   "group": "dash",
+   "description": "ผู้ใช้งานสามารถมองเห็นกราฟ \"มูลค่า Pipeline ตามกลุ่มขั้นตอน\" ในแท็บ Pipeline & ยอดขาย ของแดชบอร์ด · ดูมูลค่าเงินของดีลที่ยังเปิดอยู่ในแต่ละขั้นตอน เพื่อรู้ว่าเงินกองอยู่ที่ขั้นไหนและควรเร่งขั้นใด\nหมายเหตุ: ข้อมูลในกราฟแสดงตามขอบเขตการเห็นข้อมูลของผู้ใช้งาน"
+  },
+  {
+   "code": "Dashboard_Pipeline_WinLossReasons",
+   "group": "dash",
+   "description": "ผู้ใช้งานสามารถมองเห็นกราฟ \"ชนะ / แพ้ และเหตุผลที่แพ้\" ในแท็บ Pipeline & ยอดขาย ของแดชบอร์ด · ดูสัดส่วนดีลที่ชนะเทียบแพ้ และเหตุผลหลักที่แพ้ เพื่อแก้ที่ต้นเหตุ เช่น ปรับราคา หรือเตรียมเอกสารให้ครบ\nหมายเหตุ: ข้อมูลในกราฟแสดงตามขอบเขตการเห็นข้อมูลของผู้ใช้งาน"
+  },
+  {
+   "code": "Dashboard_Pipeline_Top5Deals",
+   "group": "dash",
+   "description": "ผู้ใช้งานสามารถมองเห็นกราฟ \"ดีลใหญ่ 5 อันดับ\" ในแท็บ Pipeline & ยอดขาย ของแดชบอร์ด · รายการดีลมูลค่าสูงที่ยังไม่ปิด ให้ผู้บริหารโฟกัสและช่วยผลักดันดีลสำคัญ คลิกแถวเพื่อเปิดข้อมูลลูกค้า\nหมายเหตุ: ข้อมูลในกราฟแสดงตามขอบเขตการเห็นข้อมูลของผู้ใช้งาน"
+  },
+  {
+   "code": "Dashboard_Pipeline_StuckDeals",
+   "group": "dash",
+   "description": "ผู้ใช้งานสามารถมองเห็นกราฟ \"ดีลค้างนานเกินกำหนด\" ในแท็บ Pipeline & ยอดขาย ของแดชบอร์ด · ดีลที่อยู่ในขั้นตอนเดิมนานเกินเกณฑ์มีความเสี่ยงหลุด ควรติดตามทันทีหรือปิดทิ้งเพื่อให้ Pipeline สะอาด\nหมายเหตุ: ข้อมูลในกราฟแสดงตามขอบเขตการเห็นข้อมูลของผู้ใช้งาน"
+  },
+  {
+   "code": "Dashboard_Pipeline_StepGroupPassRate",
+   "group": "dash",
+   "description": "ผู้ใช้งานสามารถมองเห็นกราฟ \"อัตราผ่านแต่ละกลุ่มขั้นตอน\" ในแท็บ Pipeline & ยอดขาย ของแดชบอร์ด · ดูว่า Opportunity ผ่านจากกลุ่มหนึ่งไปอีกกลุ่มกี่ % ตามเส้นทางหลัก CS → เก็บเงิน → AN → PLS → LS → LE → FI → CRM เพื่อหาจุดที่ Opportunity หลุดมากที่สุด\nหมายเหตุ: ข้อมูลในกราฟแสดงตามขอบเขตการเห็นข้อมูลของผู้ใช้งาน"
+  },
+  {
+   "code": "Dashboard_Pipeline_AvgWonDealSize",
+   "group": "dash",
+   "description": "ผู้ใช้งานสามารถมองเห็นกราฟ \"มูลค่าเฉลี่ยของดีลที่ชนะ\" ในแท็บ Pipeline & ยอดขาย ของแดชบอร์ด · ติดตามว่าดีลที่ปิดได้มีขนาดใหญ่ขึ้นหรือเล็กลง ใช้ประกอบการตั้งเป้าและวางกลยุทธ์ขายสินค้าราคาสูง\nหมายเหตุ: ข้อมูลในกราฟแสดงตามขอบเขตการเห็นข้อมูลของผู้ใช้งาน"
+  },
+  {
+   "code": "Dashboard_Pipeline_ExpectedClose30Days",
+   "group": "dash",
+   "description": "ผู้ใช้งานสามารถมองเห็นกราฟ \"ดีลที่คาดว่าจะปิดใน 30 วัน\" ในแท็บ Pipeline & ยอดขาย ของแดชบอร์ด · รายการดีลที่ใกล้ถึงวันคาดปิด ใช้วางแผนติดตามรายสัปดาห์เพื่อปิดให้ทันเป้า คลิกแถวเพื่อเปิดข้อมูลลูกค้า\nหมายเหตุ: ข้อมูลในกราฟแสดงตามขอบเขตการเห็นข้อมูลของผู้ใช้งาน"
+  },
+  {
+   "code": "Dashboard_Pipeline_AvgSalesCycleBySalesperson",
+   "group": "dash",
+   "description": "ผู้ใช้งานสามารถมองเห็นกราฟ \"ระยะเวลาปิดดีลเฉลี่ยรายเซล\" ในแท็บ Pipeline & ยอดขาย ของแดชบอร์ด · ดูว่าเซลแต่ละคนใช้เวลากี่วันกว่าจะปิดดีลได้ ใช้หาจุดที่ต้องโค้ชหรือปรับกระบวนการขาย\nหมายเหตุ: ข้อมูลในกราฟแสดงตามขอบเขตการเห็นข้อมูลของผู้ใช้งาน"
+  },
+  {
+   "code": "Dashboard_Team_EmployeePerformance",
+   "group": "dash",
+   "description": "ผู้ใช้งานสามารถมองเห็นกราฟ \"ตารางผลงานพนักงาน\" ในแท็บ ทีมขาย ของแดชบอร์ด · ผลงานของผู้ถือขั้นตอนแต่ละคนในกลุ่มที่เลือก: Opportunity ทั้งหมด งานที่ค้างอยู่และวันค้างเฉลี่ย งานที่ทำเสร็จและวันเฉลี่ยที่ใช้ เทียบ SLA ของกลุ่ม ใช้หาคนที่งานล้นหรือทำช้ากว่าเกณฑ์\nหมายเหตุ: ข้อมูลในกราฟแสดงตามขอบเขตการเห็นข้อมูลของผู้ใช้งาน"
+  },
+  {
+   "code": "Dashboard_Activity_BySalesperson",
+   "group": "dash",
+   "description": "ผู้ใช้งานสามารถมองเห็นกราฟ \"กิจกรรมตามเซล\" ในแท็บ กิจกรรม ของแดชบอร์ด · เทียบจำนวนกิจกรรมของเซลแต่ละคน ใช้ดูภาระงานและความสม่ำเสมอของทีม\nหมายเหตุ: ข้อมูลในกราฟแสดงตามขอบเขตการเห็นข้อมูลของผู้ใช้งาน"
+  },
+  {
+   "code": "Dashboard_Activity_NoFollowUpDeals",
+   "group": "dash",
+   "description": "ผู้ใช้งานสามารถมองเห็นกราฟ \"ดีลที่ขาดการติดตาม\" ในแท็บ กิจกรรม ของแดชบอร์ด · ดีลที่ยังเปิดอยู่แต่ไม่มีการโทร นัด หรือส่งเอกสารเกิน 14 วัน มีโอกาสหลุดสูง ควรมอบหมายให้ติดตามทันที\nหมายเหตุ: ข้อมูลในกราฟแสดงตามขอบเขตการเห็นข้อมูลของผู้ใช้งาน"
+  },
+  {
+   "code": "Dashboard_Activity_OverdueByOwner",
+   "group": "dash",
+   "description": "ผู้ใช้งานสามารถมองเห็นกราฟ \"งานเลยกำหนดตามผู้รับผิดชอบ\" ในแท็บ กิจกรรม ของแดชบอร์ด · จำนวนงานที่เลยกำหนดแต่ยังไม่เสร็จของแต่ละคน ใช้ติดตามและช่วยกระจายงาน\nหมายเหตุ: ข้อมูลในกราฟแสดงตามขอบเขตการเห็นข้อมูลของผู้ใช้งาน"
+  },
+  {
+   "code": "Dashboard_Activity_UpcomingAppointments7Days",
+   "group": "dash",
+   "description": "ผู้ใช้งานสามารถมองเห็นกราฟ \"นัดหมาย 7 วันข้างหน้า\" ในแท็บ กิจกรรม ของแดชบอร์ด · รายการนัดหมายที่กำลังจะถึง ใช้เตรียมข้อมูลก่อนพบลูกค้าและกระจายงานเมื่อมีนัดชนกัน\nหมายเหตุ: ข้อมูลในกราฟแสดงตามขอบเขตการเห็นข้อมูลของผู้ใช้งาน"
+  },
+  {
+   "code": "Dashboard_Chat_BotHandoff",
+   "group": "dash",
+   "description": "ผู้ใช้งานสามารถมองเห็นกราฟ \"บอทส่งต่อให้พนักงาน\" ในแท็บ แชท ของแดชบอร์ด · สรุปแชทที่บอทตอบ แชทที่บอทตอบไม่ได้และส่งต่อให้พนักงาน และแชทที่ยังไม่มีคนเปิดอ่าน (นับเป็นยังไม่อ่านแม้บอทตอบแล้ว) ใช้หาคำถามที่ควรสอนบอทเพิ่ม\nหมายเหตุ: ข้อมูลในกราฟแสดงตามขอบเขตการเห็นข้อมูลของผู้ใช้งาน"
+  },
+  {
+   "code": "Dashboard_Chat_BotVsHumanReplies",
+   "group": "dash",
+   "description": "ผู้ใช้งานสามารถมองเห็นกราฟ \"ข้อความที่บอทตอบเทียบคนตอบ\" ในแท็บ แชท ของแดชบอร์ด · สัดส่วนข้อความฝั่งร้านที่ AI Chat Bot ตอบเอง เทียบกับที่พนักงานตอบ (ระบบบันทึกผู้ส่งแยกตาม CH-62) ใช้ประเมินว่าบอทช่วยลดภาระได้แค่ไหน\nหมายเหตุ: ข้อมูลในกราฟแสดงตามขอบเขตการเห็นข้อมูลของผู้ใช้งาน"
+  },
+  {
+   "code": "Dashboard_Chat_FirstResponseTime",
+   "group": "dash",
+   "description": "ผู้ใช้งานสามารถมองเห็นกราฟ \"เวลาตอบแชทครั้งแรก (First Response Time)\" ในแท็บ แชท ของแดชบอร์ด · เวลาเฉลี่ยตั้งแต่ลูกค้าทักจนมีคนหรือบอทตอบครั้งแรก แยกตามผู้ตอบ ยิ่งตอบเร็วลูกค้ายิ่งไม่หลุด ใช้ประเมินคุณภาพการดูแลแชทและเทียบบอทกับคน\nหมายเหตุ: ข้อมูลในกราฟแสดงตามขอบเขตการเห็นข้อมูลของผู้ใช้งาน"
+  },
+  {
+   "code": "Dashboard_Chat_UnassignedChatQueue",
+   "group": "dash",
+   "description": "ผู้ใช้งานสามารถมองเห็นกราฟ \"คิวแชทที่ยังไม่ส่งมอบให้ทีมขาย\" ในแท็บ แชท ของแดชบอร์ด · แชทที่ยังอยู่ในความดูแลของ Social Admin คือยังไม่ผูกลูกค้า หรือผูกแล้วแต่ยังไม่มอบหมายพนักงานขาย ทีมขายยังมองไม่เห็นแชทเหล่านี้ ควรเคลียร์ให้เร็วเพื่อส่งต่อลูกค้า\nหมายเหตุ: ข้อมูลในกราฟแสดงตามขอบเขตการเห็นข้อมูลของผู้ใช้งาน"
+  },
+  {
+   "code": "Dashboard_Chat_OverSLAChats",
+   "group": "dash",
+   "description": "ผู้ใช้งานสามารถมองเห็นกราฟ \"แชทรอตอบเกิน SLA\" ในแท็บ แชท ของแดชบอร์ด · แชทที่ลูกค้าทักแล้วยังไม่มีใครตอบเกินเวลาที่กำหนด (ค่าตัวอย่าง 15 นาที) ควรรีบตอบก่อนลูกค้าทักร้านอื่น\nหมายเหตุ: ข้อมูลในกราฟแสดงตามขอบเขตการเห็นข้อมูลของผู้ใช้งาน"
+  },
+  {
+   "code": "Dashboard_Chat_DailyNewChatsByChannel",
+   "group": "dash",
+   "description": "ผู้ใช้งานสามารถมองเห็นกราฟ \"แชทเข้าใหม่รายวันตามช่องทาง\" ในแท็บ แชท ของแดชบอร์ด · จำนวนแชทใหม่ต่อวันแยก LINE / Facebook / Instagram ใช้จัดคนดูแลแต่ละช่องทางให้พอกับปริมาณงาน\nหมายเหตุ: ข้อมูลในกราฟแสดงตามขอบเขตการเห็นข้อมูลของผู้ใช้งาน"
+  },
+  {
+   "code": "Dashboard_Chat_ChatFunnel",
+   "group": "dash",
+   "description": "ผู้ใช้งานสามารถมองเห็นกราฟ \"Funnel แชท → ผูกลูกค้า → Opportunity → Sold\" ในแท็บ แชท ของแดชบอร์ด · ดูว่าแชทที่เข้ามากลายเป็นลูกค้าในระบบ โอกาสขาย และการขายได้กี่ % หลุดมากที่ขั้นไหน ใช้วัดผลช่องทางแชทเทียบช่องทางอื่น\nหมายเหตุ: ข้อมูลในกราฟแสดงตามขอบเขตการเห็นข้อมูลของผู้ใช้งาน"
+  },
+  {
+   "code": "Dashboard_Chat_ChatHeatmap",
+   "group": "dash",
+   "description": "ผู้ใช้งานสามารถมองเห็นกราฟ \"ช่วงเวลาที่ลูกค้าทักแชท\" ในแท็บ แชท ของแดชบอร์ด · ตารางสีแสดงวันและช่วงเวลาที่แชทเข้ามามากที่สุด ใช้จัดเวรผู้ดูแลแชทและตั้งเวลาให้บอทตอบนอกเวลาทำการ คลิกแถวเพื่อดูแชทของวันนั้น\nหมายเหตุ: ข้อมูลในกราฟแสดงตามขอบเขตการเห็นข้อมูลของผู้ใช้งาน"
+  },
+  {
+   "code": "AI_CHAT_USE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถใช้ผู้ช่วย AI ในแผงขวาของเครื่องมือที่ตนมีสิทธิ์ใช้ ดู เปิดต่อ ลบ และดาวน์โหลดประวัติแชทของตัวเองได้ · ไม่เกี่ยวกับแชทลูกค้าในโมดูล Chat Box"
+  },
+  {
+   "code": "AI_DOC_ANALYZE_USE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถใช้เครื่องมือ \"วิเคราะห์เอกสาร\" (Document AI) เพื่ออัปโหลดเอกสาร PDF / Word / รูป ให้ AI วิเคราะห์ความเสี่ยงและประเด็นสำคัญ แล้วถามต่อจากเอกสารได้\nหมายเหตุ: เนื้อหาเอกสารถูกส่งไปประมวลผลที่ AI"
+  },
+  {
+   "code": "AI_DOC_SUMMARY_USE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถใช้เครื่องมือ \"สรุปเอกสาร\" (Document AI) เพื่อสรุปเอกสารยาวเป็นสรุปย่อ ประเด็นหลัก และสิ่งที่ต้องทำ"
+  },
+  {
+   "code": "AI_DATA_ANALYZE_USE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถใช้เครื่องมือ \"วิเคราะห์ข้อมูล\" (Document AI) เพื่ออัปโหลด Excel / CSV ให้ AI วิเคราะห์ตัวเลข สรุปแนวโน้ม พร้อมกราฟ\nหมายเหตุ: ข้อมูลตัวเลขของบริษัทถูกส่งไปประมวลผลที่ AI"
+  },
+  {
+   "code": "AI_MEETING_USE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถใช้เครื่องมือ \"สรุปการประชุม\" (Document AI) เพื่ออัปโหลดไฟล์เสียงหรือวิดีโอประชุม ให้ AI ถอดเสียงและสรุปรายงานการประชุมเป็น Word / PDF\nหมายเหตุ: ข้อมูลประชุมอาจเป็นความลับ"
+  },
+  {
+   "code": "AI_DOC_COMPARE_USE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถใช้เครื่องมือ \"เปรียบเทียบเอกสาร\" (Document AI) เพื่อเปรียบเทียบเอกสาร 2 ฉบับ เช่น สัญญาเดิมกับฉบับแก้ไข แล้วแสดงจุดที่เปลี่ยน\nหมายเหตุ: เนื้อหาเอกสารถูกส่งไปประมวลผลที่ AI"
+  },
+  {
+   "code": "AI_DOC_EXTRACT_USE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถใช้เครื่องมือ \"ดึงข้อมูลเป็นตาราง\" (Document AI) เพื่อดึงข้อมูลจากใบแจ้งหนี้ ใบเสร็จ ใบเสนอราคา เป็นตาราง และส่งออก Excel\nหมายเหตุ: เป็นข้อมูลทางการเงิน"
+  },
+  {
+   "code": "AI_DOC_CHECK_USE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถใช้เครื่องมือ \"ตรวจเอกสารตาม checklist\" (Document AI) เพื่อตรวจเอกสารตาม checklist ว่าครบถ้วนหรือไม่"
+  },
+  {
+   "code": "AI_SLIDES_USE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถใช้เครื่องมือ \"ทำสไลด์\" (Content Creation) เพื่อสร้างสไลด์นำเสนอเป็นไฟล์ .pptx"
+  },
+  {
+   "code": "AI_IMAGE_USE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถใช้เครื่องมือ \"สร้างรูปภาพ\" (Content Creation) เพื่อสร้างและแก้ไขรูปภาพด้วย AI รวมถึงสร้างตามภาพอ้างอิงและใช้เทมเพลตภาพกลางของบริษัท\nหมายเหตุ: ค่าใช้จ่ายสูง"
+  },
+  {
+   "code": "AI_VIDEO_USE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถใช้เครื่องมือ \"สร้างคลิป\" (Content Creation) เพื่อสร้างคลิปวิดีโอสั้นด้วย AI โดยเรนเดอร์ทีละฉาก\nหมายเหตุ: ค่าใช้จ่ายสูง"
+  },
+  {
+   "code": "AI_MUSIC_USE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถใช้เครื่องมือ \"สร้างเพลง\" (Content Creation) เพื่อแต่งเพลง เนื้อร้อง และคอร์ด\nหมายเหตุ: ค่าใช้จ่ายสูง"
+  },
+  {
+   "code": "AI_SOCIAL_USE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถใช้เครื่องมือ \"โพสต์โซเชียล\" (Content Creation) เพื่อเขียนโพสต์โซเชียลสำหรับหลายแพลตฟอร์ม"
+  },
+  {
+   "code": "AI_ARTICLE_USE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถใช้เครื่องมือ \"บทความ / SEO / ข่าว PR\" (Content Creation) เพื่อเขียนบทความ บทความ SEO และข่าว PR"
+  },
+  {
+   "code": "AI_VOICEOVER_USE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถใช้เครื่องมือ \"เสียงพากย์ไทย\" (Content Creation) เพื่อแปลงสคริปต์เป็นเสียงพากย์ภาษาไทย\nหมายเหตุ: ค่าใช้จ่ายสูง"
+  },
+  {
+   "code": "AI_GIF_USE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถใช้เครื่องมือ \"สร้างไฟล์ GIF\" (Content Creation) เพื่อสร้างไฟล์ GIF จากภาพหรือเฟรม\nหมายเหตุ: ค่าใช้จ่ายสูง"
+  },
+  {
+   "code": "AI_CODE_USE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถใช้เครื่องมือ \"เขียนโค้ด\" (Developer AI) เพื่อช่วยเขียนและอธิบายโค้ด"
+  },
+  {
+   "code": "AI_CLAUDE_CODE_USE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถใช้เครื่องมือ \"Claude Code\" (Developer AI) เพื่อดูข้อมูลและวิธีใช้ Claude Code ของบริษัท และขอสิทธิ์ใช้งาน (ขอคีย์ตามงบรายเดือน)\nหมายเหตุ: มีงบและค่าใช้จ่ายรายเดือน ต้องได้รับอนุมัติจากผู้ดูแล Claude Code"
+  },
+  {
+   "code": "AI_CODE_REVIEW_USE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถใช้เครื่องมือ \"รีวิวโค้ด\" (Developer AI) เพื่อรีวิวโค้ดเพื่อหาบั๊กและช่องโหว่"
+  },
+  {
+   "code": "AI_SQL_ASSIST_USE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถใช้เครื่องมือ \"ภาษาไทยเป็น SQL\" (Developer AI) เพื่อแปลงคำสั่งภาษาไทยเป็น SQL และปรับ SQL ให้ทำงานเร็วขึ้น"
+  },
+  {
+   "code": "AI_LOG_DOCTOR_USE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถใช้เครื่องมือ \"อ่าน log / error\" (Developer AI) เพื่ออ่าน log / error เพื่อหาสาเหตุและวิธีแก้"
+  },
+  {
+   "code": "AI_CODE_DOCS_USE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถใช้เครื่องมือ \"เอกสาร API / unit test\" (Developer AI) เพื่อสร้างเอกสาร API และ unit test จากโค้ด"
+  },
+  {
+   "code": "AI_STRATEGY_USE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถใช้เครื่องมือ \"วิเคราะห์กลยุทธ์\" (Knowledge & Strategy) เพื่อวิเคราะห์กลยุทธ์ SWOT และแผนธุรกิจ"
+  },
+  {
+   "code": "AI_HOWTO_USE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถใช้เครื่องมือ \"ศึกษาวิธีทำงาน\" (Knowledge & Strategy) เพื่อศึกษาวิธีทำงาน สร้างคู่มือและขั้นตอนทีละขั้น"
+  },
+  {
+   "code": "AI_DIAGRAM_USE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถใช้เครื่องมือ \"สร้างแผนภาพ\" (Knowledge & Strategy) เพื่อสร้างแผนภาพ flowchart / ER / sequence และแก้ไขต่อใน draw.io ได้"
+  },
+  {
+   "code": "AI_LIBRARY_USE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถใช้เครื่องมือ \"ถามคลังเอกสาร\" (Knowledge & Strategy) เพื่อถามคำถามจากคลังเอกสารของบริษัท ตอบพร้อมอ้างอิงเอกสาร และดูรายการเอกสารในคลัง\nหมายเหตุ: เห็นเฉพาะเอกสารที่ขอบเขตตรงกับสาขาของตน"
+  },
+  {
+   "code": "AI_QUIZ_USE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถใช้เครื่องมือ \"แบบทดสอบ / บทเรียน\" (Knowledge & Strategy) เพื่อสร้างแบบทดสอบและบทเรียนสำหรับอบรมพนักงาน"
+  },
+  {
+   "code": "AI_FAQ_USE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถใช้เครื่องมือ \"สร้าง FAQ\" (Knowledge & Strategy) เพื่อสร้าง FAQ จากเอกสารหรือข้อมูล"
+  },
+  {
+   "code": "AI_PROJECT_PLAN_USE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถใช้เครื่องมือ \"แผนโครงการ\" (Knowledge & Strategy) เพื่อวางแผนโครงการ ไทม์ไลน์ และความเสี่ยง"
+  },
+  {
+   "code": "AI_DECISION_USE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถใช้เครื่องมือ \"ช่วยตัดสินใจ\" (Knowledge & Strategy) เพื่อช่วยเปรียบเทียบตัวเลือกและตัดสินใจ"
+  },
+  {
+   "code": "AI_FORMAL_WRITER_USE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถใช้เครื่องมือ \"หนังสือ / จดหมายทางการ\" (Communication & Office) เพื่อร่างหนังสือและจดหมายทางการ"
+  },
+  {
+   "code": "AI_REPLY_DRAFT_USE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถใช้เครื่องมือ \"ร่างข้อความตอบกลับ\" (Communication & Office) เพื่อร่างข้อความตอบกลับลูกค้า อีเมล และ LINE"
+  },
+  {
+   "code": "AI_HR_DOCS_USE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถใช้เครื่องมือ \"เอกสาร HR\" (Communication & Office) เพื่อร่างเอกสาร HR เช่น ประกาศรับสมัคร และข้อตกลงต่าง ๆ"
+  },
+  {
+   "code": "AI_CUSTOMER_BRIEF_USE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถใช้เครื่องมือ \"สรุปลูกค้า\" (Sales & Customer AI) เพื่อสรุปข้อมูลลูกค้าจาก CRM และร่างข้อความติดตามเพื่อเตรียมคุยงาน\nหมายเหตุ: เห็นข้อมูลลูกค้าตามสิทธิ์เดิมใน CRM เท่านั้น สิทธิ์นี้ไม่ได้ทำให้เห็นลูกค้าเพิ่ม"
+  },
+  {
+   "code": "AI_LIBRARY_MANAGE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถเพิ่ม แก้ไข และลบเอกสารในคลังเอกสาร กำหนดขอบเขตเอกสาร (ทุกคน / เฉพาะสาขา) และเห็นเอกสารทุกสาขา\nหมายเหตุ: ชื่อเดิม AIHUB_Library_Manage · การกระทำถูกบันทึกใน Audit Log"
+  },
+  {
+   "code": "AI_IMAGE_TEMPLATE_MANAGE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถเพิ่มและลบเทมเพลตภาพกลางของบริษัท ส่วนผู้ใช้ทั่วไปใช้เทมเพลตได้ตามสิทธิ์สร้างรูปภาพ\nหมายเหตุ: ตอนนี้ใช้ธงเดียวกับผู้ดูแลคลังเอกสาร"
+  },
+  {
+   "code": "AI_CLAUDE_CODE_MANAGE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถอนุมัติ ระงับ และตั้งงบรายเดือนของพนักงานที่ขอใช้ Claude Code ดูรายชื่อและยอดใช้ทั้งหมด และเพิกถอนคีย์ได้\nหมายเหตุ: ชื่อเดิม AIHUB_ClaudeCode_Manage"
+  },
+  {
+   "code": "AI_CONNECT_USE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถเชื่อมต่อบัญชีส่วนตัวกับ Google Drive / OneDrive (Microsoft 365) / Canva เพื่อบันทึกผลลัพธ์จากเครื่องมือเป็นไฟล์ และตัดการเชื่อมต่อได้\nหมายเหตุ: การเชื่อมต่อถูกบันทึกใน Audit Log"
+  },
+  {
+   "code": "AI_ADMIN_USAGE_VIEW",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถเข้าหน้า Admin ของ AI Hub เพื่อดูยอด token และค่าใช้จ่ายการใช้ AI ของสาขาตนเอง แยกรายเครื่องมือและรายคน"
+  },
+  {
+   "code": "AI_ADMIN_USAGE_ALL_BRANCH",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถดูยอดการใช้ AI ของทุกสาขาและทุกบริษัท\nหมายเหตุ: เป็นการเห็นข้ามบริษัท ปัจจุบันบังคับด้วย super_admin"
+  },
+  {
+   "code": "AI_ADMIN_USAGE_EXPORT",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถส่งออกรายงานการใช้งานและค่าใช้จ่ายเป็นไฟล์ CSV (ไฟล์บิลรายเดือน)\nหมายเหตุ: การส่งออกถูกบันทึกใน Audit Log ทุกครั้ง"
+  },
+  {
+   "code": "AI_ADMIN_QUOTA_MANAGE",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถตั้ง แก้ไข และลบโควตา token และงบ USD รายเดือนต่อบริษัท และดูภาพรวมรายคน\nหมายเหตุ: การแก้ไขถูกบันทึกใน Audit Log"
+  },
+  {
+   "code": "AI_ADMIN_SYSTEM_VIEW",
+   "group": "ai",
+   "description": "ผู้ใช้งานสามารถดูสถานะระบบ AI Hub ได้แก่ Monitor รายการ model ที่เปิดใช้ และ Audit Log การกระทำของผู้ใช้และผู้ดูแล"
+  }
+ ],
+ "roles": [
+  {
+   "code": "ENTITY_VIEWER",
+   "name": "ผู้ที่ดูข้อมูลทั้งหมดของบริษัท",
+   "nameEn": "Entity Viewer",
+   "description": "เห็นข้อมูลทุกรายการของบริษัท ทั้ง Master Transaction และแชท แบบดูอย่างเดียว",
+   "category": "Entity",
+   "permissions": [
+    "MODULE_Pipeline",
+    "MODULE_Chat_Box",
+    "View_All"
+   ]
+  },
+  {
+   "code": "ENTITY_ADMIN",
+   "name": "ผู้ที่ดูแลข้อมูลทั้งหมดของบริษัท",
+   "nameEn": "Entity Admin",
+   "description": "เห็นและทำได้ทุก Action กับข้อมูล Master และเอกสาร Transaction ทุกรายการของบริษัท รวมแชท",
+   "category": "Entity",
+   "permissions": [
+    "MODULE_Pipeline",
+    "MODULE_Chat_Box",
+    "View_All",
+    "Master_Edit_All",
+    "Transaction_Edit_All"
+   ]
+  },
+  {
+   "code": "ENTITY_CONFIG",
+   "name": "ผู้ที่ตั้งค่าระบบของบริษัท",
+   "nameEn": "Entity Config",
+   "description": "เข้าถึงและแก้ไขหน้าตั้งค่าทั้งหมดของบริษัท รวมการจัดการ Role ของตำแหน่ง",
+   "category": "Entity",
+   "permissions": [
+    "Config_All"
+   ]
+  },
+  {
+   "code": "LEAD_RESPONSIBLE",
+   "name": "ผู้ที่รับผิดชอบ Lead",
+   "nameEn": "Lead Responsible Person",
+   "description": "ชุดสิทธิ์ขั้นต่ำของคนที่ดูแล Lead · ระบบนับว่ารับงาน Lead ได้เมื่อมี Pipeline_Lead_View + Pipeline_Lead_Edit",
+   "category": "Lead",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "MODULE_Chat_Box",
+    "Pipeline_Lead_View",
+    "Pipeline_Lead_Edit",
+    "Pipeline_Lead_Contact_View",
+    "Pipeline_Lead_Contact_Activity_Create",
+    "Pipeline_Lead_Contact_Activity_Delete",
+    "Pipeline_Lead_Attachment_View",
+    "Pipeline_Schedule_Appointment_View",
+    "Pipeline_Schedule_Appointment_Add_Edit",
+    "Pipeline_Schedule_Task_View",
+    "Pipeline_Schedule_Task_Add_Edit",
+    "Chat_View_Assigned",
+    "Chat_Reply_Assigned"
+   ]
+  },
+  {
+   "code": "LEAD_VIEWER",
+   "name": "ผู้ที่ดู Lead",
+   "nameEn": "Lead Viewer",
+   "description": "ดูรายการและรายละเอียด Lead ประวัติการติดต่อ และไฟล์แนบ แบบอ่านอย่างเดียว",
+   "category": "Lead",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Lead_View",
+    "Pipeline_Lead_Contact_View",
+    "Pipeline_Lead_Attachment_View"
+   ]
+  },
+  {
+   "code": "LEAD_CREATOR",
+   "name": "ผู้ที่สร้าง Lead",
+   "nameEn": "Lead Creator",
+   "description": "สร้าง Lead ใหม่จากการคีย์ อัปโหลด หรือจากแชท",
+   "category": "Lead",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Lead_Create"
+   ]
+  },
+  {
+   "code": "LEAD_MANAGE_ATTACHMENT",
+   "name": "ผู้ที่จัดการไฟล์แนบ Lead",
+   "nameEn": "Lead Manage Attachment",
+   "description": "ดู ดาวน์โหลด อัปโหลด และลบไฟล์แนบของ Lead",
+   "category": "Lead",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Lead_Attachment_View",
+    "Pipeline_Lead_Attachment_Download",
+    "Pipeline_Lead_Attachment_Upload",
+    "Pipeline_Lead_Attachment_Delete",
+    "Pipeline_Lead_View"
+   ]
+  },
+  {
+   "code": "LEAD_ASSIGNER",
+   "name": "ผู้ที่มอบหมาย Lead",
+   "nameEn": "Lead Assigner",
+   "description": "มอบหมาย Lead จาก Wait List และเปลี่ยนผู้รับผิดชอบ Lead",
+   "category": "Lead",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Lead_View",
+    "Pipeline_Lead_Assign",
+    "Pipeline_Lead_Change_Assign",
+    "Pipeline_Wait_list_Access"
+   ]
+  },
+  {
+   "code": "LEAD_CONVERT_CLOSE",
+   "name": "ผู้ที่แปลงและปิด Lead",
+   "nameEn": "Lead Convert & Close",
+   "description": "ดู Lead แปลง Lead เป็น Prospect และปิด Lead ที่ไม่ไปต่อ",
+   "category": "Lead",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Lead_View",
+    "Pipeline_Lead_Convert_Prospect",
+    "Pipeline_Lead_Close"
+   ]
+  },
+  {
+   "code": "LEAD_TRASH",
+   "name": "ผู้ที่ลบ Lead",
+   "nameEn": "Lead Trash",
+   "description": "ย้าย Lead ไปถังขยะ มองเห็นถังขยะ และกู้คืน",
+   "category": "Lead",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Lead_View",
+    "Pipeline_Lead_Trash"
+   ]
+  },
+  {
+   "code": "LEAD_PDPA_DATA",
+   "name": "ผู้ที่ดูข้อมูล PDPA ของลูกค้าใน Lead",
+   "nameEn": "Lead PDPA Data Access",
+   "description": "ผู้ใช้งานสามารถเข้าถึงข้อมูลระเอียดอ่อนตาม พระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล ของลูกค้า ที่ Lead ได้",
+   "category": "Lead",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Lead_Customer_PDPA_Data"
+   ]
+  },
+  {
+   "code": "LEAD_CRITICAL_DATA",
+   "name": "ผู้ที่ดูข้อมูลความปลอดภัยของลูกค้าใน Lead",
+   "nameEn": "Lead Critical Data Access",
+   "description": "ผู้ใช้งานสามารถเข้าถึงข้อมูลด้านความปลอดภัย ของลูกค้า ที่ Lead ได้",
+   "category": "Lead",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Lead_Customer_Critical_Data"
+   ]
+  },
+  {
+   "code": "LEAD_FINANCIAL_DATA",
+   "name": "ผู้ที่ดูข้อมูลการเงินของบริษัทใน Lead",
+   "nameEn": "Lead Financial Data Access",
+   "description": "ผู้ใช้งานสามารถเข้าถึงข้อมูลด้านการเงินของบริษัท เช่น มูลค่าดีล ยอดขาย ที่ Lead ได้",
+   "category": "Lead",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Lead_Company_Financial_Data"
+   ]
+  },
+  {
+   "code": "LEAD_STRATEGIC_DATA",
+   "name": "ผู้ที่ดูข้อมูลเชิงกลยุทธ์ของบริษัทใน Lead",
+   "nameEn": "Lead Strategic Data Access",
+   "description": "ผู้ใช้งานสามารถเข้าถึงข้อมูลเชิงกลยุทธ์ของบริษัท ที่ Lead ได้",
+   "category": "Lead",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Lead_Company_Strategic_Data"
+   ]
+  },
+  {
+   "code": "PROSPECT_RESPONSIBLE",
+   "name": "ผู้ที่รับผิดชอบ Prospect",
+   "nameEn": "Prospect Responsible Person",
+   "description": "ชุดสิทธิ์ขั้นต่ำของคนที่ดูแล Prospect · ระบบนับว่ารับงาน Prospect ได้เมื่อมี Pipeline_Prospect_View + Pipeline_Prospect_Edit",
+   "category": "Prospect",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "MODULE_Chat_Box",
+    "Pipeline_Prospect_View",
+    "Pipeline_Prospect_Edit",
+    "Pipeline_Prospect_Attachment_View",
+    "Chat_View_Assigned",
+    "Chat_Reply_Assigned"
+   ]
+  },
+  {
+   "code": "PROSPECT_VIEWER",
+   "name": "ผู้ที่ดู Prospect",
+   "nameEn": "Prospect Viewer",
+   "description": "ดูรายการ รายละเอียด และไฟล์แนบของ Prospect แบบอ่านอย่างเดียว",
+   "category": "Prospect",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Prospect_View",
+    "Pipeline_Prospect_Attachment_View"
+   ]
+  },
+  {
+   "code": "PROSPECT_CREATOR",
+   "name": "ผู้ที่สร้าง Prospect",
+   "nameEn": "Prospect Creator",
+   "description": "สร้าง Prospect ใหม่",
+   "category": "Prospect",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Prospect_Create"
+   ]
+  },
+  {
+   "code": "PROSPECT_ATTACHMENT_MANAGER",
+   "name": "ผู้ที่จัดการไฟล์แนบ Prospect",
+   "nameEn": "Prospect Attachment Manager",
+   "description": "ดู ดาวน์โหลด อัปโหลด และลบไฟล์แนบของ Prospect",
+   "category": "Prospect",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Prospect_Attachment_View",
+    "Pipeline_Prospect_Attachment_Download",
+    "Pipeline_Prospect_Attachment_Upload",
+    "Pipeline_Prospect_Attachment_Delete",
+    "Pipeline_Prospect_View"
+   ]
+  },
+  {
+   "code": "PROSPECT_ASSIGNER",
+   "name": "ผู้ที่มอบหมาย Prospect",
+   "nameEn": "Prospect Assigner",
+   "description": "มอบหมาย Prospect จาก Wait List และเปลี่ยนผู้รับผิดชอบ Prospect",
+   "category": "Prospect",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Prospect_View",
+    "Pipeline_Prospect_Assign",
+    "Pipeline_Prospect_Change_Assign",
+    "Pipeline_Wait_list_Access"
+   ]
+  },
+  {
+   "code": "PROSPECT_TRASH",
+   "name": "ผู้ที่ลบ Prospect",
+   "nameEn": "Prospect Trash",
+   "description": "ย้าย Prospect ไปถังขยะ และกู้คืน",
+   "category": "Prospect",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Prospect_View",
+    "Pipeline_Prospect_Trash"
+   ]
+  },
+  {
+   "code": "PROSPECT_PDPA_DATA",
+   "name": "ผู้ที่ดูข้อมูล PDPA ของลูกค้าใน Prospect",
+   "nameEn": "Prospect PDPA Data Access",
+   "description": "ผู้ใช้งานสามารถเข้าถึงข้อมูลระเอียดอ่อนตาม พระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล ของลูกค้า ที่ Prospect ได้",
+   "category": "Prospect",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Prospect_Customer_PDPA_Data"
+   ]
+  },
+  {
+   "code": "PROSPECT_CRITICAL_DATA",
+   "name": "ผู้ที่ดูข้อมูลความปลอดภัยของลูกค้าใน Prospect",
+   "nameEn": "Prospect Critical Data Access",
+   "description": "ผู้ใช้งานสามารถเข้าถึงข้อมูลด้านความปลอดภัย ของลูกค้า ที่ Prospect ได้",
+   "category": "Prospect",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Prospect_Customer_Critical_Data"
+   ]
+  },
+  {
+   "code": "PROSPECT_FINANCIAL_DATA",
+   "name": "ผู้ที่ดูข้อมูลการเงินของบริษัทใน Prospect",
+   "nameEn": "Prospect Financial Data Access",
+   "description": "ผู้ใช้งานสามารถเข้าถึงข้อมูลด้านการเงินของบริษัท เช่น มูลค่าดีล ยอดขาย ที่ Prospect ได้",
+   "category": "Prospect",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Prospect_Company_Financial_Data"
+   ]
+  },
+  {
+   "code": "PROSPECT_STRATEGIC_DATA",
+   "name": "ผู้ที่ดูข้อมูลเชิงกลยุทธ์ของบริษัทใน Prospect",
+   "nameEn": "Prospect Strategic Data Access",
+   "description": "ผู้ใช้งานสามารถเข้าถึงข้อมูลเชิงกลยุทธ์ของบริษัท ที่ Prospect ได้",
+   "category": "Prospect",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Prospect_Company_Strategic_Data"
+   ]
+  },
+  {
+   "code": "OPP_RESPONSIBLE",
+   "name": "ผู้ที่รับผิดชอบ Opportunity",
+   "nameEn": "Opportunity Responsible Person",
+   "description": "ชุดสิทธิ์ขั้นต่ำของผู้รับผิดชอบหรือพนักงานขายของ Opportunity · ระบบนับว่ารับงานได้เมื่อมี Pipeline_Opportunity_View + Pipeline_Opportunity_Edit",
+   "category": "Opportunity",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "MODULE_Chat_Box",
+    "Pipeline_Opportunity_View",
+    "Pipeline_Opportunity_Edit",
+    "Pipeline_Opportunity_Contact_View",
+    "Pipeline_Opportunity_Contact_Activity_Create",
+    "Pipeline_Opportunity_Contact_Activity_Delete",
+    "Pipeline_Opportunity_Attachment_View",
+    "Pipeline_Opportunity_WorkflowStep_Close",
+    "Pipeline_Schedule_Appointment_View",
+    "Pipeline_Schedule_Appointment_Add_Edit",
+    "Pipeline_Schedule_Task_View",
+    "Pipeline_Schedule_Task_Add_Edit",
+    "Chat_View_Assigned",
+    "Chat_Reply_Assigned"
+   ]
+  },
+  {
+   "code": "OPP_COLLABORATOR",
+   "name": "ผู้ที่ร่วมงานใน Opportunity",
+   "nameEn": "Opportunity Collaborator",
+   "description": "สิทธิ์ 9 อย่างที่ตรงกับช่องแชร์บนใบ (Sharing Employee / Sharing Group / Peer Sharing / Ex Responsible) · ให้ตำแหน่งที่มักถูกแชร์ เพื่อให้ช่องที่ติ๊กในแชร์มีผล",
+   "category": "Opportunity",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "MODULE_Chat_Box",
+    "Pipeline_Opportunity_View",
+    "Pipeline_Opportunity_Edit",
+    "Pipeline_Opportunity_Contact_Activity_Create",
+    "Pipeline_Schedule_Appointment_View",
+    "Pipeline_Schedule_Appointment_Add_Edit",
+    "Pipeline_Schedule_Task_View",
+    "Pipeline_Schedule_Task_Add_Edit",
+    "Chat_View_Assigned",
+    "Chat_Reply_Assigned"
+   ]
+  },
+  {
+   "code": "OPP_VIEWER",
+   "name": "ผู้ที่ดู Opportunity",
+   "nameEn": "Opportunity Viewer",
+   "description": "ดูรายการ รายละเอียด ประวัติการติดต่อ และไฟล์แนบของ Opportunity แบบอ่านอย่างเดียว",
+   "category": "Opportunity",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Opportunity_View",
+    "Pipeline_Opportunity_Contact_View",
+    "Pipeline_Opportunity_Attachment_View"
+   ]
+  },
+  {
+   "code": "OPP_CREATOR",
+   "name": "ผู้ที่สร้าง Opportunity",
+   "nameEn": "Opportunity Creator",
+   "description": "สร้าง Opportunity ใหม่ รวมถึงสร้างจาก Prospect",
+   "category": "Opportunity",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Opportunity_Create"
+   ]
+  },
+  {
+   "code": "OPP_ATTACHMENT_MANAGER",
+   "name": "ผู้ที่จัดการไฟล์แนบ Opportunity",
+   "nameEn": "Opportunity Attachment Manager",
+   "description": "ดู ดาวน์โหลด อัปโหลด และลบไฟล์แนบของ Opportunity",
+   "category": "Opportunity",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Opportunity_Attachment_View",
+    "Pipeline_Opportunity_Attachment_Download",
+    "Pipeline_Opportunity_Attachment_Upload",
+    "Pipeline_Opportunity_Attachment_Delete",
+    "Pipeline_Opportunity_View"
+   ]
+  },
+  {
+   "code": "OPP_ASSIGNER",
+   "name": "ผู้ที่มอบหมาย Opportunity",
+   "nameEn": "Opportunity Assigner",
+   "description": "มอบหมาย Opportunity จาก Wait List เปลี่ยนผู้รับผิดชอบ และเปลี่ยนพนักงานขาย",
+   "category": "Opportunity",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Opportunity_View",
+    "Pipeline_Opportunity_Assign",
+    "Pipeline_Opportunity_Change_Assign",
+    "Pipeline_Opportunity_Change_Sales_Person",
+    "Pipeline_Wait_list_Access"
+   ]
+  },
+  {
+   "code": "OPP_SHARING_MANAGER",
+   "name": "ผู้ที่จัดการการแชร์ Opportunity",
+   "nameEn": "Opportunity Sharing Manager",
+   "description": "แชร์ Opportunity ให้พนักงาน และยกเลิกการแชร์ทุกประเภท",
+   "category": "Opportunity",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Opportunity_View",
+    "Pipeline_Opportunity_Share_Sharing_Employee",
+    "Pipeline_Opportunity_Revoke_Sharing_Employee",
+    "Pipeline_Opportunity_Revoke_OPP_Sharing_Group",
+    "Pipeline_Opportunity_Revoke_Latest_Peering",
+    "Pipeline_Opportunity_Revoke_Ex_Responsible_Person"
+   ]
+  },
+  {
+   "code": "OPP_WORKFLOW_OPERATOR",
+   "name": "ผู้ที่ดำเนินขั้นตอน Workflow",
+   "nameEn": "Workflow Step Operator",
+   "description": "ปิดขั้นตอน และส่งขั้นตอนย้อนกลับ (Rework) ของ Opportunity",
+   "category": "Opportunity",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Opportunity_View",
+    "Pipeline_Opportunity_WorkflowStep_Close",
+    "Pipeline_Opportunity_WorkflowStep_Rework"
+   ]
+  },
+  {
+   "code": "OPP_CLOSER",
+   "name": "ผู้ที่ปิด Opportunity",
+   "nameEn": "Opportunity Closer",
+   "description": "ปิด Opportunity ทั้งใบ",
+   "category": "Opportunity",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Opportunity_View",
+    "Pipeline_Opportunity_Close"
+   ]
+  },
+  {
+   "code": "OPP_ALL_GROUPS_FILTER",
+   "name": "ผู้ที่ดูงานทุก Activity Group",
+   "nameEn": "All Activity Groups Filter",
+   "description": "กรองหน้า Opportunity List ได้ทุก Activity Group ไม่จำกัดแค่กลุ่มของตัวเอง",
+   "category": "Opportunity",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Opportunity_View",
+    "Pipeline_Opportunity_Activity_Group_Admin"
+   ]
+  },
+  {
+   "code": "OPP_PDPA_DATA",
+   "name": "ผู้ที่ดูข้อมูล PDPA ของลูกค้าใน Opportunity",
+   "nameEn": "Opportunity PDPA Data Access",
+   "description": "ผู้ใช้งานสามารถเข้าถึงข้อมูลระเอียดอ่อนตาม พระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล ของลูกค้า ที่ Opportunity ได้",
+   "category": "Opportunity",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Opportunity_Customer_PDPA_Data"
+   ]
+  },
+  {
+   "code": "OPP_CRITICAL_DATA",
+   "name": "ผู้ที่ดูข้อมูลความปลอดภัยของลูกค้าใน Opportunity",
+   "nameEn": "Opportunity Critical Data Access",
+   "description": "ผู้ใช้งานสามารถเข้าถึงข้อมูลด้านความปลอดภัย ของลูกค้า ที่ Opportunity ได้",
+   "category": "Opportunity",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Opportunity_Customer_Critical_Data"
+   ]
+  },
+  {
+   "code": "OPP_FINANCIAL_DATA",
+   "name": "ผู้ที่ดูข้อมูลการเงินของบริษัทใน Opportunity",
+   "nameEn": "Opportunity Financial Data Access",
+   "description": "ผู้ใช้งานสามารถเข้าถึงข้อมูลด้านการเงินของบริษัท เช่น มูลค่าดีล ยอดขาย ที่ Opportunity ได้",
+   "category": "Opportunity",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Opportunity_Company_Financial_Data"
+   ]
+  },
+  {
+   "code": "OPP_STRATEGIC_DATA",
+   "name": "ผู้ที่ดูข้อมูลเชิงกลยุทธ์ของบริษัทใน Opportunity",
+   "nameEn": "Opportunity Strategic Data Access",
+   "description": "ผู้ใช้งานสามารถเข้าถึงข้อมูลเชิงกลยุทธ์ของบริษัท ที่ Opportunity ได้",
+   "category": "Opportunity",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Opportunity_Company_Strategic_Data"
+   ]
+  },
+  {
+   "code": "SCHEDULE_APPOINTMENT",
+   "name": "ผู้ที่จัดการนัดหมายของตัวเอง",
+   "nameEn": "Own Appointments",
+   "description": "ดู สร้าง และแก้ไขนัดหมาย (Appointment) ของตัวเอง",
+   "category": "นัดหมายและงาน",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Schedule_Appointment_View",
+    "Pipeline_Schedule_Appointment_Add_Edit"
+   ]
+  },
+  {
+   "code": "SCHEDULE_TASK",
+   "name": "ผู้ที่จัดการงานของตัวเอง",
+   "nameEn": "Own Tasks",
+   "description": "ดู สร้าง และแก้ไขงาน (Task) ของตัวเอง",
+   "category": "นัดหมายและงาน",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Schedule_Task_View",
+    "Pipeline_Schedule_Task_Add_Edit"
+   ]
+  },
+  {
+   "code": "SCHEDULE_APPOINTMENT_FOR_OTHERS",
+   "name": "ผู้ที่นัดหมายแทนผู้อื่น",
+   "nameEn": "Appointments for Others",
+   "description": "สร้างและแก้ไขนัดหมาย (Appointment) ให้คนอื่น เช่น หัวหน้าลงนัดให้ลูกทีม",
+   "category": "นัดหมายและงาน",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Schedule_Appointment_View",
+    "Pipeline_Schedule_Appointment_Add_Edit",
+    "Pipeline_Schedule_Appointment_Add_Edit_For_Other"
+   ]
+  },
+  {
+   "code": "SCHEDULE_TASK_FOR_OTHERS",
+   "name": "ผู้ที่สร้างงานแทนผู้อื่น",
+   "nameEn": "Tasks for Others",
+   "description": "สร้างและแก้ไขงาน (Task) ให้คนอื่น เช่น หัวหน้ามอบงานให้ลูกทีม",
+   "category": "นัดหมายและงาน",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Schedule_Task_View",
+    "Pipeline_Schedule_Task_Add_Edit",
+    "Pipeline_Schedule_Task_Add_Edit_For_Other"
+   ]
+  },
+  {
+   "code": "DOC_LETTER_OF_INTENT",
+   "name": "ผู้จัดการเอกสารใบเจตจำนง",
+   "nameEn": "Document: Letter of Intent",
+   "description": "ดู สร้าง แก้ไข และระงับเอกสารใบเจตจำนง",
+   "category": "เอกสารงานขาย",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Document_LetterofIntent_View",
+    "Pipeline_Document_LetterofIntent_Create",
+    "Pipeline_Document_LetterofIntent_Edit",
+    "Pipeline_Document_LetterofIntent_Block"
+   ]
+  },
+  {
+   "code": "DOC_LEGAL_CREDIT_REQUEST",
+   "name": "ผู้จัดการเอกสารใบขอใช้บริการนิติกรรมและสินเชื่อ",
+   "nameEn": "Document: Legal & Credit Service Request",
+   "description": "ดู สร้าง แก้ไข และระงับเอกสารใบขอใช้บริการนิติกรรมและสินเชื่อ",
+   "category": "เอกสารงานขาย",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Document_LegalCreditServiceRequest_View",
+    "Pipeline_Document_LegalCreditServiceRequest_Create",
+    "Pipeline_Document_LegalCreditServiceRequest_Edit",
+    "Pipeline_Document_LegalCreditServiceRequest_Block"
+   ]
+  },
+  {
+   "code": "DOC_SERVICE_CONTRACT",
+   "name": "ผู้จัดการเอกสารสัญญาบริการ",
+   "nameEn": "Document: Service Contract",
+   "description": "ดู สร้าง แก้ไข และระงับเอกสารสัญญาบริการ",
+   "category": "เอกสารงานขาย",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Document_Servicecontract_View",
+    "Pipeline_Document_Servicecontract_Create",
+    "Pipeline_Document_Servicecontract_Edit",
+    "Pipeline_Document_Servicecontract_Block"
+   ]
+  },
+  {
+   "code": "DOC_LOAN_AGREEMENT",
+   "name": "ผู้จัดการเอกสารสัญญาเงินกู้",
+   "nameEn": "Document: Loan Agreement",
+   "description": "ดู สร้าง แก้ไข และระงับเอกสารสัญญาเงินกู้",
+   "category": "เอกสารงานขาย",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Document_LoanAgreement_View",
+    "Pipeline_Document_LoanAgreement_Create",
+    "Pipeline_Document_LoanAgreement_Edit",
+    "Pipeline_Document_LoanAgreement_Block"
+   ]
+  },
+  {
+   "code": "DOC_PRELIM_CREDIT_APPROVAL",
+   "name": "ผู้จัดการเอกสารใบอนุมัติวงเงินเบื้องต้น",
+   "nameEn": "Document: Preliminary Credit Approval",
+   "description": "ดู สร้าง แก้ไข และระงับเอกสารใบอนุมัติวงเงินเบื้องต้น",
+   "category": "เอกสารงานขาย",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Document_PreliminaryCreditApproval_View",
+    "Pipeline_Document_PreliminaryCreditApproval_Create",
+    "Pipeline_Document_PreliminaryCreditApproval_Edit",
+    "Pipeline_Document_PreliminaryCreditApproval_Block"
+   ]
+  },
+  {
+   "code": "DOC_PROPERTY_PROJECT_CONTRACT",
+   "name": "ผู้จัดการเอกสารสัญญาโครงการอสังหาริมทรัพย์",
+   "nameEn": "Document: Property Project Contract",
+   "description": "ดู สร้าง แก้ไข และระงับเอกสารสัญญาโครงการอสังหาริมทรัพย์",
+   "category": "เอกสารงานขาย",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Document_PropertyProjectContract_View",
+    "Pipeline_Document_PropertyProjectContract_Create",
+    "Pipeline_Document_PropertyProjectContract_Edit",
+    "Pipeline_Document_PropertyProjectContract_Block"
+   ]
+  },
+  {
+   "code": "DOC_CREDIT_APPLICATION",
+   "name": "ผู้จัดการเอกสารใบคำขอสินเชื่อ",
+   "nameEn": "Document: Credit Application",
+   "description": "ดู สร้าง แก้ไข และระงับเอกสารใบคำขอสินเชื่อ",
+   "category": "เอกสารงานขาย",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Pipeline_Document_CreditApplication_View",
+    "Pipeline_Document_CreditApplication_Create",
+    "Pipeline_Document_CreditApplication_Edit",
+    "Pipeline_Document_CreditApplication_Block"
+   ]
+  },
+  {
+   "code": "CHAT_ASSIGNED",
+   "name": "ผู้ที่ดูและตอบแชทของงานที่ดูแล",
+   "nameEn": "Assigned Chats",
+   "description": "เห็นและตอบแชทที่ผูกกับ Lead / Prospect / Opportunity ที่ตัวเองเกี่ยวข้อง",
+   "category": "แชท",
+   "permissions": [
+    "MODULE_Chat_Box",
+    "Chat_View_Assigned",
+    "Chat_Reply_Assigned"
+   ]
+  },
+  {
+   "code": "CHAT_UNASSIGNED_HANDLER",
+   "name": "ผู้ที่รับแชทลูกค้าใหม่",
+   "nameEn": "Unassigned Chat Handler",
+   "description": "เห็นและตอบแชทที่ยังไม่มีผู้ดูแล เช่น ลูกค้าทักเข้ามาครั้งแรก",
+   "category": "แชท",
+   "permissions": [
+    "MODULE_Chat_Box",
+    "Chat_View_Unassigned",
+    "Chat_Reply_Unassigned"
+   ]
+  },
+  {
+   "code": "CHAT_ASSIGNMENT_MANAGER",
+   "name": "ผู้ที่จัดการผู้ดูแลแชท",
+   "nameEn": "Chat Assignment Manager",
+   "description": "ผูกแชทใหม่กับ Lead / Prospect เปลี่ยนผู้ดูแลแชท และถอนผู้ดูแลแชท",
+   "category": "แชท",
+   "permissions": [
+    "MODULE_Chat_Box",
+    "Chat_New_Assigner",
+    "Chat_Change_Assigned",
+    "Chat_Revoke_Assigned"
+   ]
+  },
+  {
+   "code": "CHAT_AI_TOOLS",
+   "name": "ผู้ที่ใช้ AI ในแชท",
+   "nameEn": "Chat AI Tools",
+   "description": "เปิด/ปิด ChatBot และ AI ผู้ช่วยในห้องแชท",
+   "category": "แชท",
+   "permissions": [
+    "MODULE_Chat_Box",
+    "Chat_Open_AI_Chat_Bot",
+    "Chat_Open_AI_Analytics_AI"
+   ]
+  },
+  {
+   "code": "FORECAST_SETUP",
+   "name": "ผู้ที่ตั้งค่า Forecast",
+   "nameEn": "Forecast Setup",
+   "description": "ตั้งค่า Forecast (ชีท Permission ยังไม่มีคำอธิบาย)",
+   "category": "ตั้งค่า",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Forecast_Setup"
+   ]
+  },
+  {
+   "code": "DASH_EXECUTIVE",
+   "name": "แดชบอร์ดผู้บริหาร",
+   "nameEn": "Executive Dashboard",
+   "description": "เห็นกราฟแดชบอร์ดทั้งหมด สำหรับผู้บริหารหรือเจ้าของกิจการที่ต้องเห็นภาพรวมทุกด้าน",
+   "category": "แดชบอร์ด",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Dashboard_Overview_KeyMetrics",
+    "Dashboard_Overview_MonthlyClosedSales",
+    "Dashboard_Overview_DailyOpportunityTrend",
+    "Dashboard_Marketing_BySource",
+    "Dashboard_Marketing_ConversionFunnel",
+    "Dashboard_Marketing_Uncontacted",
+    "Dashboard_Marketing_MonthlyConversionRate",
+    "Dashboard_Pipeline_PipelineValueByStepGroup",
+    "Dashboard_Pipeline_WinLossReasons",
+    "Dashboard_Pipeline_Top5Deals",
+    "Dashboard_Pipeline_StuckDeals",
+    "Dashboard_Pipeline_StepGroupPassRate",
+    "Dashboard_Pipeline_AvgWonDealSize",
+    "Dashboard_Pipeline_ExpectedClose30Days",
+    "Dashboard_Pipeline_AvgSalesCycleBySalesperson",
+    "Dashboard_Team_EmployeePerformance",
+    "Dashboard_Activity_BySalesperson",
+    "Dashboard_Activity_NoFollowUpDeals",
+    "Dashboard_Activity_OverdueByOwner",
+    "Dashboard_Activity_UpcomingAppointments7Days",
+    "Dashboard_Chat_BotHandoff",
+    "Dashboard_Chat_BotVsHumanReplies",
+    "Dashboard_Chat_FirstResponseTime",
+    "Dashboard_Chat_UnassignedChatQueue",
+    "Dashboard_Chat_OverSLAChats",
+    "Dashboard_Chat_DailyNewChatsByChannel",
+    "Dashboard_Chat_ChatFunnel",
+    "Dashboard_Chat_ChatHeatmap"
+   ]
+  },
+  {
+   "code": "DASH_MARKETING",
+   "name": "แดชบอร์ดการตลาด",
+   "nameEn": "Marketing Dashboard",
+   "description": "ดูว่าลูกค้ามาจากไหน และช่องทางไหนได้ผล",
+   "category": "แดชบอร์ด",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Dashboard_Overview_KeyMetrics",
+    "Dashboard_Overview_DailyOpportunityTrend",
+    "Dashboard_Marketing_BySource",
+    "Dashboard_Marketing_ConversionFunnel",
+    "Dashboard_Marketing_MonthlyConversionRate",
+    "Dashboard_Chat_DailyNewChatsByChannel",
+    "Dashboard_Chat_ChatFunnel",
+    "Dashboard_Chat_ChatHeatmap"
+   ]
+  },
+  {
+   "code": "DASH_SALES",
+   "name": "แดชบอร์ดฝ่ายขาย",
+   "nameEn": "Sales Dashboard",
+   "description": "ดูดีลที่ต้องปิดและงานที่ต้องติดตาม",
+   "category": "แดชบอร์ด",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Dashboard_Overview_KeyMetrics",
+    "Dashboard_Overview_MonthlyClosedSales",
+    "Dashboard_Marketing_ConversionFunnel",
+    "Dashboard_Marketing_Uncontacted",
+    "Dashboard_Pipeline_PipelineValueByStepGroup",
+    "Dashboard_Pipeline_WinLossReasons",
+    "Dashboard_Pipeline_Top5Deals",
+    "Dashboard_Pipeline_StuckDeals",
+    "Dashboard_Pipeline_AvgWonDealSize",
+    "Dashboard_Pipeline_ExpectedClose30Days",
+    "Dashboard_Activity_NoFollowUpDeals",
+    "Dashboard_Activity_UpcomingAppointments7Days"
+   ]
+  },
+  {
+   "code": "DASH_CHAT_SUPPORT",
+   "name": "แดชบอร์ดทีมดูแลแชท",
+   "nameEn": "Chat Support Dashboard",
+   "description": "สำหรับผู้ที่ตอบแชทลูกค้าใหม่ก่อนส่งต่อทีมขาย ดูคิว ความเร็วในการตอบ และผลของบอท",
+   "category": "แดชบอร์ด",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Dashboard_Chat_BotHandoff",
+    "Dashboard_Chat_BotVsHumanReplies",
+    "Dashboard_Chat_FirstResponseTime",
+    "Dashboard_Chat_UnassignedChatQueue",
+    "Dashboard_Chat_OverSLAChats",
+    "Dashboard_Chat_DailyNewChatsByChannel",
+    "Dashboard_Chat_ChatFunnel",
+    "Dashboard_Chat_ChatHeatmap"
+   ]
+  },
+  {
+   "code": "DASH_OPERATION",
+   "name": "แดชบอร์ดฝ่ายปฏิบัติการ",
+   "nameEn": "Operation Dashboard",
+   "description": "สำหรับทีมที่ทำงานตามกลุ่มขั้นตอนหลังการขาย ดูว่างานค้างหรือติดที่ขั้นตอนไหน",
+   "category": "แดชบอร์ด",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Dashboard_Overview_KeyMetrics",
+    "Dashboard_Pipeline_StuckDeals",
+    "Dashboard_Pipeline_StepGroupPassRate",
+    "Dashboard_Pipeline_ExpectedClose30Days",
+    "Dashboard_Activity_NoFollowUpDeals",
+    "Dashboard_Activity_UpcomingAppointments7Days"
+   ]
+  },
+  {
+   "code": "DASH_TEAM_LEAD",
+   "name": "แดชบอร์ดหัวหน้าทีม",
+   "nameEn": "Team Lead Dashboard",
+   "description": "กราฟเปรียบเทียบผลงานรายคน ใช้คู่กับ Role แดชบอร์ดของฝ่ายตัวเอง",
+   "category": "แดชบอร์ด",
+   "permissions": [
+    "MODULE_Pipeline",
+    "Pipeline_Dashboard_Access",
+    "Dashboard_Pipeline_AvgSalesCycleBySalesperson",
+    "Dashboard_Team_EmployeePerformance",
+    "Dashboard_Activity_BySalesperson",
+    "Dashboard_Activity_OverdueByOwner"
+   ]
+  },
+  {
+   "code": "AI_PKG_STAFF",
+   "name": "AI งานทั่วไป",
+   "nameEn": "AI for Everyone",
+   "description": "เครื่องมือพื้นฐานความเสี่ยงต่ำสำหรับพนักงานทุกคน เช่น สรุป / วิเคราะห์เอกสาร ร่างหนังสือและข้อความตอบกลับ ถามคลังเอกสาร",
+   "category": "AI Hub",
+   "permissions": [
+    "AI_ACCESS_USE",
+    "AI_CHAT_USE",
+    "AI_DOC_ANALYZE_USE",
+    "AI_DOC_SUMMARY_USE",
+    "AI_DOC_COMPARE_USE",
+    "AI_HOWTO_USE",
+    "AI_DIAGRAM_USE",
+    "AI_LIBRARY_USE",
+    "AI_FAQ_USE",
+    "AI_FORMAL_WRITER_USE",
+    "AI_REPLY_DRAFT_USE"
+   ]
+  },
+  {
+   "code": "AI_PKG_SALES",
+   "name": "AI งานขาย",
+   "nameEn": "AI for Sales",
+   "description": "งานขายและตอบลูกค้า เช่น สรุปลูกค้าจาก CRM ร่างข้อความติดตาม ทำสไลด์และโพสต์โซเชียล",
+   "category": "AI Hub",
+   "permissions": [
+    "AI_ACCESS_USE",
+    "AI_CHAT_USE",
+    "AI_DOC_ANALYZE_USE",
+    "AI_DOC_SUMMARY_USE",
+    "AI_DOC_COMPARE_USE",
+    "AI_SLIDES_USE",
+    "AI_IMAGE_USE",
+    "AI_SOCIAL_USE",
+    "AI_HOWTO_USE",
+    "AI_LIBRARY_USE",
+    "AI_REPLY_DRAFT_USE",
+    "AI_CUSTOMER_BRIEF_USE",
+    "AI_CONNECT_USE"
+   ]
+  },
+  {
+   "code": "AI_PKG_OFFICE",
+   "name": "AI งานสำนักงาน",
+   "nameEn": "AI for Office",
+   "description": "งานเอกสารสำนักงาน ธุรการ บัญชี และ HR เช่น ดึงข้อมูลเป็นตาราง สรุปการประชุม ตรวจเอกสาร เอกสาร HR",
+   "category": "AI Hub",
+   "permissions": [
+    "AI_ACCESS_USE",
+    "AI_CHAT_USE",
+    "AI_DOC_ANALYZE_USE",
+    "AI_DOC_SUMMARY_USE",
+    "AI_DATA_ANALYZE_USE",
+    "AI_MEETING_USE",
+    "AI_DOC_COMPARE_USE",
+    "AI_DOC_EXTRACT_USE",
+    "AI_DOC_CHECK_USE",
+    "AI_HOWTO_USE",
+    "AI_DIAGRAM_USE",
+    "AI_LIBRARY_USE",
+    "AI_QUIZ_USE",
+    "AI_FAQ_USE",
+    "AI_FORMAL_WRITER_USE",
+    "AI_REPLY_DRAFT_USE",
+    "AI_HR_DOCS_USE",
+    "AI_CONNECT_USE"
+   ]
+  },
+  {
+   "code": "AI_PKG_MARKETING",
+   "name": "AI งานการตลาด",
+   "nameEn": "AI for Marketing",
+   "description": "งานสร้างสรรค์และคอนเทนต์ เช่น รูปภาพ คลิป เพลง เสียงพากย์ บทความ และโพสต์โซเชียล",
+   "category": "AI Hub",
+   "permissions": [
+    "AI_ACCESS_USE",
+    "AI_CHAT_USE",
+    "AI_DOC_SUMMARY_USE",
+    "AI_SLIDES_USE",
+    "AI_IMAGE_USE",
+    "AI_VIDEO_USE",
+    "AI_MUSIC_USE",
+    "AI_SOCIAL_USE",
+    "AI_ARTICLE_USE",
+    "AI_VOICEOVER_USE",
+    "AI_GIF_USE",
+    "AI_LIBRARY_USE",
+    "AI_REPLY_DRAFT_USE",
+    "AI_CONNECT_USE"
+   ]
+  },
+  {
+   "code": "AI_PKG_DEV",
+   "name": "AI งานพัฒนาระบบ",
+   "nameEn": "AI for Developers",
+   "description": "งานพัฒนาและระบบ เช่น เขียน / รีวิวโค้ด SQL อ่าน log เอกสาร API และขอใช้ Claude Code",
+   "category": "AI Hub",
+   "permissions": [
+    "AI_ACCESS_USE",
+    "AI_CHAT_USE",
+    "AI_DOC_ANALYZE_USE",
+    "AI_DOC_SUMMARY_USE",
+    "AI_CODE_USE",
+    "AI_CLAUDE_CODE_USE",
+    "AI_CODE_REVIEW_USE",
+    "AI_SQL_ASSIST_USE",
+    "AI_LOG_DOCTOR_USE",
+    "AI_CODE_DOCS_USE",
+    "AI_HOWTO_USE",
+    "AI_DIAGRAM_USE",
+    "AI_LIBRARY_USE"
+   ]
+  },
+  {
+   "code": "AI_PKG_MANAGER",
+   "name": "AI งานบริหาร",
+   "nameEn": "AI for Management",
+   "description": "วางแผน ตัดสินใจ และดูภาพรวม เช่น วิเคราะห์กลยุทธ์ แผนโครงการ สรุปลูกค้า และดูยอดการใช้ AI ของสาขาตนเอง",
+   "category": "AI Hub",
+   "permissions": [
+    "AI_ACCESS_USE",
+    "AI_CHAT_USE",
+    "AI_DOC_ANALYZE_USE",
+    "AI_DOC_SUMMARY_USE",
+    "AI_DATA_ANALYZE_USE",
+    "AI_MEETING_USE",
+    "AI_DOC_COMPARE_USE",
+    "AI_SLIDES_USE",
+    "AI_STRATEGY_USE",
+    "AI_HOWTO_USE",
+    "AI_LIBRARY_USE",
+    "AI_PROJECT_PLAN_USE",
+    "AI_DECISION_USE",
+    "AI_CUSTOMER_BRIEF_USE",
+    "AI_CONNECT_USE",
+    "AI_ADMIN_USAGE_VIEW"
+   ]
+  },
+  {
+   "code": "AI_PKG_LIBRARY_ADMIN",
+   "name": "ผู้ดูแลคลังความรู้ AI",
+   "nameEn": "AI Knowledge Library Admin",
+   "description": "ดูแลเอกสารในคลังความรู้และเทมเพลตภาพกลางของบริษัท",
+   "category": "AI Hub",
+   "permissions": [
+    "AI_ACCESS_USE",
+    "AI_CHAT_USE",
+    "AI_LIBRARY_USE",
+    "AI_LIBRARY_MANAGE",
+    "AI_IMAGE_TEMPLATE_MANAGE"
+   ]
+  },
+  {
+   "code": "AI_PKG_CLAUDE_CODE_ADMIN",
+   "name": "ผู้ดูแล Claude Code",
+   "nameEn": "Claude Code Admin",
+   "description": "อนุมัติ ระงับ และคุมงบการใช้ Claude Code ของพนักงาน",
+   "category": "AI Hub",
+   "permissions": [
+    "AI_ACCESS_USE",
+    "AI_CHAT_USE",
+    "AI_CLAUDE_CODE_USE",
+    "AI_CLAUDE_CODE_MANAGE"
+   ]
+  },
+  {
+   "code": "AI_PKG_ADMIN",
+   "name": "ผู้ดูแลระบบ AI Hub",
+   "nameEn": "AI Hub Admin",
+   "description": "ดูแลระบบ AI Hub โควตา และค่าใช้จ่ายของทุกบริษัท",
+   "category": "AI Hub",
+   "permissions": [
+    "AI_ACCESS_USE",
+    "AI_CHAT_USE",
+    "AI_ADMIN_USAGE_VIEW",
+    "AI_ADMIN_USAGE_ALL_BRANCH",
+    "AI_ADMIN_USAGE_EXPORT",
+    "AI_ADMIN_QUOTA_MANAGE",
+    "AI_ADMIN_SYSTEM_VIEW"
+   ]
+  }
+ ],
+ "templates": [
+  {
+   "key": "sale",
+   "name": "พนักงานขาย",
+   "roles": [
+    "LEAD_VIEWER",
+    "PROSPECT_RESPONSIBLE",
+    "PROSPECT_CREATOR",
+    "OPP_RESPONSIBLE",
+    "OPP_CREATOR",
+    "SCHEDULE_APPOINTMENT",
+    "SCHEDULE_TASK",
+    "CHAT_ASSIGNED",
+    "PROSPECT_PDPA_DATA",
+    "OPP_PDPA_DATA",
+    "OPP_FINANCIAL_DATA",
+    "DASH_SALES",
+    "AI_PKG_STAFF",
+    "AI_PKG_SALES"
+   ],
+   "optional": [
+    "PROSPECT_ATTACHMENT_MANAGER",
+    "OPP_ATTACHMENT_MANAGER",
+    "OPP_COLLABORATOR"
+   ]
+  },
+  {
+   "key": "sup",
+   "name": "หัวหน้าทีมขาย",
+   "roles": [
+    "LEAD_VIEWER",
+    "PROSPECT_RESPONSIBLE",
+    "PROSPECT_CREATOR",
+    "PROSPECT_ASSIGNER",
+    "OPP_RESPONSIBLE",
+    "OPP_CREATOR",
+    "OPP_ASSIGNER",
+    "OPP_SHARING_MANAGER",
+    "LEAD_ASSIGNER",
+    "SCHEDULE_APPOINTMENT_FOR_OTHERS",
+    "SCHEDULE_TASK_FOR_OTHERS",
+    "CHAT_ASSIGNED",
+    "PROSPECT_PDPA_DATA",
+    "OPP_PDPA_DATA",
+    "OPP_FINANCIAL_DATA",
+    "OPP_STRATEGIC_DATA",
+    "DASH_SALES",
+    "DASH_TEAM_LEAD",
+    "AI_PKG_STAFF",
+    "AI_PKG_SALES",
+    "AI_PKG_MANAGER"
+   ],
+   "optional": [
+    "OPP_CLOSER",
+    "PROSPECT_TRASH",
+    "CHAT_ASSIGNMENT_MANAGER"
+   ]
+  },
+  {
+   "key": "chat",
+   "name": "ทีมรับแชท",
+   "roles": [
+    "LEAD_VIEWER",
+    "LEAD_CREATOR",
+    "PROSPECT_VIEWER",
+    "PROSPECT_CREATOR",
+    "CHAT_UNASSIGNED_HANDLER",
+    "CHAT_ASSIGNMENT_MANAGER",
+    "LEAD_PDPA_DATA",
+    "DASH_CHAT_SUPPORT",
+    "AI_PKG_STAFF"
+   ],
+   "optional": [
+    "LEAD_ASSIGNER",
+    "CHAT_AI_TOOLS"
+   ]
+  },
+  {
+   "key": "mkt",
+   "name": "ทีม Marketing",
+   "roles": [
+    "LEAD_RESPONSIBLE",
+    "LEAD_CREATOR",
+    "LEAD_MANAGE_ATTACHMENT",
+    "LEAD_CONVERT_CLOSE",
+    "LEAD_PDPA_DATA",
+    "CHAT_UNASSIGNED_HANDLER",
+    "DASH_MARKETING",
+    "AI_PKG_STAFF",
+    "AI_PKG_MARKETING"
+   ],
+   "optional": [
+    "LEAD_ASSIGNER",
+    "LEAD_TRASH",
+    "CHAT_AI_TOOLS"
+   ]
+  },
+  {
+   "key": "next",
+   "name": "เจ้าหน้าที่ขั้นตอนถัดไป (Pre Loan, Legal)",
+   "roles": [
+    "OPP_RESPONSIBLE",
+    "OPP_COLLABORATOR",
+    "OPP_WORKFLOW_OPERATOR",
+    "OPP_ATTACHMENT_MANAGER",
+    "OPP_PDPA_DATA",
+    "OPP_FINANCIAL_DATA",
+    "DASH_OPERATION",
+    "AI_PKG_STAFF",
+    "AI_PKG_OFFICE"
+   ],
+   "optional": [
+    "DOC_CREDIT_APPLICATION",
+    "DOC_LOAN_AGREEMENT",
+    "DOC_PRELIM_CREDIT_APPROVAL"
+   ]
+  },
+  {
+   "key": "adm",
+   "name": "Admin บริษัท",
+   "roles": [
+    "ENTITY_ADMIN",
+    "DASH_EXECUTIVE",
+    "AI_PKG_MANAGER"
+   ],
+   "optional": [
+    "ENTITY_CONFIG",
+    "AI_PKG_LIBRARY_ADMIN"
+   ]
+  }
+ ],
+ "positions": [
+  {
+   "code": "MD1",
+   "line": "MD",
+   "parent": "",
+   "roles": [
+    "ENTITY_ADMIN"
+   ]
+  },
+  {
+   "code": "MD2",
+   "line": "MD",
+   "parent": "",
+   "roles": [
+    "ENTITY_ADMIN"
+   ]
+  },
+  {
+   "code": "AMD",
+   "line": "MD",
+   "parent": "รอสรุป",
+   "roles": []
+  },
+  {
+   "code": "MKT-Sup",
+   "line": "MKT",
+   "parent": "ยังไม่กำหนด",
+   "roles": [
+    "LEAD_RESPONSIBLE",
+    "LEAD_VIEWER",
+    "LEAD_CREATOR",
+    "LEAD_MANAGE_ATTACHMENT",
+    "LEAD_ASSIGNER",
+    "LEAD_CONVERT_CLOSE",
+    "LEAD_TRASH",
+    "LEAD_PDPA_DATA",
+    "LEAD_CRITICAL_DATA",
+    "LEAD_FINANCIAL_DATA",
+    "LEAD_STRATEGIC_DATA"
+   ]
+  },
+  {
+   "code": "Online",
+   "line": "MKT",
+   "parent": "MKT-Sup",
+   "roles": [
+    "LEAD_RESPONSIBLE",
+    "LEAD_VIEWER",
+    "LEAD_CREATOR",
+    "LEAD_MANAGE_ATTACHMENT",
+    "LEAD_ASSIGNER",
+    "LEAD_CONVERT_CLOSE",
+    "LEAD_TRASH",
+    "LEAD_PDPA_DATA",
+    "LEAD_CRITICAL_DATA",
+    "LEAD_FINANCIAL_DATA",
+    "LEAD_STRATEGIC_DATA"
+   ]
+  },
+  {
+   "code": "Chanel & BD",
+   "line": "MKT",
+   "parent": "MKT-Sup",
+   "roles": [
+    "LEAD_RESPONSIBLE",
+    "LEAD_VIEWER",
+    "LEAD_CREATOR",
+    "LEAD_MANAGE_ATTACHMENT",
+    "LEAD_ASSIGNER",
+    "LEAD_CONVERT_CLOSE",
+    "LEAD_TRASH",
+    "LEAD_PDPA_DATA",
+    "LEAD_CRITICAL_DATA",
+    "LEAD_FINANCIAL_DATA",
+    "LEAD_STRATEGIC_DATA"
+   ]
+  },
+  {
+   "code": "CS-Sup",
+   "line": "CS",
+   "parent": "MD1, MD2",
+   "roles": [
+    "LEAD_VIEWER",
+    "PROSPECT_RESPONSIBLE",
+    "PROSPECT_VIEWER",
+    "PROSPECT_CREATOR",
+    "PROSPECT_ATTACHMENT_MANAGER",
+    "PROSPECT_ASSIGNER",
+    "PROSPECT_TRASH",
+    "PROSPECT_PDPA_DATA",
+    "PROSPECT_CRITICAL_DATA",
+    "PROSPECT_FINANCIAL_DATA",
+    "PROSPECT_STRATEGIC_DATA",
+    "OPP_RESPONSIBLE",
+    "OPP_COLLABORATOR",
+    "OPP_VIEWER",
+    "OPP_CREATOR",
+    "OPP_ATTACHMENT_MANAGER",
+    "OPP_ASSIGNER",
+    "OPP_SHARING_MANAGER",
+    "OPP_WORKFLOW_OPERATOR",
+    "OPP_CLOSER",
+    "OPP_ALL_GROUPS_FILTER",
+    "OPP_PDPA_DATA",
+    "OPP_CRITICAL_DATA",
+    "OPP_FINANCIAL_DATA",
+    "OPP_STRATEGIC_DATA"
+   ]
+  },
+  {
+   "code": "CS",
+   "line": "CS",
+   "parent": "CS-Sup",
+   "roles": [
+    "LEAD_VIEWER",
+    "PROSPECT_RESPONSIBLE",
+    "PROSPECT_VIEWER",
+    "PROSPECT_CREATOR",
+    "PROSPECT_ATTACHMENT_MANAGER",
+    "PROSPECT_ASSIGNER",
+    "PROSPECT_TRASH",
+    "PROSPECT_PDPA_DATA",
+    "PROSPECT_CRITICAL_DATA",
+    "PROSPECT_FINANCIAL_DATA",
+    "PROSPECT_STRATEGIC_DATA",
+    "OPP_RESPONSIBLE",
+    "OPP_COLLABORATOR",
+    "OPP_VIEWER",
+    "OPP_CREATOR",
+    "OPP_ATTACHMENT_MANAGER",
+    "OPP_ASSIGNER",
+    "OPP_SHARING_MANAGER",
+    "OPP_WORKFLOW_OPERATOR",
+    "OPP_CLOSER",
+    "OPP_ALL_GROUPS_FILTER",
+    "OPP_PDPA_DATA",
+    "OPP_CRITICAL_DATA",
+    "OPP_FINANCIAL_DATA",
+    "OPP_STRATEGIC_DATA"
+   ]
+  },
+  {
+   "code": "AN-Sup",
+   "line": "อื่นๆ",
+   "parent": "MD1, MD2",
+   "roles": [
+    "LEAD_VIEWER",
+    "PROSPECT_VIEWER",
+    "OPP_RESPONSIBLE",
+    "OPP_COLLABORATOR",
+    "OPP_VIEWER",
+    "OPP_CREATOR",
+    "OPP_ATTACHMENT_MANAGER",
+    "OPP_ASSIGNER",
+    "OPP_SHARING_MANAGER",
+    "OPP_WORKFLOW_OPERATOR",
+    "OPP_CLOSER",
+    "OPP_ALL_GROUPS_FILTER",
+    "OPP_PDPA_DATA",
+    "OPP_CRITICAL_DATA",
+    "OPP_FINANCIAL_DATA",
+    "OPP_STRATEGIC_DATA"
+   ]
+  },
+  {
+   "code": "AN",
+   "line": "อื่นๆ",
+   "parent": "AN-Sup",
+   "roles": [
+    "LEAD_VIEWER",
+    "PROSPECT_VIEWER",
+    "OPP_RESPONSIBLE",
+    "OPP_COLLABORATOR",
+    "OPP_VIEWER",
+    "OPP_CREATOR",
+    "OPP_ATTACHMENT_MANAGER",
+    "OPP_ASSIGNER",
+    "OPP_SHARING_MANAGER",
+    "OPP_WORKFLOW_OPERATOR",
+    "OPP_CLOSER",
+    "OPP_ALL_GROUPS_FILTER",
+    "OPP_PDPA_DATA",
+    "OPP_CRITICAL_DATA",
+    "OPP_FINANCIAL_DATA",
+    "OPP_STRATEGIC_DATA"
+   ]
+  },
+  {
+   "code": "PLS-Sup",
+   "line": "อื่นๆ",
+   "parent": "MD1, MD2",
+   "roles": [
+    "LEAD_VIEWER",
+    "PROSPECT_VIEWER",
+    "OPP_RESPONSIBLE",
+    "OPP_COLLABORATOR",
+    "OPP_VIEWER",
+    "OPP_CREATOR",
+    "OPP_ATTACHMENT_MANAGER",
+    "OPP_ASSIGNER",
+    "OPP_SHARING_MANAGER",
+    "OPP_WORKFLOW_OPERATOR",
+    "OPP_CLOSER",
+    "OPP_ALL_GROUPS_FILTER",
+    "OPP_PDPA_DATA",
+    "OPP_CRITICAL_DATA",
+    "OPP_FINANCIAL_DATA",
+    "OPP_STRATEGIC_DATA"
+   ]
+  },
+  {
+   "code": "PLS Associate",
+   "line": "อื่นๆ",
+   "parent": "PLS-Sup",
+   "roles": [
+    "LEAD_VIEWER",
+    "PROSPECT_VIEWER",
+    "OPP_RESPONSIBLE",
+    "OPP_COLLABORATOR",
+    "OPP_VIEWER",
+    "OPP_CREATOR",
+    "OPP_ATTACHMENT_MANAGER",
+    "OPP_ASSIGNER",
+    "OPP_SHARING_MANAGER",
+    "OPP_WORKFLOW_OPERATOR",
+    "OPP_CLOSER",
+    "OPP_ALL_GROUPS_FILTER",
+    "OPP_PDPA_DATA",
+    "OPP_CRITICAL_DATA",
+    "OPP_FINANCIAL_DATA",
+    "OPP_STRATEGIC_DATA"
+   ]
+  },
+  {
+   "code": "PLS Property Service",
+   "line": "อื่นๆ",
+   "parent": "PLS-Sup",
+   "roles": [
+    "LEAD_VIEWER",
+    "PROSPECT_VIEWER",
+    "OPP_RESPONSIBLE",
+    "OPP_COLLABORATOR",
+    "OPP_VIEWER",
+    "OPP_CREATOR",
+    "OPP_ATTACHMENT_MANAGER",
+    "OPP_ASSIGNER",
+    "OPP_SHARING_MANAGER",
+    "OPP_WORKFLOW_OPERATOR",
+    "OPP_CLOSER",
+    "OPP_ALL_GROUPS_FILTER",
+    "OPP_PDPA_DATA",
+    "OPP_CRITICAL_DATA",
+    "OPP_FINANCIAL_DATA",
+    "OPP_STRATEGIC_DATA"
+   ]
+  },
+  {
+   "code": "LS-Sup",
+   "line": "อื่นๆ",
+   "parent": "MD1, MD2",
+   "roles": [
+    "LEAD_VIEWER",
+    "PROSPECT_VIEWER",
+    "OPP_RESPONSIBLE",
+    "OPP_COLLABORATOR",
+    "OPP_VIEWER",
+    "OPP_CREATOR",
+    "OPP_ATTACHMENT_MANAGER",
+    "OPP_ASSIGNER",
+    "OPP_SHARING_MANAGER",
+    "OPP_WORKFLOW_OPERATOR",
+    "OPP_CLOSER",
+    "OPP_ALL_GROUPS_FILTER",
+    "OPP_PDPA_DATA",
+    "OPP_CRITICAL_DATA",
+    "OPP_FINANCIAL_DATA",
+    "OPP_STRATEGIC_DATA"
+   ]
+  },
+  {
+   "code": "LS",
+   "line": "อื่นๆ",
+   "parent": "LS-Sup",
+   "roles": [
+    "LEAD_VIEWER",
+    "PROSPECT_VIEWER",
+    "OPP_RESPONSIBLE",
+    "OPP_COLLABORATOR",
+    "OPP_VIEWER",
+    "OPP_CREATOR",
+    "OPP_ATTACHMENT_MANAGER",
+    "OPP_ASSIGNER",
+    "OPP_SHARING_MANAGER",
+    "OPP_WORKFLOW_OPERATOR",
+    "OPP_CLOSER",
+    "OPP_ALL_GROUPS_FILTER",
+    "OPP_PDPA_DATA",
+    "OPP_CRITICAL_DATA",
+    "OPP_FINANCIAL_DATA",
+    "OPP_STRATEGIC_DATA"
+   ]
+  },
+  {
+   "code": "LE-Sup",
+   "line": "อื่นๆ",
+   "parent": "MD1, MD2",
+   "roles": [
+    "LEAD_VIEWER",
+    "PROSPECT_VIEWER",
+    "OPP_RESPONSIBLE",
+    "OPP_COLLABORATOR",
+    "OPP_VIEWER",
+    "OPP_CREATOR",
+    "OPP_ATTACHMENT_MANAGER",
+    "OPP_ASSIGNER",
+    "OPP_SHARING_MANAGER",
+    "OPP_WORKFLOW_OPERATOR",
+    "OPP_CLOSER",
+    "OPP_ALL_GROUPS_FILTER",
+    "OPP_PDPA_DATA",
+    "OPP_CRITICAL_DATA",
+    "OPP_FINANCIAL_DATA",
+    "OPP_STRATEGIC_DATA"
+   ]
+  },
+  {
+   "code": "LE",
+   "line": "อื่นๆ",
+   "parent": "LE-Sup",
+   "roles": [
+    "LEAD_VIEWER",
+    "PROSPECT_VIEWER",
+    "OPP_RESPONSIBLE",
+    "OPP_COLLABORATOR",
+    "OPP_VIEWER",
+    "OPP_CREATOR",
+    "OPP_ATTACHMENT_MANAGER",
+    "OPP_ASSIGNER",
+    "OPP_SHARING_MANAGER",
+    "OPP_WORKFLOW_OPERATOR",
+    "OPP_CLOSER",
+    "OPP_ALL_GROUPS_FILTER",
+    "OPP_PDPA_DATA",
+    "OPP_CRITICAL_DATA",
+    "OPP_FINANCIAL_DATA",
+    "OPP_STRATEGIC_DATA"
+   ]
+  },
+  {
+   "code": "LE- Operation",
+   "line": "อื่นๆ",
+   "parent": "LE-Sup",
+   "roles": [
+    "LEAD_VIEWER",
+    "PROSPECT_VIEWER",
+    "OPP_RESPONSIBLE",
+    "OPP_COLLABORATOR",
+    "OPP_VIEWER",
+    "OPP_CREATOR",
+    "OPP_ATTACHMENT_MANAGER",
+    "OPP_ASSIGNER",
+    "OPP_SHARING_MANAGER",
+    "OPP_WORKFLOW_OPERATOR",
+    "OPP_CLOSER",
+    "OPP_ALL_GROUPS_FILTER",
+    "OPP_PDPA_DATA",
+    "OPP_CRITICAL_DATA",
+    "OPP_FINANCIAL_DATA",
+    "OPP_STRATEGIC_DATA"
+   ]
+  },
+  {
+   "code": "FI-Sup",
+   "line": "อื่นๆ",
+   "parent": "MD1, MD2",
+   "roles": [
+    "LEAD_VIEWER",
+    "PROSPECT_VIEWER",
+    "OPP_RESPONSIBLE",
+    "OPP_COLLABORATOR",
+    "OPP_VIEWER",
+    "OPP_CREATOR",
+    "OPP_ATTACHMENT_MANAGER",
+    "OPP_ASSIGNER",
+    "OPP_SHARING_MANAGER",
+    "OPP_WORKFLOW_OPERATOR",
+    "OPP_CLOSER",
+    "OPP_ALL_GROUPS_FILTER",
+    "OPP_PDPA_DATA",
+    "OPP_CRITICAL_DATA",
+    "OPP_FINANCIAL_DATA",
+    "OPP_STRATEGIC_DATA"
+   ]
+  },
+  {
+   "code": "FI",
+   "line": "อื่นๆ",
+   "parent": "FI-Sup",
+   "roles": [
+    "LEAD_VIEWER",
+    "PROSPECT_VIEWER",
+    "OPP_RESPONSIBLE",
+    "OPP_COLLABORATOR",
+    "OPP_VIEWER",
+    "OPP_CREATOR",
+    "OPP_ATTACHMENT_MANAGER",
+    "OPP_ASSIGNER",
+    "OPP_SHARING_MANAGER",
+    "OPP_WORKFLOW_OPERATOR",
+    "OPP_CLOSER",
+    "OPP_ALL_GROUPS_FILTER",
+    "OPP_PDPA_DATA",
+    "OPP_CRITICAL_DATA",
+    "OPP_FINANCIAL_DATA",
+    "OPP_STRATEGIC_DATA"
+   ]
+  },
+  {
+   "code": "CRM-Sup",
+   "line": "อื่นๆ",
+   "parent": "MD1, MD2",
+   "roles": [
+    "LEAD_VIEWER",
+    "PROSPECT_VIEWER",
+    "OPP_RESPONSIBLE",
+    "OPP_COLLABORATOR",
+    "OPP_VIEWER",
+    "OPP_CREATOR",
+    "OPP_ATTACHMENT_MANAGER",
+    "OPP_ASSIGNER",
+    "OPP_SHARING_MANAGER",
+    "OPP_WORKFLOW_OPERATOR",
+    "OPP_CLOSER",
+    "OPP_ALL_GROUPS_FILTER",
+    "OPP_PDPA_DATA",
+    "OPP_CRITICAL_DATA",
+    "OPP_FINANCIAL_DATA",
+    "OPP_STRATEGIC_DATA"
+   ]
+  },
+  {
+   "code": "CRM",
+   "line": "อื่นๆ",
+   "parent": "CRM-Sup",
+   "roles": [
+    "LEAD_VIEWER",
+    "PROSPECT_VIEWER",
+    "OPP_RESPONSIBLE",
+    "OPP_COLLABORATOR",
+    "OPP_VIEWER",
+    "OPP_CREATOR",
+    "OPP_ATTACHMENT_MANAGER",
+    "OPP_ASSIGNER",
+    "OPP_SHARING_MANAGER",
+    "OPP_WORKFLOW_OPERATOR",
+    "OPP_CLOSER",
+    "OPP_ALL_GROUPS_FILTER",
+    "OPP_PDPA_DATA",
+    "OPP_CRITICAL_DATA",
+    "OPP_FINANCIAL_DATA",
+    "OPP_STRATEGIC_DATA"
+   ]
+  },
+  {
+   "code": "Propety-Sup",
+   "line": "อื่นๆ",
+   "parent": "MD1, MD2",
+   "roles": [
+    "LEAD_VIEWER",
+    "PROSPECT_VIEWER",
+    "OPP_RESPONSIBLE",
+    "OPP_COLLABORATOR",
+    "OPP_VIEWER",
+    "OPP_CREATOR",
+    "OPP_ATTACHMENT_MANAGER",
+    "OPP_ASSIGNER",
+    "OPP_SHARING_MANAGER",
+    "OPP_WORKFLOW_OPERATOR",
+    "OPP_CLOSER",
+    "OPP_ALL_GROUPS_FILTER",
+    "OPP_PDPA_DATA",
+    "OPP_CRITICAL_DATA",
+    "OPP_FINANCIAL_DATA",
+    "OPP_STRATEGIC_DATA"
+   ]
+  },
+  {
+   "code": "Business Development",
+   "line": "อื่นๆ",
+   "parent": "Propety-Sup",
+   "roles": [
+    "LEAD_VIEWER",
+    "PROSPECT_VIEWER",
+    "OPP_RESPONSIBLE",
+    "OPP_COLLABORATOR",
+    "OPP_VIEWER",
+    "OPP_CREATOR",
+    "OPP_ATTACHMENT_MANAGER",
+    "OPP_ASSIGNER",
+    "OPP_SHARING_MANAGER",
+    "OPP_WORKFLOW_OPERATOR",
+    "OPP_CLOSER",
+    "OPP_ALL_GROUPS_FILTER",
+    "OPP_PDPA_DATA",
+    "OPP_CRITICAL_DATA",
+    "OPP_FINANCIAL_DATA",
+    "OPP_STRATEGIC_DATA"
+   ]
+  },
+  {
+   "code": "Propety Sales",
+   "line": "อื่นๆ",
+   "parent": "Propety-Sup",
+   "roles": [
+    "LEAD_VIEWER",
+    "PROSPECT_VIEWER",
+    "OPP_RESPONSIBLE",
+    "OPP_COLLABORATOR",
+    "OPP_VIEWER",
+    "OPP_CREATOR",
+    "OPP_ATTACHMENT_MANAGER",
+    "OPP_ASSIGNER",
+    "OPP_SHARING_MANAGER",
+    "OPP_WORKFLOW_OPERATOR",
+    "OPP_CLOSER",
+    "OPP_ALL_GROUPS_FILTER",
+    "OPP_PDPA_DATA",
+    "OPP_CRITICAL_DATA",
+    "OPP_FINANCIAL_DATA",
+    "OPP_STRATEGIC_DATA"
+   ]
+  }
+ ]
+}

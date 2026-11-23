@@ -1,0 +1,188 @@
+<section class="aad-section" [attr.aria-busy]="state.loading()">
+  <div class="aad-toolbar">
+    <nav class="aad-crumbs" [attr.aria-label]="t('app.aiAdmin.breadcrumb')">
+      @for (crumb of crumbs(); track crumb.depth; let last = $last) {
+        @if (last) {
+          <strong aria-current="location">{{ crumb.label }}</strong>
+        } @else {
+          <button type="button" class="aad-link" (click)="goTo(crumb.depth)">
+            {{ crumb.label }}
+          </button>
+          <i class="fa-solid fa-chevron-right aad-crumb-sep" aria-hidden="true"></i>
+        }
+      }
+    </nav>
+    <div class="aad-toolbar-end">
+      <ts-aad-month [(month)]="month" />
+      <button type="button" class="aad-btn" (click)="reload()" [disabled]="state.loading()">
+        <i class="fa-solid fa-rotate" aria-hidden="true"></i> {{ t('app.aiAdmin.refresh') }}
+      </button>
+    </div>
+  </div>
+
+  @if (state.error(); as message) {
+    <p class="aad-alert is-error" role="alert">{{ message }}</p>
+  }
+  @if (state.loading() && !data()) {
+    <p class="aad-muted" role="status">{{ t('app.aiAdmin.loading') }}</p>
+  }
+
+  @if (data(); as d) {
+    <ts-aad-tiles [tiles]="tiles()" />
+
+    @if (d.scope.quota) {
+      <div class="aad-card">
+        <h3 class="aad-h3">{{ t('app.aiAdmin.usage.scopeQuota', d.scope.label) }}</h3>
+        <ts-aad-quota-bar [quota]="d.scope.quota" />
+      </div>
+    }
+
+    @if (warnings().length > 0) {
+      <div class="aad-card aad-warn-card" role="status">
+        <h3 class="aad-h3">
+          <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+          {{ t('app.aiAdmin.usage.nearLimit') }}
+        </h3>
+        <ul class="aad-warn-list">
+          @for (row of warnings(); track row.key) {
+            <li>
+              <strong>{{ row.name }}</strong>
+              <ts-aad-quota-bar [quota]="row.quota" [compact]="true" />
+            </li>
+          }
+        </ul>
+      </div>
+    }
+
+    <div class="aad-grid-2">
+      <div class="aad-card">
+        <h3 class="aad-h3">{{ t('app.aiAdmin.usage.byRows', t(levelKey())) }}</h3>
+        @if (!leaf()) {
+          <p class="aad-muted aad-hint">{{ t('app.aiAdmin.usage.clickToDrill') }}</p>
+        }
+        <ts-bar-chart
+          [items]="barItems()"
+          [clickable]="!leaf()"
+          [ariaLabel]="t('app.aiAdmin.usage.chartRows')"
+          (pick)="open($event)"
+        />
+      </div>
+      <div class="aad-card">
+        <h3 class="aad-h3">{{ t('app.aiAdmin.usage.share') }}</h3>
+        <ts-donut-chart
+          [items]="shareItems()"
+          [centerText]="formatTokens(d.scope.tokens)"
+          [ariaLabel]="t('app.aiAdmin.usage.chartShare')"
+        />
+      </div>
+    </div>
+
+    <div class="aad-grid-2">
+      <div class="aad-card">
+        <div class="aad-card-head">
+          <h3 class="aad-h3">{{ t('app.aiAdmin.usage.daily') }}</h3>
+          <label class="aad-inline-field">
+            <span>{{ t('app.aiAdmin.usage.compare') }}</span>
+            <select data-ods-skip="1" (change)="onCompare($any($event.target).value)">
+              <option value="" [selected]="!compareKey()">
+                {{ t('app.aiAdmin.usage.compareNone') }}
+              </option>
+              @for (row of rows(); track row.key) {
+                <option [value]="row.key" [selected]="row.key === compareKey()">
+                  {{ row.name }}
+                </option>
+              }
+            </select>
+          </label>
+        </div>
+        <ts-line-chart
+          [labels]="dailyLabels()"
+          [series]="dailySeries()"
+          [format]="formatTokens"
+          [ariaLabel]="t('app.aiAdmin.usage.chartDaily')"
+        />
+      </div>
+      <div class="aad-card">
+        <h3 class="aad-h3">{{ t('app.aiAdmin.usage.months') }}</h3>
+        <ts-line-chart
+          [labels]="monthLabels()"
+          [series]="monthSeries()"
+          [format]="formatTokens"
+          [ariaLabel]="t('app.aiAdmin.usage.chartMonths')"
+        />
+      </div>
+    </div>
+
+    <div class="aad-card">
+      <h3 class="aad-h3">{{ t('app.aiAdmin.usage.table', t(levelKey())) }}</h3>
+      <div class="aad-table-wrap">
+        <table class="aad-table">
+          <caption class="aad-sr">
+            {{
+              t('app.aiAdmin.usage.table', t(levelKey()))
+            }}
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">{{ t('app.aiAdmin.col.name') }}</th>
+              <th scope="col" class="num">{{ t('app.aiAdmin.tile.total') }}</th>
+              <th scope="col" class="num">{{ t('app.aiAdmin.tile.input') }}</th>
+              <th scope="col" class="num">{{ t('app.aiAdmin.tile.output') }}</th>
+              <th scope="col" class="num">{{ t('app.aiAdmin.tile.runs') }}</th>
+              <th scope="col" class="num">{{ t('app.aiAdmin.col.users') }}</th>
+              <th scope="col" class="num">{{ t('app.aiAdmin.col.share') }}</th>
+              <th scope="col">{{ t('app.aiAdmin.col.quota') }}</th>
+              <th scope="col">
+                <span class="aad-sr">{{ t('app.aiAdmin.col.actions') }}</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of rows(); track row.key) {
+              <tr>
+                <th scope="row">
+                  @if (leaf()) {
+                    {{ row.name }}
+                    @if (row.username) {
+                      <small class="aad-muted">{{ row.username }}</small>
+                    }
+                  } @else {
+                    <button type="button" class="aad-link" (click)="open(row.key)">
+                      {{ row.name }}
+                    </button>
+                  }
+                </th>
+                <td class="num">{{ formatNumber(row.tokens) }}</td>
+                <td class="num">{{ formatNumber(row.inputTokens) }}</td>
+                <td class="num">{{ formatNumber(row.outputTokens) }}</td>
+                <td class="num">{{ formatNumber(row.runs) }}</td>
+                <td class="num">
+                  {{ row.users }}
+                  @if (row.headcount !== undefined) {
+                    / {{ row.headcount }}
+                  }
+                </td>
+                <td class="num">{{ formatPercent(row.share) }}</td>
+                <td class="aad-cell-quota">
+                  <ts-aad-quota-bar [quota]="row.quota" [compact]="true" />
+                </td>
+                <td>
+                  <a
+                    class="aad-link"
+                    routerLink="/ai/hub/admin"
+                    [queryParams]="detailParams(row)"
+                    >{{ t('app.aiAdmin.usage.detail') }}</a
+                  >
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="9" class="aad-muted">{{ t('app.aiAdmin.empty') }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+</section>

@@ -1,0 +1,103 @@
+// ---------------------------------------------------------------------------
+// ชุดสี Design System (Figma) สำหรับหน้าที่ host ใส่ class `ts-ds` :
+//   · Sales Forecast (`ts-forecast`)
+//   · Configuration & Master data (`ts-settings` v1 · `ts-sv-frame` v2 — ทุกแท็บของ v2 อยู่ใต้ `ts-sv-frame`)
+//
+// ค่าที่ได้มาจากรูป "Color modes" / "COLORS" เก็บเป็น `--ds-*` ใน _tokens.scss (ตรงตามรูปทุกค่า ทั้ง Light / Dark) ;
+// ไฟล์นี้แค่ map `--ds-*` ลงชื่อ `--ts-*` ที่สไตล์ของสองหน้านี้ใช้อยู่แล้ว เพื่อให้ไม่ต้องแก้ทีละกฎ
+// และเพราะ custom property สืบทอดลงลูก จึงใช้ได้กับคอมโพเนนต์ลูกที่ encapsulation ต่างกัน — **ไม่รั่วไปหน้าอื่น / shell**.
+//
+// ไม่แตะ : สี Stepper / Interest / Tag (`shared/constants/palettes.ts`) · ขนาด/ระยะของ shell · เงา (รูปไม่ระบุค่า)
+// ---------------------------------------------------------------------------
+
+.ts-ds {
+  // brand
+  --ts-accent: var(--ds-primary); // Primary 00C08B (ทั้งสองธีม)
+  --ts-accent-soft: rgba(0, 192, 139, 0.1);
+  --ts-accent-focus: var(--ds-primary-200); // วงโฟกัสของช่องกรอก
+  --ts-primary: var(--ds-secondary); // Secondary : Light 35236A · Dark 7F63D2
+  --ts-primary-fg: var(--ds-secondary);
+  --ts-selected: var(--ds-secondary-soft); // Secondary 100 (7F63D2 20%)
+  --ts-selected-text: var(--ds-secondary);
+  --ts-selected-bar: var(--ds-secondary);
+  --ts-info: var(--ds-res-2);
+
+  // พื้นผิว
+  --ts-content-bg: var(--ds-bg); // Background / Primary
+  --ts-surface: var(--ds-card); // Background / Card
+  --ts-input-bg: var(--ds-card);
+  --ts-surface-2: var(--ds-card-2); // Card 2
+  --ts-tabbar: var(--ds-card-2);
+  --ts-th: var(--ds-table-header); // Background / Table Header BG
+  --ts-surface-hover: var(--ds-hover-button); // Hover Button (CBD2DB 30%)
+  --ts-row-hover: var(--ds-hover-button);
+  --ts-line: var(--ds-line); // Line
+  --ts-border: var(--ds-border); // Text / Border
+  --ts-border-strong: var(--ds-border);
+  --ts-overlay: rgba(0, 0, 0, 0.4); // Opacity-40 ของชุด Dark (#000000 40%)
+
+  // ข้อความ
+  --ts-text: var(--ds-text); // Text / Primary
+  --ts-text-header: var(--ds-text);
+  --ts-text-secondary: var(--ds-text-secondary); // Text / Secondary
+  --ts-text-muted: var(--ds-text-secondary);
+  --ts-muted: var(--ds-text-secondary);
+  --ts-faint: var(--ds-text-disabled);
+  --ts-text-disabled: var(--ds-text-disabled); // Text / Disabled
+
+  // กลุ่มสีม่วง (Secondary)
+  --ts-violet-soft: var(--ds-secondary-soft);
+  --ts-violet-tint: rgba(127, 99, 210, 0.1);
+  --ts-violet-line: var(--ds-secondary-300);
+
+  // สถานะ Success (เขียว)
+  --ts-green-ink: var(--ds-primary-900);
+  --ts-green-soft: var(--ds-primary-100);
+  --ts-green-line: var(--ds-primary-300);
+  --ts-badge-release-bg: rgba(2, 163, 106, 0.15); // Success 500
+  --ts-badge-release: var(--ds-primary-900);
+
+  // สถานะ Pending (เหลือง)
+  --ts-warning: var(--ds-pending-500);
+  --ts-amber: var(--ds-pending-500);
+  --ts-on-amber: var(--ds-grey-700);
+  --ts-amber-soft: rgba(237, 167, 33, 0.18);
+  --ts-amber-ink: #8a5a00; // ไม่มีสี Pending ที่เข้มพอสำหรับตัวอักษรเล็กบนพื้นอ่อน (600 = E09609 ตัดกัน ~2.3:1) — คงของเดิม
+  --ts-badge-draft-bg: rgba(237, 167, 33, 0.2);
+  --ts-badge-draft: var(--ts-amber-ink);
+
+  // สถานะ Cancel (แดง)
+  --ts-danger: var(--ds-cancel-500);
+  --ts-req: var(--ds-cancel-500); // เครื่องหมาย * ช่องบังคับ
+  --ts-pink-ink: var(--ds-cancel-700);
+  --ts-pink-soft: rgba(234, 40, 40, 0.12);
+  --ts-badge-block-bg: rgba(234, 40, 40, 0.14);
+  --ts-badge-block: var(--ds-cancel-700);
+
+  // Highlight (5DA3FF 30%) · ข้อมูล/ลิงก์
+  --ts-blue-soft: var(--ds-highlight);
+  --ts-blue-ink: var(--ds-res-2);
+}
+
+:root[data-theme='dark'] .ts-ds {
+  --ts-accent-focus: rgba(0, 192, 139, 0.3);
+  --ts-violet-line: var(--ds-secondary-600);
+  --ts-green-ink: var(--ds-primary-400);
+  --ts-green-soft: rgba(0, 192, 139, 0.18);
+  --ts-green-line: var(--ds-primary-800);
+  --ts-badge-release-bg: rgba(2, 163, 106, 0.22);
+  --ts-badge-release: var(--ds-success-100);
+  --ts-amber-ink: var(--ds-pending-100);
+  --ts-badge-draft-bg: rgba(237, 167, 33, 0.18);
+  --ts-badge-draft: var(--ds-pending-100);
+  --ts-req: var(--ds-cancel-100);
+  --ts-pink-ink: var(--ds-cancel-100);
+  --ts-pink-soft: rgba(234, 40, 40, 0.2);
+  --ts-badge-block-bg: rgba(234, 40, 40, 0.2);
+  --ts-badge-block: var(--ds-cancel-100);
+}
+
+// พื้นที่เนื้อหาของ shell (`.content` ใน layout/shell.ts) อยู่นอกหน้า จึงต้องเปลี่ยนที่ราก : มีหน้า `ts-ds` อยู่ = ใช้ Background / Primary
+:root:has(.ts-ds) {
+  --ts-content-bg: var(--ds-bg);
+}

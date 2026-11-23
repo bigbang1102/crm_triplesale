@@ -1,0 +1,32 @@
+{
+  "api": {
+    "auth": "/triplesale-auth/api/v1",
+    "service": "/tps-api/api/v1",
+    "dashboard": "/dashboard-triplesale-service/api/v1",
+    "master": "/master-service/api/v1"
+  },
+  "apiOrigin": "https://dev-tps.acecloud.co.th",
+  "apiBase": "/triplesale",
+  "keycloak": {
+    "enabled": true,
+    "url": "https://dev-auth.acecloud.co.th",
+    "realm": "ace",
+    "clientId": "triplesales-web",
+    "groupApi": "/tps-api/api/v1"
+  },
+  "mock": false,
+  "defaultLang": "th",
+  "features": {
+    "aiHubEnabled": true,
+    "pageGuardEnabled": true,
+    "apiLog": true
+  },
+  "upload": {
+    "maxBytes": 14680064,
+    "hardCapBytes": 15000000
+  },
+  "branding": {
+    "projectEn": "ACHIEVER CO., LTD.",
+    "version": "2.0.0-docker"
+  }
+}

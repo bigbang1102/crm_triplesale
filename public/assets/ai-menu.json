@@ -1,0 +1,34 @@
+{
+  "_readme": [
+    "รายการเมนูของ Floating AI Menu (มุมขวาล่าง) — ใช้โดย WEB-INF/pages/ai_menu.xhtml",
+    "เพิ่มเมนูใหม่ = เพิ่ม object ใน items ไม่ต้องแก้โค้ด xhtml",
+    "type: 'page'  -> เปิดหน้าในระบบเดิม (url สัมพัทธ์กับ /pages/)",
+    "type: 'toast' -> แสดงข้อความแจ้งเตือน (message.th / message.en)",
+    "type: 'help'  -> เปิดหน้าต่างสนทนา 'สอบถามการใช้งาน' (กล่อง .ai-help ใน ai_menu.xhtml)",
+    "icon: class ของ Font Awesome 6 ที่ระบบมีอยู่แล้ว",
+    "enabled: false = ซ่อนเมนูนั้นชั่วคราวโดยไม่ต้องลบทิ้ง"
+  ],
+  "items": [
+    {
+      "id": "ai-doc-translator",
+      "enabled": true,
+      "icon": "fa-solid fa-language",
+      "accent": "#6043B6",
+      "label": { "th": "AI แปลเอกสาร", "en": "AI Document Translator" },
+      "type": "page",
+      "url": "ai_translator.face?pid=1&page_id=15&act=15&navbar_menu=navbar_menu_ai"
+    },
+    {
+      "id": "ai-help",
+      "enabled": true,
+      "icon": "fa-solid fa-circle-question",
+      "accent": "#0D61CF",
+      "label": { "th": "สอบถามการใช้งาน", "en": "Help & Support" },
+      "type": "help",
+      "message": {
+        "th": "💬 สอบถามการใช้งานระบบได้ที่ทีมพัฒนา หรือดูคู่มือการใช้งานของแต่ละระบบได้จากศูนย์รวมคู่มือ",
+        "en": "💬 Contact the development team for help, or open the manual of each system from the documentation hub."
+      }
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+// Global styles. @font-face lives in index.html so its URL is resolved against <base href>
+// (works when the app is deployed under a sub-path such as /triplesale/app/).
+@use 'styles/tokens';
+@use 'styles/ds-page';
+@use 'styles/base';
+@use 'styles/drag-scroll';
+@use 'styles/login-page';
+@use 'styles/swal';

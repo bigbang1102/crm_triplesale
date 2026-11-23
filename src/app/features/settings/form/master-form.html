@@ -1,0 +1,301 @@
+<div class="mf-page">
+  <nav class="pg-crumb" [attr.aria-label]="t('app.settings.page.crumb')">
+    <button type="button" class="pg-back" [disabled]="saving()" (click)="confirming() ? stay() : close()">
+      <ts-icon name="chevronLeft" [size]="14" />{{ t(confirming() ? 'app.settings.page.backForm' : 'app.settings.page.back') }}
+    </button>
+    <span>/</span>
+    <span>{{ stepTitle() }}</span>
+    <span>/</span>
+    <span>{{ tableTitle() }}</span>
+    <span>/</span>
+    <b>{{ current() }}</b>
+  </nav>
+
+  <section class="mf-dialog" role="region" [attr.aria-labelledby]="uid + '-title'" [attr.aria-busy]="loading() || saving()" [hidden]="confirming()">
+    <!-- ปุ่มทำงาน (บันทึก/ยกเลิก · ปิด/แก้ไข) อยู่ที่หัวการ์ด ฝั่งขวา — ตาม mockup v30 -->
+    <header class="mf-head">
+      <div class="mf-ttl">
+        <div class="mf-title">
+          <h2 [id]="uid + '-title'">{{ heading() }}</h2>
+          <span class="tcode">{{ table() }}</span>
+        </div>
+        @if (copying() && copySrc()) {
+          <p class="mf-sub">{{ t('app.settings.form.copyFrom', copySrc()) }}</p>
+        }
+      </div>
+      @if (mode() === 'view' && !deleting()) {
+        <span class="mf-mode"><ts-icon name="eye" [size]="14" />{{ t('app.settings.form.modeView') }}</span>
+      }
+      <div class="mf-act">
+        @if (deleting()) {
+          <button type="button" class="ts-btn ts-btn--ghost" [disabled]="saving()" (click)="close()">{{ t('app.settings.form.cancel') }}</button>
+          @switch (deleteMode()) {
+            @case ('delete') {
+              <button type="button" class="ts-btn mf-danger" [disabled]="saving()" (click)="doDelete()">{{ saving() ? t('app.settings.delete.deleting') : t('app.settings.delete.ok') }}</button>
+            }
+            @case ('block') {
+              <button type="button" class="ts-btn mf-danger" [disabled]="saving()" (click)="doBlock()">{{ saving() ? t('app.settings.delete.deleting') : t('app.settings.delete.toBlock') }}</button>
+            }
+          }
+        } @else if (!readOnly() && def() && !blocked()) {
+          <button type="button" class="ts-btn ts-btn--ghost" [disabled]="saving()" (click)="close()">{{ t('app.settings.form.cancel') }}</button>
+          <button type="button" class="ts-btn" [disabled]="saving() || !state()" (click)="save()">{{ saving() ? t('app.settings.form.saving') : t('app.settings.form.save') }}</button>
+        } @else {
+          <button type="button" class="ts-btn ts-btn--ghost" (click)="close()">{{ t('app.settings.form.close') }}</button>
+          @if (canSwitchToEdit()) {
+            <button type="button" class="ts-btn ts-btn--ghost" (click)="copy.emit()"><ts-icon name="copy" [size]="16" />{{ t('app.settings.form.copy') }}</button>
+            <button type="button" class="ts-btn" (click)="edit.emit()"><ts-icon name="pencil" [size]="16" />{{ t('app.settings.edit') }}</button>
+          }
+        }
+      </div>
+    </header>
+
+    <div class="mf-body">
+      @if (loadFailure(); as lf) {
+        <div class="mf-note err" role="alert">
+          <span class="bi"><i>!</i></span>
+          <div class="mb-t"><b>{{ failureText(lf) }}</b></div>
+          <button type="button" class="ts-btn ts-btn--ghost" (click)="retry()">{{ t('app.settings.live.retry') }}</button>
+        </div>
+      } @else if (loading() && !def()) {
+        <div class="mf-empty" role="status">{{ t('app.settings.form.loading') }}</div>
+      } @else if (blocked(); as b) {
+        <div class="mf-note warn" role="status">
+          <span class="bi"><i>!</i></span>
+          <div class="mb-t">
+            @switch (b.kind) {
+              @case ('notWritable') { <span>{{ t('app.settings.err.notWritable') }}</span> }
+              @case ('viewOnly') { <span>{{ t('app.settings.create.viewOnly') }}</span> }
+              @case ('steps') {
+                <span>{{ t('app.settings.create.needSteps') }}</span>
+                @for (s of b.steps; track s.stepKey) {
+                  <button type="button" class="go-i" (click)="goStep.emit(s.stepKey)">
+                    {{ s.title }}
+                    <ts-icon name="chevronRight" [size]="15" />
+                  </button>
+                }
+              }
+            }
+          </div>
+        </div>
+      } @else if (def() && state(); as st) {
+        @if (deleting()) {
+          <!-- หน้า "ลบ" (mockup v33 delModal) : ใช้อยู่ → ลบไม่ได้ + รายการที่ใช้ ; ไม่ใช้ → ลบรายการนี้ออกจากระบบ -->
+          @if (readOnlyNote(); as rn) {
+            <div class="mf-note warn" role="status"><span class="bi"><i>!</i></span><div class="mb-t">{{ rn }}</div></div>
+          }
+          @if (failure(); as f) {
+            <div class="mf-note err" role="alert"><span class="bi"><i>!</i></span><div class="mb-t"><b>{{ failureText(f) }}</b></div></div>
+          }
+          @if (usage(); as u) {
+            @if (u.total) {
+              <div class="del-no">{{ t('app.settings.delete.inUse', u.total) }}</div>
+              <div class="used">
+                @for (x of usedFew(); track x.table + x.id) {
+                  <span>{{ x.title }} · {{ [x.code, x.name].filter(present).join(' ') }}</span>
+                }
+              </div>
+            } @else {
+              <div>{{ t('app.settings.delete.body') }}</div>
+            }
+          } @else {
+            <div>{{ t('app.settings.delete.body') }}</div>
+          }
+        } @else {
+        <!-- 1 ช่องของแท็บหลัก (ใช้ทั้งแบบแบ่งกลุ่มและแบบกริดเดียว) -->
+        <ng-template #cell let-f>
+          <div class="mf-cell">
+            <ts-master-field
+              [field]="f"
+              [uid]="uid + '-' + f.field"
+              [value]="st.values[f.field]"
+              [error]="errorOf('values.' + f.field, f)"
+              [disabled]="readOnly()"
+              [ctx]="ctx('main')"
+              [systemText]="sysText(f)"
+              [creating]="mode() === 'create'"
+              (valueChange)="setMain(f.field, $event)"
+            />
+            @if (f.field === 'usagestatus' && blockNote(); as bn) {
+              <div class="fnote">{{ bn }}</div>
+            }
+            @if (refHint(f); as h) {
+              <span class="fhint">
+                {{ t('app.settings.form.refHint', h.title) }}
+                @if (h.step) {
+                  · <button type="button" (click)="goStep.emit(h.step)">{{ t('app.settings.form.refGo') }}</button>
+                } @else {
+                  · {{ t('app.settings.form.refAsk') }}
+                }
+              </span>
+            }
+          </div>
+        </ng-template>
+
+        @if (readOnlyNote(); as rn) {
+          <div class="mf-note warn" role="status"><span class="bi"><i>!</i></span><div class="mb-t">{{ rn }}</div></div>
+        }
+        @for (w of warnRefs(); track $index) {
+          <div class="mf-note warn" role="status"><span class="bi"><i>!</i></span><div class="mb-t">{{ w }}</div></div>
+        }
+        @if (failure(); as f) {
+          <div class="mf-note err" role="alert"><span class="bi"><i>!</i></span><div class="mb-t"><b>{{ failureText(f) }}</b></div></div>
+        }
+        @if (dupCode()) {
+          <div class="mf-note err" role="alert">
+            <span class="bi"><i>!</i></span>
+            <div class="mb-t">
+              <b>{{ t('app.settings.form.dupTitle', codeValue(), tableTitle() || def()?.title || '') }}</b>
+              <span class="mb-s">{{ t('app.settings.form.dupHint') }}</span>
+            </div>
+          </div>
+        } @else if (errorCount() || loose().length) {
+          <div class="mf-note err" role="alert">
+            <span class="bi"><i>!</i></span>
+            <div class="mb-t">
+              <b>{{ t('app.settings.form.checkFields', errorCount()) }}</b>
+              <span class="mb-s">{{ t('app.settings.form.checkFieldsHint') }}</span>
+              @for (m of loose(); track $index) {
+                <span class="mb-s">{{ m }}</span>
+              }
+            </div>
+          </div>
+        }
+
+        <section class="mf-sec">
+          <div class="mf-tabs" role="tablist">
+            @for (tb of tabs(); track tb.key) {
+              <button
+                type="button"
+                class="mtab"
+                role="tab"
+                [class.bad]="isBadTab(tb.key)"
+                [attr.aria-selected]="tab() === tb.key"
+                (click)="tab.set(tb.key)"
+              >
+                <ts-icon [name]="tb.icon" [size]="16" />
+                <span>{{ tb.title }}</span>
+              </button>
+            }
+          </div>
+
+          <div class="mf-pane" role="tabpanel" [hidden]="tab() !== 'main'">
+            @if (mainGroups(); as groups) {
+              <!-- แท็บหลักแบ่งกลุ่มข้อมูล (section) ตามผังฟอร์มของ API : การ์ดต่อกลุ่ม · หัวการ์ด = เลขกลุ่ม + ชื่อ + จำนวนฟิลด์ -->
+              @for (g of groups; track g.seq) {
+                <section class="mf-grp" [class.sys]="g.systemOnly" [attr.aria-labelledby]="uid + '-g' + g.seq">
+                  <header class="mf-grp-h">
+                    <span class="gn" aria-hidden="true">{{ g.seq }}</span>
+                    <b [id]="uid + '-g' + g.seq">{{ g.title }}</b>
+                    <span class="gc">{{ t('app.settings.form.fieldCount', g.fields.length) }}@if (g.systemOnly) { {{ t('app.settings.form.sysGroup') }} }</span>
+                  </header>
+                  <div class="mf-grid">
+                    @for (f of g.fields; track f.field) {
+                      <ng-container [ngTemplateOutlet]="cell" [ngTemplateOutletContext]="{ $implicit: f }" />
+                    }
+                  </div>
+                </section>
+              }
+            } @else {
+              <div class="mf-grid">
+                @for (f of mainFields(); track f.field) {
+                  <ng-container [ngTemplateOutlet]="cell" [ngTemplateOutletContext]="{ $implicit: f }" />
+                }
+              </div>
+            }
+          </div>
+
+          @if (usage(); as u) {
+            <div class="mf-pane" role="tabpanel" [attr.aria-label]="t('app.settings.form.tabUsed')" [hidden]="tab() !== 'used'">
+              @if (usedShown().length) {
+                <div class="used">
+                  @for (x of usedShown(); track x.table + x.id) {
+                    <span>{{ x.title }} · {{ [x.code, x.name].filter(present).join(' ') }}</span>
+                  }
+                </div>
+              } @else {
+                <div class="used-empty">{{ t('app.settings.form.usedNone') }}</div>
+              }
+            </div>
+          }
+
+          @for (sec of itemSecs(); track sec.key) {
+            <div class="mf-pane" role="tabpanel" [attr.aria-label]="sec.title" [hidden]="tab() !== sec.key">
+              <div class="mf-itb-h">
+                <b>{{ sec.title }}</b>
+                @if (!readOnly()) {
+                  <button type="button" class="ts-btn ts-btn--ghost" (click)="addRow(sec)"><ts-icon name="plus" [size]="17" />{{ t('app.settings.form.addRow') }}</button>
+                }
+              </div>
+              <div class="mf-it">
+                <table>
+                  <thead>
+                    <tr>
+                      <th class="rn">#</th>
+                      @for (f of sec.fields; track f.field) {
+                        <th>{{ f.label }} @if (f.required && f.control !== 'file') { <span class="rq">*</span> }</th>
+                      }
+                      @if (!readOnly()) { <th class="rm"></th> }
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (row of rowsOf(sec); track $index; let i = $index) {
+                      <tr class="mf-row">
+                        <td class="rn">{{ i + 1 }}</td>
+                        @for (f of sec.fields; track f.field) {
+                          <td>
+                            <ts-master-field
+                              [compact]="true"
+                              [field]="f"
+                              [uid]="uid + '-' + sec.key + '-' + i + '-' + f.field"
+                              [value]="row[f.field]"
+                              [error]="errorOf('items.' + sec.key + '[' + i + '].' + f.field, f)"
+                              [disabled]="readOnly()"
+                              [ctx]="ctx(sec.key)"
+                              (valueChange)="setItem(sec.key, i, f.field, $event)"
+                            />
+                          </td>
+                        }
+                        @if (!readOnly()) {
+                          <td class="rm">
+                            <button type="button" class="mf-rm" [attr.aria-label]="t('app.settings.form.removeRow')" [title]="t('app.settings.form.removeRow')" (click)="removeRow(sec, i)">
+                              <ts-icon name="trash" [size]="17" />
+                            </button>
+                          </td>
+                        }
+                      </tr>
+                    } @empty {
+                      <tr>
+                        <td class="it-empty" [attr.colspan]="sec.fields.length + 2">{{ t('app.settings.form.noRows') }}</td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          }
+        </section>
+        }
+      }
+    </div>
+
+  </section>
+
+  @if (confirming()) {
+    <section class="mf-dialog mf-confirm" role="region" aria-labelledby="mf-confirm-title">
+      <header class="mf-head">
+        <div class="mf-title">
+          <h2 id="mf-confirm-title">{{ t('app.settings.discard.title') }}</h2>
+          <span class="tcode">{{ table() }}</span>
+        </div>
+        <div class="mf-act">
+          <button type="button" class="ts-btn ts-btn--ghost" (click)="stay()">{{ t('app.settings.discard.stay') }}</button>
+          <button type="button" class="ts-btn mf-danger" (click)="discard()">{{ t('app.settings.discard.drop') }}</button>
+        </div>
+      </header>
+      <div class="mf-body">
+        <div>{{ t('app.settings.discard.body') }}</div>
+      </div>
+    </section>
+  }
+</div>

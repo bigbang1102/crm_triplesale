@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="200" viewBox="0 0 640 200" font-family="Arial, sans-serif">
+  <rect width="640" height="200" fill="#F6F7FB"/>
+  <g font-size="12" text-anchor="middle" fill="#111827">
+    <rect x="14" y="70" width="86" height="52" rx="10" fill="#fff" stroke="#6043B6"/><text x="57" y="101">Quoted</text>
+    <rect x="124" y="70" width="86" height="52" rx="10" fill="#fff" stroke="#6043B6"/><text x="167" y="101">Pending</text>
+    <rect x="234" y="70" width="86" height="52" rx="10" fill="#fff" stroke="#6043B6"/><text x="277" y="101">Translating</text>
+    <rect x="344" y="70" width="86" height="52" rx="10" fill="#fff" stroke="#6043B6"/><text x="387" y="101">Reviewing</text>
+    <rect x="454" y="70" width="86" height="52" rx="10" fill="#fff" stroke="#6043B6"/><text x="497" y="101">Sent</text>
+    <rect x="564" y="70" width="62" height="52" rx="10" fill="#6043B6"/><text x="595" y="101" fill="#fff">Done</text>
+  </g>
+  <g stroke="#9CA3AF" stroke-width="2"><path d="M100 96h24M210 96h24M320 96h24M430 96h24M540 96h24"/></g>
+</svg>

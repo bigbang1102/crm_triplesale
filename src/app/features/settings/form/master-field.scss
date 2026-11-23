@@ -1,0 +1,169 @@
+// 1 ช่องของฟอร์ม Master — ตาม mockup master-setup final (30-10-2026) ; ใช้ token --ts-* เท่านั้น
+@use '../settings-controls';
+
+:host {
+  display: block;
+  min-width: 0;
+}
+.mf-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.mf-label {
+  color: var(--ts-text);
+  font-size: var(--ts-fs-0);
+  line-height: 20px; // mockup: ป้ายสูง 20px (ไม่ขึ้นกับฟอนต์) → ช่องละ 64px
+}
+.rq {
+  color: var(--ts-pink-ink);
+}
+.bad .ts-input {
+  border-color: var(--ts-danger);
+}
+.msg {
+  margin: 0;
+  color: var(--ts-pink-ink);
+  font-size: calc(10.6px + var(--ts-fs-adj));
+}
+.chk {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  cursor: pointer;
+}
+// ตัวเลือกแบบปุ่มต่อกัน (สถานะการใช้งาน ฯลฯ) — กรอบเดียว กว้างเต็มช่อง
+.seg {
+  display: flex;
+  width: 100%;
+  height: 38px;
+  overflow: hidden;
+  border: 1px solid var(--ts-border-strong);
+  border-radius: 10px;
+}
+// ตัวเลือกแบบปุ่มวิทยุ — mockup v33 : .modal .radios (สูง 42px · ห่างกัน 16px · .9rem)
+.radios {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 16px;
+  height: 42px;
+  min-height: 42px;
+  overflow: hidden;
+  color: var(--ts-text);
+  font-size: calc(12.6px + var(--ts-fs-adj));
+
+  label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+  input {
+    margin: 0;
+  }
+}
+.seg-o {
+  flex: 1;
+  min-width: 0;
+  padding: 0 14px;
+  overflow: hidden;
+  border: 0;
+  border-right: 1px solid var(--ts-border-strong);
+  background: none;
+  color: var(--ts-text);
+  font: inherit;
+  font-size: calc(12px + var(--ts-fs-adj));
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &:last-child {
+    border-right: 0;
+  }
+  &.on {
+    background: var(--ts-violet-soft);
+    color: var(--ts-selected-text);
+    font-weight: 500;
+  }
+  &:disabled {
+    cursor: default;
+  }
+}
+// ฟิลด์ระบบอ่านอย่างเดียว : ช่อง disabled พื้น surface-2 + ใต้ช่องไอคอนกุญแจ 12px และข้อความ 11.8px จาง (spec F32)
+.ts-input.sys {
+  background: var(--ts-surface-2);
+  color: var(--ts-text);
+  opacity: 1;
+  cursor: default;
+}
+.sys-note {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 4px 0 0;
+  color: var(--ts-text-disabled);
+  font-size: calc(10.4px + var(--ts-fs-adj));
+}
+.file-off {
+  padding: 10px;
+  border: 1px dashed var(--ts-border);
+  border-radius: 6px;
+  color: var(--ts-text-disabled);
+  font-size: var(--ts-fs-small);
+}
+.ref {
+  position: relative;
+}
+.ref-x {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  border: 0;
+  background: none;
+  color: var(--ts-text-muted);
+  font-size: var(--ts-fs-2);
+  line-height: 1;
+  cursor: pointer;
+}
+.ref-list {
+  position: absolute;
+  z-index: var(--ts-z-dropdown);
+  top: calc(100% + 4px);
+  right: 0;
+  left: 0;
+  max-height: 240px;
+  margin: 0;
+  padding: 4px;
+  overflow: auto;
+  border: 1px solid var(--ts-border);
+  border-radius: var(--ts-radius);
+  background: var(--ts-surface);
+  box-shadow: var(--ts-shadow-pop);
+  list-style: none;
+
+  li {
+    padding: 8px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+
+    &:hover,
+    &.act {
+      background: var(--ts-selected);
+      color: var(--ts-selected-text);
+    }
+  }
+  .ref-empty,
+  .ref-more {
+    color: var(--ts-text-disabled);
+    font-size: var(--ts-fs-small);
+    cursor: default;
+
+    &:hover {
+      background: none;
+      color: var(--ts-text-disabled);
+    }
+  }
+}

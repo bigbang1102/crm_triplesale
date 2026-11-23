@@ -1,0 +1,37 @@
+<div class="aad-root">
+  <header class="aad-header">
+    <h1 class="aad-h1">
+      <i class="fa-solid fa-user-shield" aria-hidden="true"></i> {{ t('app.aiAdmin.title') }}
+    </h1>
+    <p class="aad-muted">{{ t('app.aiAdmin.subtitle') }}</p>
+    <nav class="aad-tabs" [attr.aria-label]="t('app.aiAdmin.title')">
+      @for (tab of tabs(); track tab.id) {
+        <a
+          class="aad-tab"
+          routerLink="/ai/hub/admin"
+          [queryParams]="{ tab: tab.id }"
+          [class.is-active]="tab.id === active()"
+          [attr.aria-current]="tab.id === active() ? 'page' : null"
+        >
+          <i [class]="'fa-solid ' + tab.icon" aria-hidden="true"></i>
+          {{ t('app.nav.aiAdmin.' + tab.id) }}
+        </a>
+      }
+    </nav>
+  </header>
+
+  @switch (active()) {
+    @case ('usage') {
+      <ts-ai-admin-usage />
+    }
+    @case ('detail') {
+      <ts-ai-admin-detail />
+    }
+    @case ('audit') {
+      <ts-ai-admin-audit />
+    }
+    @default {
+      <p class="aad-alert is-error" role="alert">{{ t('app.aiHub.noPermText') }}</p>
+    }
+  }
+</div>

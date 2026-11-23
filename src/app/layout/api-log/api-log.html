@@ -1,0 +1,197 @@
+@if (log.isOpen()) {
+  <div id="apiLogOverlay" class="alg-overlay show" (click)="onOverlay($event)">
+    <div class="alg-panel" #panel [style.transform]="'translate(' + pos().x + 'px,' + pos().y + 'px)'">
+      <div class="alg-head" (pointerdown)="onHeadPointerDown($event)" (dblclick)="onHeadDblClick($event)">
+        <span class="t">Log การเรียก API</span>
+        <span class="n" id="algCount">{{ count() }}</span>
+        @if (tab() === 'api') {
+          <select class="alg-in alg-apionly" id="algPage" style="max-width: 210px" (change)="page.set($any($event.target).value)">
+            <option value="" [selected]="!page()">ทุกหน้า ({{ data().length }})</option>
+            @for (p of pages(); track p.name) {
+              <option [value]="p.name" [selected]="p.name === page()">{{ p.name }} ({{ p.n }})</option>
+            }
+          </select>
+          <input
+            class="alg-in alg-apionly"
+            id="algSearch"
+            type="text"
+            placeholder="ค้นหา url / body / response"
+            style="width: 230px"
+            [value]="search()"
+            (input)="search.set($any($event.target).value)"
+          />
+        }
+        <span class="sp"></span>
+        @if (tab() === 'api') {
+          <button type="button" class="alg-btn alg-apionly" id="algAutoBtn" [class.on]="auto()" (click)="toggleAuto()">อัตโนมัติ: {{ auto() ? 'เปิด' : 'ปิด' }}</button>
+        }
+        <button type="button" class="alg-btn" (click)="refresh()">รีเฟรช</button>
+        @if (tab() === 'api') {
+          <button type="button" class="alg-btn alg-apionly" (click)="clear()">ล้าง</button>
+        }
+        <button type="button" class="alg-btn" (click)="close()">ปิด</button>
+      </div>
+      <div class="alg-tabs">
+        <button type="button" class="alg-tab" id="algTabApi" [class.on]="tab() === 'api'" (click)="setTab('api')">API ที่ยิงออกไป</button>
+        <button type="button" class="alg-tab" id="algTabRoles" [class.on]="tab() === 'roles'" (click)="setTab('roles')">สิทธิ์ของผู้ใช้ (Role)</button>
+        <!-- not in the Java Log: the tokens a sign-in and every refresh brought (features.apiLog only) -->
+        <button type="button" class="alg-tab" id="algTabTokens" [class.on]="tab() === 'tokens'" (click)="setTab('tokens')">Token ({{ log.tokenEvents().length }})</button>
+      </div>
+
+      @if (tab() === 'api') {
+        <div class="alg-body" id="algBody">
+          @if (rows().length === 0) {
+            <div class="alg-empty">ยังไม่มี log — เปิดหน้าที่ต้องการตรวจสอบให้ระบบยิง API ก่อน แล้วกด "รีเฟรช"</div>
+          }
+          @for (r of rows(); track r.d.id) {
+            @if (r.head) {
+              <div class="alg-pagehd">หน้า: {{ r.d.page }}</div>
+            }
+            <div class="alg-row" (click)="toggleRow(r.d.id)">
+              <span class="seq">#{{ r.d.id }}</span>
+              <span class="at">{{ r.d.at }}</span>
+              <span><i [class]="'alg-m ' + r.d.method">{{ r.d.method }}</i></span>
+              <span class="path" [title]="fullUrl(r.d)">{{ short(r.d.url) }}</span>
+              <span [class]="'alg-st st ' + statusClass(r.d.status)">{{ r.d.status || 'ERR' }}</span>
+              <span class="ms">{{ r.d.ms }} ms</span>
+            </div>
+            <div class="alg-detail" [class.show]="openRows().has(r.d.id)">
+              @if (openRows().has(r.d.id)) {
+                <div class="alg-dbox">
+                  <div class="alg-dlbl">เรียกจาก servlet: <b>{{ r.d.via || '-' }}</b></div>
+                  <pre class="alg-pre">{{ fullUrl(r.d) }}</pre>
+                </div>
+                @if (r.d.reqBody) {
+                  <div class="alg-dbox">
+                    <div class="alg-dlbl">Request body</div>
+                    <pre class="alg-pre">{{ pretty(reqText(r.d)) }}</pre>
+                  </div>
+                }
+                <div class="alg-dbox">
+                  <div class="alg-dlbl">Response</div>
+                  <pre class="alg-pre">{{ pretty(resText(r.d)) }}</pre>
+                </div>
+                <div class="alg-dbox alg-curl">
+                  <div class="alg-dlbl" style="color: #9ca3af">
+                    curl (วางใน Postman ได้เลย)
+                    <button type="button" class="alg-copy" (click)="$event.stopPropagation(); copy(r.d)">{{ copied() === 'curl-' + r.d.id ? 'คัดลอกแล้ว' : 'คัดลอก curl' }}</button>
+                  </div>
+                  <pre class="alg-pre">{{ curlOf(r.d) }}</pre>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      } @else if (tab() === 'tokens') {
+        <div class="alg-body alg-tokens" id="algTokens">
+          @if (log.tokenEvents().length === 0) {
+            <div class="alg-empty">ยังไม่มี token ในแท็บนี้ — token จะแสดงที่นี่หลัง login สำเร็จ และทุกครั้งที่มีการ refresh token</div>
+          }
+          @for (t of log.tokenEvents(); track t.id) {
+            <div class="alg-pagehd">
+              {{ t.kind === 'login' ? 'Login สำเร็จ' : 'Refresh token' }} · {{ t.at }} · {{ sourceLabel(t) }}
+              @if (isCurrentToken(t)) {
+                <span class="alg-badge yes" style="margin-left: 8px">ใช้งานอยู่</span>
+              }
+            </div>
+            <div class="alg-dbox">
+              <div class="alg-dlbl">อายุ access token: <b>{{ t.expiresIn }} วินาที</b> — หมดอายุเวลา <b>{{ expiresAt(t) }}</b></div>
+            </div>
+            <div class="alg-dbox alg-curl">
+              <div class="alg-dlbl" style="color: #9ca3af">
+                access_token
+                <button type="button" class="alg-copy" (click)="copyText(t.accessToken, 'at-' + t.id)">{{ copied() === 'at-' + t.id ? 'คัดลอกแล้ว' : 'คัดลอก' }}</button>
+              </div>
+              <pre class="alg-pre">{{ t.accessToken }}</pre>
+            </div>
+            @if (t.refreshToken) {
+              <div class="alg-dbox alg-curl">
+                <div class="alg-dlbl" style="color: #9ca3af">
+                  refresh_token
+                  <button type="button" class="alg-copy" (click)="copyText(t.refreshToken, 'rt-' + t.id)">{{ copied() === 'rt-' + t.id ? 'คัดลอกแล้ว' : 'คัดลอก' }}</button>
+                </div>
+                <pre class="alg-pre">{{ t.refreshToken }}</pre>
+              </div>
+            }
+            @if (t.idToken) {
+              <div class="alg-dbox alg-curl">
+                <div class="alg-dlbl" style="color: #9ca3af">
+                  id_token
+                  <button type="button" class="alg-copy" (click)="copyText(t.idToken, 'it-' + t.id)">{{ copied() === 'it-' + t.id ? 'คัดลอกแล้ว' : 'คัดลอก' }}</button>
+                </div>
+                <pre class="alg-pre">{{ t.idToken }}</pre>
+              </div>
+            }
+            <div class="alg-dbox">
+              <div class="alg-dlbl">ข้อมูลใน access token (claims)</div>
+              <pre class="alg-pre">{{ claimsText(t) }}</pre>
+            </div>
+            @if (t.calls.length) {
+              <div class="alg-dlbl" style="margin: 8px 0 4px">
+                curl ของการ {{ t.kind === 'login' ? 'Login' : 'Refresh token' }} ({{ t.calls.length }} คำขอ) — เรียงตามลำดับที่ยิง
+              </div>
+              @for (c of t.calls; track c.id) {
+                <div class="alg-dbox alg-curl">
+                  <div class="alg-dlbl" style="color: #9ca3af">
+                    #{{ c.id }} · {{ c.at }} · {{ c.label }} · {{ c.method }} → {{ c.status ? 'HTTP ' + c.status : 'ไม่มีคำตอบ' }} · {{ c.ms }} ms
+                    <button type="button" class="alg-copy" (click)="copyText(authCurl(c), 'ac-' + c.id)">{{ copied() === 'ac-' + c.id ? 'คัดลอกแล้ว' : 'คัดลอก curl' }}</button>
+                  </div>
+                  <pre class="alg-pre">{{ authCurl(c) }}</pre>
+                </div>
+                @if (c.resBody) {
+                  <div class="alg-dbox">
+                    <div class="alg-dlbl">Response #{{ c.id }}</div>
+                    <pre class="alg-pre">{{ pretty(c.resBody) }}</pre>
+                  </div>
+                }
+              }
+            }
+          }
+        </div>
+      } @else {
+        <div class="alg-roles" id="algRoles">
+          @if (rolesView(); as v) {
+            <div class="alg-rsum">
+              <span class="k">ผู้ใช้</span><span class="v">{{ v.username || '-' }}</span>
+              <span class="sp" style="width: 8px"></span>
+              <span class="k">จำนวน role</span><span class="v">{{ v.roles.length }}</span>
+              <span class="sp" style="width: 8px"></span>
+              <span class="k">super_admin</span>
+              <span class="alg-badge" [class.yes]="v.superAdmin" [class.no]="!v.superAdmin">{{ v.superAdmin ? 'ใช่ — ข้ามทุกด่านสิทธิ์' : 'ไม่ใช่ — ตรวจตาม role ด้านล่าง' }}</span>
+              <input
+                class="alg-in"
+                id="algRoleSearch"
+                type="text"
+                placeholder="ค้นหา role"
+                style="width: 200px; margin-left: auto"
+                [value]="roleSearch()"
+                (input)="roleSearch.set($any($event.target).value)"
+              />
+            </div>
+            @if (v.roles.length === 0) {
+              <div class="alg-empty">ไม่มี role เลย — ส่วนใหญ่แปลว่า /me/roles ตอน login ไม่สำเร็จ (ระบบเป็น fail-closed เมนูและปุ่มจะหายทั้งหมด)</div>
+            } @else {
+              <div class="alg-rlist" id="algRoleList">
+                @for (r of shownRoles(); track r.name) {
+                  @if (r.show) {
+                    <div class="alg-role" [class.super]="isSuperName(r.name)" [class.hit]="r.hit">
+                      {{ r.name }}
+                      @if (isSuperName(r.name)) {
+                        <span class="why">ผ่านทุกด่านสิทธิ์โดยอัตโนมัติ</span>
+                      }
+                    </div>
+                  }
+                }
+              </div>
+            }
+          }
+        </div>
+      }
+
+      <div class="alg-foot">
+        <span style="float: right; opacity: 0.75">Log UI v4 · 28/08/2026</span>
+        คลิกที่แถวเพื่อดู request/response และ curl — ปุ่ม "คัดลอก curl" แล้ววางใน Postman (Import &gt; Raw text) ได้ทันที · ลากแถบหัวเพื่อย้ายหน้าต่าง (ดับเบิลคลิกแถบหัว = กลับไปกลางจอ)
+      </div>
+    </div>
+  </div>
+}

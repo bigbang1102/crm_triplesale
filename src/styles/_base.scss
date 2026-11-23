@@ -1,0 +1,197 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+// the Java app used html{font-size:13px}; keep it so any rem-based sizes match
+html {
+  font-size: 13px;
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  overflow-x: hidden;
+  background: var(--ts-page-bg);
+  color: var(--ts-text);
+  font-family: var(--ts-font);
+  font-size: var(--ts-fs-0);
+  letter-spacing: var(--ts-letter-spacing);
+  line-height: normal; // same as the Java body — components that need a rhythm set their own
+  -webkit-font-smoothing: antialiased;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+}
+
+ts-root {
+  display: block;
+  height: 100%;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+  margin: 0;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+}
+
+button {
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  text-align: inherit;
+}
+
+// (not inside a page that was generated from a Java file — its host carries data-java-page: there a disabled button has the cursor its own
+// stylesheet gives it, e.g. `.ac-contact-save { cursor: pointer }`, as in Java where nothing sets not-allowed)
+button:disabled:not(:where([data-java-page], [data-java-page] *)) {
+  cursor: not-allowed;
+}
+
+a {
+  color: inherit;
+}
+
+// template.xhtml: `h1…h10, span, p, button, ul, li, div, a, tr, td { font-family: NotoSansThai }` — the warning box of the
+// input guard (a <div> appended to <body>, core/dom/input-guard.ts) takes its font from it; its own style sets no family.
+#ig-warn-tip {
+  font-family: NotoSansThai;
+}
+
+// PrimeIcons size set by the PrimeFaces Pandora theme (`body .pi { font-size: 1rem }`) — Java markup that was copied
+// verbatim (AI HUB …) relies on it; component styles that need another size set their own.
+body .pi {
+  font-size: 1rem;
+}
+
+// css/project_root.css of the Java template.xhtml: `[type="text"] { padding: 10px !important }` — every text input of a
+// signed-in page. Java markup that was copied verbatim (AI HUB …) was built against it. The Java login page does not
+// load that file, so the rule is scoped to the shell (and to the portal lists of open_down_select, which live in <body>). :where() keeps the specificity of the original (0,1,0): a page rule
+// such as `.cb-ksearch input { padding: … !important }` must be able to win against it, exactly as in Java.
+:where(ts-shell, .ods-list) [type='text'] {
+  padding: 10px !important;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ts-accent);
+  outline-offset: 2px;
+}
+
+// slim scrollbars (8px, rounded) like the Java app — except on the sign-in page: the Java login does not load the theme that
+// styles them, so its page scrolls with the browser's own scrollbar (html.ts-login-page, set by features/auth/login/login.ts)
+*:not(html.ts-login-page) {
+  scrollbar-width: thin;
+  scrollbar-color: var(--ts-scrollbar) transparent;
+}
+*:not(html.ts-login-page)::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*:not(html.ts-login-page)::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background: var(--ts-scrollbar);
+}
+*:not(html.ts-login-page)::-webkit-scrollbar-thumb:hover {
+  background: var(--ts-scrollbar-hover);
+}
+
+.ts-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.ts-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// ---- shared element classes (kept deliberately small) -------------------------
+
+// pill button — `.ui-button-custom` in the Java CSS
+.ts-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px 12px;
+  border: 1px solid var(--ts-primary);
+  border-radius: var(--ts-radius-pill);
+  background: var(--ts-primary);
+  color: #fff;
+  font-size: var(--ts-fs-0);
+  line-height: 18px;
+  white-space: nowrap;
+  transition: filter 0.15s;
+
+  &:hover:not(:disabled) {
+    filter: brightness(1.12);
+  }
+  &:disabled {
+    opacity: 0.5;
+  }
+
+  // `.ui-button-custom-inline`
+  &--ghost {
+    border-color: var(--ts-line);
+    background: var(--ts-surface);
+    color: var(--ts-primary);
+  }
+}
+
+:root[data-theme='dark'] .ts-btn--ghost {
+  color: var(--ts-text);
+}
+
+.ts-card {
+  border-radius: var(--ts-radius);
+  background: var(--ts-surface);
+  box-shadow: var(--ts-shadow-card);
+}
+
+// text input — outlined, 10px padding like the PrimeFaces theme
+.ts-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--ts-border);
+  border-radius: 6px;
+  background: var(--ts-input-bg);
+  font-size: var(--ts-fs-0);
+  line-height: 20px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+
+  &:hover:not(:disabled) {
+    border-color: var(--ts-primary);
+  }
+  &:focus {
+    outline: 0;
+    border-color: var(--ts-primary);
+    box-shadow: 0 0 0 0.2em var(--ts-accent-focus);
+  }
+  &::placeholder {
+    color: var(--ts-text-disabled);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

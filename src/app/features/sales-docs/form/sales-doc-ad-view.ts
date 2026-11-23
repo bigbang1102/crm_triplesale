@@ -1,0 +1,25 @@
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { SalesDocFormBase, SalesDocFormEnv } from './sales-doc-form-base';
+import { SALES_DOC_AD_NEEDS, startSalesDocAd } from './sales-doc-ad.engine';
+
+/**
+ * The form of the auto-dealer booking (ใบจองรถยนต์) — pages/sales_doc_ad_form.xhtml (generated: the template, the stylesheet and the engine; see sales-doc-form-base.ts for what the host does).
+ */
+@Component({
+  selector: 'ts-sales-doc-ad-view',
+  templateUrl: './sales-doc-ad.html',
+  styleUrl: './sales-doc-ad.scss',
+  // the Java CSS / engine rely on global selectors and on HTML strings written by the engine
+  encapsulation: ViewEncapsulation.None,
+  // whitespace between inline elements is part of the look (Java rendered the markup as written)
+  preserveWhitespaces: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  // data-java-page: a page generated from a Java file keeps the cursor its own CSS gives a disabled button (the shell's rule in _base.scss skips it)
+  host: { '(click)': 'onClick($event)', 'data-java-page': '' },
+})
+export class SalesDocAdView extends SalesDocFormBase {
+  protected readonly needs = SALES_DOC_AD_NEEDS;
+  protected startEngine(env: SalesDocFormEnv): () => void {
+    return startSalesDocAd(env);
+  }
+}

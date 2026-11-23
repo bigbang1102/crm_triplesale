@@ -1,0 +1,268 @@
+// รายการของ Master (เครื่องมือ · ตาราง · ป้ายสถานะ · ตัวแบ่งหน้า) — ตาม mockup master-setup final (30-10-2026) ; ใช้ token --ts-* เท่านั้น
+@use '../settings-controls';
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+  font-size: var(--ts-fs-0);
+}
+// ฟอร์มเป็นหน้าเต็ม (แทนรายการทั้งหมด)
+ts-master-form {
+  display: block;
+}
+
+.tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.sp {
+  flex: 1;
+}
+.search {
+  position: relative;
+  width: 240px;
+  max-width: 100%;
+
+  ts-icon {
+    position: absolute;
+    top: 11px;
+    left: 12px;
+    color: var(--ts-text-disabled);
+    pointer-events: none;
+  }
+  .ts-input {
+    padding-left: 36px !important; // ชนะ padding ของ _settings-controls (ที่เป็น !important)
+  }
+}
+
+.tw {
+  overflow-x: auto;
+  border: 1px solid var(--ts-line);
+  border-radius: 8px;
+}
+// ความกว้างคอลัมน์มาตรฐาน (ตั้งใน <col>) ; ข้อความยาวตัดด้วย … (ชี้ดูข้อความเต็มได้) ; คอลัมน์ปุ่มติดขอบขวาตอนเลื่อน
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: var(--ts-fs-0);
+}
+th {
+  height: 44px;
+  padding: 0 16px;
+  overflow: hidden;
+  background: var(--ts-th);
+  color: var(--ts-text);
+  font-size: var(--ts-fs-0);
+  font-weight: 500;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+th.sth {
+  cursor: pointer;
+  user-select: none;
+
+  &:focus-visible {
+    outline: 2px solid var(--ts-selected-bar);
+    outline-offset: -2px;
+  }
+  .si {
+    margin-left: 6px;
+    color: var(--ts-text-disabled);
+    font-size: 8px;
+    letter-spacing: -1px;
+    vertical-align: 1px;
+  }
+  &.on .si {
+    color: var(--ts-selected-text);
+  }
+}
+td {
+  height: 52px;
+  padding: 0 16px;
+  overflow: hidden;
+  border-top: 1px solid var(--ts-line);
+  color: var(--ts-text);
+  font-size: var(--ts-fs-0);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+th.fill,
+td.fill {
+  padding: 0;
+}
+th.actc,
+td.act {
+  position: sticky;
+  right: 0;
+  z-index: 1;
+  background: var(--ts-surface);
+}
+thead th.actc {
+  background: var(--ts-surface-2);
+}
+tbody tr {
+  cursor: pointer;
+
+  &:hover td {
+    background: var(--ts-row-hover);
+  }
+}
+.code {
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.ref {
+  color: var(--ts-muted);
+}
+.rq {
+  color: var(--ts-req);
+}
+.act {
+  width: 160px;
+  text-align: right;
+  white-space: nowrap;
+}
+.icb {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--ts-muted);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--ts-surface-2);
+    color: var(--ts-text);
+  }
+  &.view:hover {
+    background: var(--ts-blue-soft);
+    color: var(--ts-blue-ink);
+  }
+  &.copy:hover {
+    background: var(--ts-green-soft);
+    color: var(--ts-green-ink);
+  }
+  &.edit:hover {
+    background: var(--ts-violet-soft);
+    color: var(--ts-selected-text);
+  }
+  &.del:hover {
+    background: var(--ts-pink-soft);
+    color: var(--ts-pink-ink);
+  }
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  font-size: var(--ts-fs-small);
+  font-weight: 500;
+}
+.b-release {
+  background: var(--ts-badge-release-bg);
+  color: var(--ts-badge-release);
+}
+.b-draft {
+  background: var(--ts-badge-draft-bg);
+  color: var(--ts-badge-draft);
+}
+.b-block {
+  background: var(--ts-badge-block-bg);
+  color: var(--ts-badge-block);
+}
+.empty {
+  padding: 34px 16px;
+  color: var(--ts-muted);
+  font-size: calc(12.6px + var(--ts-fs-adj));
+  text-align: center;
+}
+
+// แถบแบ่งหน้าใต้ตาราง (อยู่ในกรอบตาราง) : "แสดง x–y จาก N รายการ · หน้าละ P" ‹ 1 2 3 ›
+.pager {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border-top: 1px solid var(--ts-line);
+  color: var(--ts-muted);
+  font-size: calc(12.5px + var(--ts-fs-adj));
+
+  .sp {
+    flex: 1;
+  }
+  .dots {
+    padding: 0 2px;
+  }
+}
+.pgb {
+  min-width: 30px;
+  height: 30px;
+  padding: 0 8px;
+  border: 1px solid var(--ts-border-strong);
+  border-radius: 6px;
+  background: var(--ts-surface);
+  color: var(--ts-text);
+  font: inherit;
+  font-size: calc(13px + var(--ts-fs-adj));
+  cursor: pointer;
+
+  &.on {
+    border-color: var(--ts-selected-bar);
+    background: var(--ts-selected-bar);
+    color: var(--ds-on-color);
+  }
+  &:disabled {
+    cursor: default;
+    opacity: 0.4;
+  }
+}
+// tooltip ของข้อความที่ถูกตัด
+.ctip {
+  position: fixed;
+  z-index: 90;
+  max-width: 420px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--ts-text);
+  box-shadow: var(--ts-shadow-pop);
+  color: var(--ts-surface);
+  font-size: calc(12.5px + var(--ts-fs-adj));
+  line-height: 1.45;
+  white-space: normal;
+  word-break: break-word;
+  pointer-events: none;
+}
+
+@media (max-width: 560px) {
+  .search {
+    width: 100%;
+  }
+}
+
+// ข้อความผิดพลาดของรายการ (คอลัมน์/แถวโหลดไม่ได้) พร้อมปุ่มลองใหม่
+.note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin: 0;
+  padding: 10px 14px;
+  border: 1px solid var(--ts-danger);
+  border-radius: 8px;
+  background: var(--ts-pink-soft);
+  color: var(--ts-pink-ink);
+  font-size: var(--ts-fs-small);
+}

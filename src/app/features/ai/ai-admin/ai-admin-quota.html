@@ -1,0 +1,220 @@
+<div class="aad-card">
+  <div class="aad-card-head">
+    <h3 class="aad-h3">{{ t('app.aiAdmin.quota.title') }}</h3>
+    <label class="aad-inline-field">
+      <span>{{ t('app.aiAdmin.quota.filterLevel') }}</span>
+      <select data-ods-skip="1" (change)="onFilter($any($event.target).value)">
+        <option value="" [selected]="!filter()">{{ t('app.aiAdmin.quota.allLevels') }}</option>
+        @for (level of levels; track level) {
+          <option [value]="level" [selected]="level === filter()">
+            {{ t('app.aiAdmin.quota.level.' + level) }}
+          </option>
+        }
+      </select>
+    </label>
+    @if (canEdit()) {
+      <button type="button" class="aad-btn is-primary" (click)="openAdd()">
+        <i class="fa-solid fa-plus" aria-hidden="true"></i>
+        {{ t('app.aiAdmin.quota.formAdd') }}
+      </button>
+    }
+  </div>
+  <p class="aad-muted aad-hint">{{ t('app.aiAdmin.quota.rule') }}</p>
+
+  @if (state.error(); as message) {
+    <p class="aad-alert is-error" role="alert">{{ message }}</p>
+  }
+
+  <div class="aad-table-wrap">
+    <table class="aad-table">
+      <caption class="aad-sr">
+        {{
+          t('app.aiAdmin.quota.title')
+        }}
+      </caption>
+      <thead>
+        <tr>
+          <th scope="col">{{ t('app.aiAdmin.quota.colLevel') }}</th>
+          <th scope="col">{{ t('app.aiAdmin.col.name') }}</th>
+          <th scope="col" class="num">{{ t('app.aiAdmin.quota.colMonthly') }}</th>
+          <th scope="col" class="num">{{ t('app.aiAdmin.quota.colUsed') }}</th>
+          <th scope="col" class="num">{{ t('app.aiAdmin.quota.colRemaining') }}</th>
+          <th scope="col">{{ t('app.aiAdmin.quota.colPercent') }}</th>
+          <th scope="col">{{ t('app.aiAdmin.quota.colNote') }}</th>
+          @if (canEdit()) {
+            <th scope="col">
+              <span class="aad-sr">{{ t('app.aiAdmin.col.actions') }}</span>
+            </th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.level + row.key) {
+          <tr>
+            <td>{{ t('app.aiAdmin.quota.level.' + row.level) }}</td>
+            <th scope="row">
+              {{ row.name }}
+              @if (whereOf(row)) {
+                <small class="aad-muted">{{ whereOf(row) }}</small>
+              }
+            </th>
+            <td class="num">{{ formatNumber(row.monthlyTokens) }}</td>
+            <td class="num">{{ formatNumber(row.used) }}</td>
+            <td class="num">{{ formatNumber(row.remaining) }}</td>
+            <td class="aad-cell-quota">
+              <ts-aad-quota-bar [quota]="infoOf(row)" [compact]="true" />
+            </td>
+            <td class="aad-note">{{ row.note }}</td>
+            @if (canEdit()) {
+              <td class="aad-actions">
+                <button
+                  type="button"
+                  class="aad-btn aad-btn-icon"
+                  [attr.aria-label]="t('app.aiAdmin.quota.edit') + ' ' + row.name"
+                  [title]="t('app.aiAdmin.quota.edit')"
+                  (click)="edit(row)"
+                >
+                  <i class="fa-solid fa-pen" aria-hidden="true"></i>
+                </button>
+                <button
+                  type="button"
+                  class="aad-btn aad-btn-icon is-danger"
+                  [attr.aria-label]="t('app.aiAdmin.quota.delete') + ' ' + row.name"
+                  [title]="t('app.aiAdmin.quota.delete')"
+                  (click)="remove(row)"
+                >
+                  <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                </button>
+              </td>
+            }
+          </tr>
+        } @empty {
+          <tr>
+            <td [attr.colspan]="canEdit() ? 8 : 7" class="aad-muted">
+              {{ t('app.aiAdmin.quota.empty') }}
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  @if (canEdit() && formOpen()) {
+    <div class="aad-modal-backdrop" (mousedown)="closeForm()" (keydown.escape)="closeForm()">
+      <div
+        class="aad-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="aad-quota-modal-title"
+        (mousedown)="$event.stopPropagation()"
+      >
+        <div class="aad-modal-head">
+          <h4 id="aad-quota-modal-title" class="aad-h3">
+            {{
+              editing()
+                ? t('app.aiAdmin.quota.formEdit', editing()!.name)
+                : t('app.aiAdmin.quota.formAdd')
+            }}
+          </h4>
+          <button
+            type="button"
+            class="aad-btn aad-btn-icon"
+            [attr.aria-label]="t('app.aiAdmin.cancel')"
+            [title]="t('app.aiAdmin.cancel')"
+            (click)="closeForm()"
+          >
+            <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+          </button>
+        </div>
+        <form class="aad-form" [formGroup]="form" (ngSubmit)="save()" novalidate>
+          <div class="aad-form-grid">
+            <label>
+              <span>{{ t('app.aiAdmin.quota.colLevel') }}</span>
+              <select
+                data-ods-skip="1"
+                formControlName="level"
+                [attr.disabled]="editing() ? '' : null"
+              >
+                @for (level of levels; track level) {
+                  <option [value]="level">{{ t('app.aiAdmin.quota.level.' + level) }}</option>
+                }
+              </select>
+            </label>
+            @if (editing()) {
+              <div class="aad-readonly">
+                <span>{{ t('app.aiAdmin.quota.target') }}</span>
+                <strong>{{ targetName() }}</strong>
+              </div>
+            } @else {
+              <ts-aad-scope-picker [month]="month()" [depth]="depth()" [(value)]="target" />
+            }
+            <label>
+              <span>{{ t('app.aiAdmin.quota.monthlyTokens') }}</span>
+              <input
+                type="number"
+                min="1"
+                step="1000"
+                formControlName="monthlyTokens"
+                inputmode="numeric"
+                [attr.aria-invalid]="
+                  form.controls.monthlyTokens.invalid && form.controls.monthlyTokens.touched
+                "
+              />
+              @if (form.controls.monthlyTokens.invalid && form.controls.monthlyTokens.touched) {
+                <small class="aad-error" role="alert">{{
+                  t('app.aiAdmin.quota.errMonthly')
+                }}</small>
+              }
+            </label>
+            <label>
+              <span>{{ t('app.aiAdmin.quota.warnPercent') }}</span>
+              <input
+                type="number"
+                min="1"
+                max="100"
+                step="1"
+                formControlName="warnPercent"
+                inputmode="numeric"
+                [attr.aria-invalid]="
+                  form.controls.warnPercent.invalid && form.controls.warnPercent.touched
+                "
+              />
+              @if (form.controls.warnPercent.invalid && form.controls.warnPercent.touched) {
+                <small class="aad-error" role="alert">{{ t('app.aiAdmin.quota.errWarn') }}</small>
+              }
+            </label>
+            <label class="aad-check">
+              <input type="checkbox" formControlName="enabled" />
+              <span>{{ t('app.aiAdmin.quota.enabled') }}</span>
+            </label>
+            <label class="aad-wide">
+              <span>{{ t('app.aiAdmin.quota.note') }}</span>
+              <input type="text" formControlName="note" maxlength="200" />
+            </label>
+          </div>
+          @if (!targetReady()) {
+            <p class="aad-muted aad-hint">{{ t('app.aiAdmin.quota.pickTarget') }}</p>
+          }
+          @if (formError()) {
+            <p class="aad-alert is-error" role="alert">{{ formError() }}</p>
+          }
+          <div class="aad-form-actions">
+            <button
+              type="submit"
+              class="aad-btn is-primary"
+              [disabled]="saving() || !targetReady()"
+            >
+              <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
+              {{ t('app.aiAdmin.quota.save') }}
+            </button>
+            <button type="button" class="aad-btn" (click)="closeForm()">
+              {{ t('app.aiAdmin.cancel') }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  } @else if (!canEdit()) {
+    <p class="aad-muted aad-hint">{{ t('app.aiAdmin.quota.readOnly') }}</p>
+  }
+</div>

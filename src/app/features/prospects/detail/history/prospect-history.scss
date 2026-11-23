@@ -1,0 +1,34 @@
+/* the tab fills the height of the page: the table box stretches to the bottom */
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  --ph-soft: color-mix(in srgb, var(--ts-text-muted) 9%, var(--ts-surface));
+  font-family: var(--ts-font);
+  font-size: calc(13px + var(--ts-fs-adj, 0px));
+  color: var(--ts-text);
+}
+.ph { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; gap: 12px; }
+.ph h2 { margin: 0; color: var(--ts-text-header); font-size: calc(16px + var(--ts-fs-adj, 0px)); font-weight: 600; line-height: 24px; }
+
+/* the box fills the tab; the header row is fixed and only the body scrolls (both reserve the same scrollbar gutter, so the columns line up) */
+.ph-box { flex: 1 1 auto; min-height: 160px; display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--ts-border); border-radius: 8px; background: var(--ts-surface); }
+.ph-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; scrollbar-gutter: stable; }
+.ph-row {
+  display: grid;
+  grid-template-columns: minmax(130px, 1.1fr) minmax(100px, 1.3fr) minmax(0, 2.6fr) 48px minmax(0, 2.6fr) minmax(0, 2.2fr);
+  align-items: center;
+  gap: 0 8px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--ts-border);
+  &:last-child { border-bottom: 0; }
+  > span { min-width: 0; overflow-wrap: anywhere; }
+}
+.ph-row--head { flex: none; overflow-y: hidden; scrollbar-gutter: stable; background: var(--ph-soft); color: var(--ts-text-secondary); font-weight: 500; padding-top: 12px; padding-bottom: 12px; }
+.ph-arrow { text-align: center; color: var(--ts-text-muted); .pi { font-size: calc(14px + var(--ts-fs-adj, 0px)); } }
+.ph-empty { margin: 32px 0; text-align: center; color: var(--ts-text-muted); }
+
+@media (max-width: 760px) {
+  .ph-row { grid-template-columns: minmax(110px, 1fr) minmax(80px, 1fr) minmax(90px, 1.5fr) 32px minmax(90px, 1.5fr) minmax(90px, 1fr); font-size: calc(12px + var(--ts-fs-adj, 0px)); padding: 12px; }
+}

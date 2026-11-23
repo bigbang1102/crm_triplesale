@@ -1,0 +1,57 @@
+<div class="tools">
+  <input
+    class="ts-input q"
+    type="search"
+    [placeholder]="t('app.settings.role.panel.search')"
+    [attr.aria-label]="t('app.settings.role.panel.search')"
+    [value]="query()"
+    (input)="query.set($any($event.target).value)"
+  />
+  <div class="seg" role="group">
+    <button type="button" [attr.aria-pressed]="!onlyYes()" (click)="onlyYes.set(false)">{{ t('app.settings.role.panel.all', total) }}</button>
+    <button type="button" [attr.aria-pressed]="onlyYes()" (click)="onlyYes.set(true)">{{ t('app.settings.role.panel.yes', count()) }}</button>
+  </div>
+  <ts-role-receive [set]="set()" [prefix]="true" />
+  <span class="hint">{{ editable() ? t('app.settings.role.panel.hint') : '🔒 ' + t('app.settings.role.panel.readonly') }}</span>
+</div>
+
+<ts-role-warnings [items]="warnings()" />
+
+@for (g of groups(); track g.id) {
+  <section class="grp" [class.open]="g.open">
+    <div class="gh">
+      <button type="button" class="tg" [attr.aria-expanded]="g.open" (click)="toggleOpen(g.id)">
+        <span class="chev" aria-hidden="true">›</span>
+        <b>{{ g.name }}</b>
+        @if (g.hint) {
+          <span class="gs">{{ g.hint }}</span>
+        }
+      </button>
+      <span class="cnt" [class.on]="g.on > 0">{{ g.on }}/{{ g.total }}</span>
+      @if (editable()) {
+        <label class="all"><input type="checkbox" [checked]="g.full" (change)="tickGroup(g.id, g.full)" />{{ t('app.settings.role.panel.group') }}</label>
+      }
+    </div>
+    @if (g.open) {
+      <div class="gb">
+        @for (p of g.rows; track p.code) {
+          <label class="pr" [class.on]="set().has(p.code)" [title]="p.description">
+            <input type="checkbox" [checked]="set().has(p.code)" [disabled]="!editable()" (change)="tick(p.code)" />
+            <span class="pm">
+              <span class="pt">
+                <code>{{ p.code }}</code>
+                @if (needs(p); as n) {
+                  <span class="tag">{{ t('app.settings.role.panel.needs', n) }}</span>
+                }
+              </span>
+              <span class="pd">{{ firstLine(p) }}</span>
+            </span>
+            <span class="yn" [class.y]="set().has(p.code)">{{ set().has(p.code) ? 'Yes' : 'No' }}</span>
+          </label>
+        }
+      </div>
+    }
+  </section>
+} @empty {
+  <div class="empty">{{ onlyYes() ? t('app.settings.role.panel.noYes') : t('app.settings.role.panel.noMatch') }}</div>
+}

@@ -1,0 +1,105 @@
+<div class="tabs" role="tablist">
+  <button type="button" role="tab" [attr.aria-selected]="view() === 'roles'" (click)="view.set('roles')">{{ t('app.settings.role.tab.roles') }}</button>
+  <button type="button" role="tab" [attr.aria-selected]="view() === 'positions'" (click)="view.set('positions')">{{ t('app.settings.role.tab.positions') }}</button>
+</div>
+
+@if (view() === 'positions') {
+  <ts-role-positions (changed)="refresh()" />
+} @else {
+  <section class="intro" [class.open]="introOpen()">
+    <button type="button" class="ih" [attr.aria-expanded]="introOpen()" (click)="introOpen.set(!introOpen())">
+      <span class="chev" aria-hidden="true">›</span>
+      <b>{{ t('app.settings.role.intro.title') }}</b>
+      <span class="sub">{{ t('app.settings.role.intro.sub') }}</span>
+    </button>
+    @if (introOpen()) {
+      <div class="ib">
+        <div class="layers">
+          @for (n of layers; track n) {
+            @let parts = t('app.settings.role.layer.' + n).split('|');
+            <div class="ly" [class.ext]="n === 3">
+              <span class="ln">{{ n }}</span>
+              <div>
+                <b>{{ parts[0] }}</b>
+                <span>{{ parts[1] }}</span>
+              </div>
+              <span class="lw">{{ parts[2] }}</span>
+            </div>
+          }
+        </div>
+        <ul class="rules">
+          @for (n of rules; track n) {
+            <li>{{ t('app.settings.role.rule.' + n) }}</li>
+          }
+        </ul>
+      </div>
+    }
+  </section>
+
+  <div class="tools">
+    <div class="search">
+      <ts-icon name="search" [size]="16" />
+      <input class="ts-input" type="search" [placeholder]="t('app.settings.role.search')" [attr.aria-label]="t('app.settings.role.search')" [value]="query()" (input)="setSearch($any($event.target).value)" />
+    </div>
+    <span class="sp"></span>
+    <button type="button" class="ts-btn ts-btn--ghost" (click)="importStandard()">{{ t('app.settings.role.importStd', standardCount) }}</button>
+    <button type="button" class="ts-btn" (click)="form.set({ mode: 'create', id: '' })"><ts-icon name="plus" [size]="17" />{{ t('app.settings.create') }}</button>
+  </div>
+
+  <div class="tw">
+    <table class="lt">
+      <thead>
+        <tr>
+          <th class="sth" tabindex="0" [attr.aria-sort]="ariaSort('code')" (click)="sortBy('code')" (keydown.enter)="sortBy('code')">{{ t('app.settings.role.col.code') }} <span class="rq">*</span> <span class="si" aria-hidden="true">{{ sortMark('code') }}</span></th>
+          <th class="sth" tabindex="0" [attr.aria-sort]="ariaSort('name')" (click)="sortBy('name')" (keydown.enter)="sortBy('name')">{{ t('app.settings.role.col.name') }} <span class="rq">*</span> <span class="si" aria-hidden="true">{{ sortMark('name') }}</span></th>
+          <th class="sth" tabindex="0" [attr.aria-sort]="ariaSort('category')" (click)="sortBy('category')" (keydown.enter)="sortBy('category')">{{ t('app.settings.role.col.category') }} <span class="si" aria-hidden="true">{{ sortMark('category') }}</span></th>
+          <th class="sth" tabindex="0" [attr.aria-sort]="ariaSort('count')" (click)="sortBy('count')" (keydown.enter)="sortBy('count')">{{ t('app.settings.role.col.count') }} <span class="si" aria-hidden="true">{{ sortMark('count') }}</span></th>
+          <th>{{ t('app.settings.role.col.usedIn') }}</th>
+          <th>{{ t('app.settings.role.col.receive') }}</th>
+          <th class="sth" tabindex="0" [attr.aria-sort]="ariaSort('status')" (click)="sortBy('status')" (keydown.enter)="sortBy('status')">{{ t('app.settings.role.col.status') }} <span class="si" aria-hidden="true">{{ sortMark('status') }}</span></th>
+          <th class="actc"><span class="ts-sr-only">{{ t('app.settings.actions') }}</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (r of rows(); track r.role.id) {
+          <tr class="row" [class.open]="opened() === r.role.id" (click)="toggle(r.role.id)">
+            <td class="code"><span class="chev" aria-hidden="true">›</span> {{ r.role.code }}</td>
+            <td class="clip" [title]="r.role.name">{{ r.role.name }}</td>
+            <td>{{ r.role.category || '–' }}</td>
+            <td>{{ r.count }}</td>
+            <td class="clip" [title]="r.used.join(', ')">{{ r.used.length ? r.used.join(', ') : '–' }}</td>
+            <td><ts-role-receive [set]="r.set" [onlyOk]="true" />@if (!r.count) { – }</td>
+            <td><span class="badge" [class]="'badge b-' + r.role.status">{{ r.role.status }}</span></td>
+            <td class="act">
+              <button type="button" class="icb view" [title]="t('app.settings.view')" [attr.aria-label]="t('app.settings.view')" (click)="form.set({ mode: 'view', id: r.role.id }); $event.stopPropagation()"><ts-icon name="eye" [size]="17" /></button>
+              <button type="button" class="icb copy" [title]="t('app.settings.copy')" [attr.aria-label]="t('app.settings.copy')" (click)="form.set({ mode: 'copy', id: r.role.id }); $event.stopPropagation()"><ts-icon name="copy" [size]="17" /></button>
+              <button type="button" class="icb edit" [title]="t('app.settings.edit')" [attr.aria-label]="t('app.settings.edit')" (click)="form.set({ mode: 'edit', id: r.role.id }); $event.stopPropagation()"><ts-icon name="pencil" [size]="17" /></button>
+              <button type="button" class="icb del" [title]="t('app.settings.delete')" [attr.aria-label]="t('app.settings.delete')" (click)="remove(r.role); $event.stopPropagation()"><ts-icon name="trash" [size]="17" /></button>
+            </td>
+          </tr>
+          @if (opened() === r.role.id) {
+            <tr class="detail">
+              <td colspan="8"><ts-role-panel [roleId]="r.role.id" [revision]="version()" (changed)="refresh()" /></td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+    @if (!rows().length) {
+      <div class="empty">{{ query() ? t('app.settings.role.noMatch') : t('app.settings.role.empty') }}</div>
+    }
+    @if (pageInfo(); as p) {
+      <div class="pager">
+        <span>{{ t('app.settings.role.pageInfo', p.from, p.to, p.total, 20) }}</span>
+        <span class="sp"></span>
+        @for (n of pages(); track n) {
+          <button type="button" class="pgb" [class.on]="n === page()" [attr.aria-current]="n === page() ? 'page' : null" (click)="page.set(n)">{{ n }}</button>
+        }
+      </div>
+    }
+  </div>
+
+  @if (form(); as f) {
+    <ts-role-form-dialog [mode]="f.mode" [roleId]="f.id" (saved)="onSaved($event)" (closed)="form.set(null)" />
+  }
+}

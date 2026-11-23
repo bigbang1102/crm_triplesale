@@ -1,0 +1,188 @@
+<div class="ph">
+  <div>
+    <h1>Forecast Overview<ts-forecast-tip k="pg_overview" /></h1>
+    <p>{{ t('app.forecast.ov.sub', store.mName(store.month())) }}</p>
+  </div>
+  <div class="r">
+    <button type="button" class="btn btn-g" (click)="store.goAdjust()">{{ t('app.forecast.ov.goAdjust') }}</button>
+  </div>
+</div>
+
+<div class="filters">
+  <ts-forecast-filters [show]="filters" />
+</div>
+
+@if (store.ovSummary(); as s) {
+  @let sc = s.totals;
+  @let ct = cats();
+  <div class="kpis">
+    <div class="kpi" [style.--c]="'var(--fc-cat-committed)'">
+      <div class="l">Sales Target<ts-forecast-tip k="ov_tgt" /></div>
+      <div class="v">{{ B(sc.target) }}</div>
+    </div>
+    <div class="kpi" [style.--c]="'var(--fc-cat-closed)'">
+      <div class="l">Closed Success<ts-forecast-tip k="ov_won" /></div>
+      <div class="v">{{ B(sc.closed) }}</div>
+    </div>
+    <div class="kpi" [style.--c]="'var(--fc-cat-bestcase)'">
+      <div class="l">Open Pipeline<ts-forecast-tip k="ov_open" /></div>
+      <div class="v">{{ B(sc.open) }}</div>
+    </div>
+    <div class="kpi" [style.--c]="'var(--fc-cat-committed)'">
+      <div class="l">Final Forecast<ts-forecast-tip k="ov_final" /></div>
+      <div class="v">{{ B(sc.final) }}</div>
+      <div class="s"><span [class]="dcls(sc.final - sc.base)">{{ sgn(sc.final - sc.base) }} {{ t('app.forecast.fromBefore') }}</span></div>
+    </div>
+    <div class="kpi" [style.--c]="'var(--fc-kpi-gap)'">
+      <div class="l">Gap to Target<ts-forecast-tip k="ov_gap" /></div>
+      <div class="v"><span [class]="dcls(sc.final - sc.target)">{{ sgn(sc.final - sc.target) }}</span></div>
+    </div>
+    <div class="kpi" [style.--c]="'var(--fc-cat-omitted)'">
+      <div class="l">Coverage<ts-forecast-tip k="ov_cov" /></div>
+      <div class="v">{{ sc.coverage.toFixed(1) }}%</div>
+      <div class="s"><div class="bar mt6"><i [style.width.%]="min(100, sc.coverage)"></i></div></div>
+    </div>
+  </div>
+
+  <ts-forecast-scenario [min]="s.scenario.min" [final]="sc.final" [max]="s.scenario.max" [target]="sc.target" />
+
+  <div class="tw">
+    <table>
+      <thead>
+        <tr>
+          <th>{{ t('app.forecast.ov.byCategory') }}<ts-forecast-tip k="ov_cat" /></th>
+          @for (k of CATEGORIES; track k) {
+            <th class="n"><i class="dot8" [style.background]="CATEGORY_COLOR[k]"></i>{{ CATEGORY_LABEL[k] }}</th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="sub">{{ store.team() === 'all' ? t('app.forecast.filter.allTeams') : store.teamName(store.team()) }}</td>
+          @for (k of CATEGORIES; track k) {
+            <td class="n">
+              <b>{{ B(ct[k]) }}</b>
+            </td>
+          }
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tw">
+    <table>
+      <thead>
+        <tr>
+          <th>{{ t('app.forecast.col.teamEmp') }}<ts-forecast-tip k="ov_tbl" /></th>
+          <th class="n">Target</th>
+          <th class="n">Closed</th>
+          <th class="n">Committed</th>
+          <th class="n">Best Case</th>
+          <th class="n">Pipeline</th>
+          <th class="n">{{ t('app.forecast.before') }}</th>
+          <th class="n">{{ t('app.forecast.ov.adjusted') }}</th>
+          <th class="n">Final</th>
+          <th class="n">Gap</th>
+          <th>Attainment</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (team of s.teams; track team.teamId) {
+          <ng-container *ngTemplateOutlet="row; context: { r: team, name: team.name, key: 't:' + team.teamId, grp: true }" />
+          @for (e of team.employees; track e.employeeId) {
+            <ng-container *ngTemplateOutlet="row; context: { r: e, name: e.name, key: 'e:' + e.employeeId, grp: false }" />
+          }
+        }
+        <tr class="tot">
+          <td>{{ t('app.forecast.total') }}</td>
+          <td class="n">{{ B(sc.target) }}</td>
+          @for (k of SHOWN; track k) {
+            <td class="n">{{ B(ct[k]) }}</td>
+          }
+          <td class="n">{{ B(sc.base) }}</td>
+          <td class="n">{{ sgn(sc.final - sc.base) }}</td>
+          <td class="n">{{ B(sc.final) }}</td>
+          <td class="n" [class]="dcls(sc.final - sc.target)">{{ sgn(sc.final - sc.target) }}</td>
+          <td>{{ sc.coverage.toFixed(0) }}%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-h">
+      <h3>Opportunity · {{ pickName() }}<ts-forecast-tip k="ov_deals" /></h3>
+      <span class="sub">{{ t('app.forecast.count', store.ovOpps().length) }}</span>
+    </div>
+    <div class="card-b">
+      <div class="tw">
+        <table>
+          <thead>
+            <tr>
+              <th>OPP</th>
+              <th>Owner</th>
+              <th>{{ t('app.forecast.ov.category') }}</th>
+              <th class="n">Amount</th>
+              <th class="n">Prob.</th>
+              <th class="n">Forecast Value</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (d of store.ovOpps(); track d.id) {
+              @let e = eff(d);
+              <tr>
+                <td>
+                  <b>{{ d.txno }}</b>
+                  <div class="sub">{{ d.customer }}</div>
+                </td>
+                <td>{{ d.owner.name }}</td>
+                <td><span class="chip" [class]="CATEGORY_CHIP[e.cat]">{{ CATEGORY_LABEL[e.cat] }}</span></td>
+                <td class="n">{{ B(e.amount) }}</td>
+                <td class="n">{{ e.prob }}%</td>
+                <td class="n">
+                  <b>{{ B(d.valueAfter) }}</b>
+                </td>
+                <td>
+                  @if (d.judgment) {
+                    <span class="chip c-warn">{{ t('app.forecast.ov.judged') }}</span>
+                  }
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="7" class="sub">{{ t('app.forecast.noRows') }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+}
+
+<ng-template #row let-r="r" let-name="name" let-key="key" let-grp="grp">
+  <tr class="click" [class.grp]="grp" [class.pick]="store.ovPick() === key" (click)="store.setOvPick(key)">
+    <td>
+      @if (grp) {
+        <b>{{ name }}</b>
+      } @else {
+        <span class="indent16">{{ name }}</span>
+      }
+    </td>
+    <td class="n">{{ B(r.target) }}</td>
+    @for (k of SHOWN; track k) {
+      <td class="n">{{ B(r.categories[k]) }}</td>
+    }
+    <td class="n">{{ B(r.base) }}</td>
+    <td class="n" [class]="dcls(r.final - r.base)">{{ sgn(r.final - r.base) }}</td>
+    <td class="n">
+      <b>{{ B(r.final) }}</b>
+    </td>
+    <td class="n" [class]="dcls(r.final - r.target)">{{ sgn(r.final - r.target) }}</td>
+    <td class="attain">
+      <div class="bar"><i [style.width.%]="min(100, r.target ? (r.final / r.target) * 100 : 0)"></i></div>
+      <span class="sub">{{ r.target ? ((r.final / r.target) * 100).toFixed(0) : 0 }}%</span>
+    </td>
+  </tr>
+</ng-template>

@@ -1,0 +1,35 @@
+{
+  "api": {
+    "auth": "/triplesale-auth/api/v1",
+    "service": "/triplesale-service/api/v1",
+    "dashboard": "/dashboard-triplesale-service/api/v1",
+    "master": "/master-service/api/v1"
+  },
+  "apiOrigin": "https://uattriplesaleo2o.acecloud.co.th",
+  "apiBase": "/triplesale",
+  "mock": true,
+  "defaultLang": "th",
+  "features": {
+    "aiHubEnabled": true,
+    "pageGuardEnabled": true,
+    "apiLog": true,
+    "mockupServer": true,
+    "masterMock": true,
+    "aiHubService": true
+  },
+  "upload": {
+    "maxBytes": 14680064,
+    "hardCapBytes": 15000000
+  },
+  "branding": {
+    "projectEn": "ACHIEVER CO., LTD.",
+    "version": "2.0.0-dev"
+  },
+  "keycloak": {
+    "enabled": true,
+    "url": "",
+    "realm": "mockup",
+    "clientId": "triplesales-web",
+    "groupApi": "/mockup-tps/api/v1"
+  }
+}

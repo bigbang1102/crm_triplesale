@@ -1,0 +1,434 @@
+// กรอบของหน้า Configuration & Master data — แท็บหมวด · การ์ดขาว · แถบขั้นตอน · "ใช้กับ" · พร้อมเปิดใช้งาน
+// ตาม mockup master-setup final (30-10-2026) ; ใช้ร่วมกันโดยหน้าหลัก (settings.scss) และหน้า v2 (v2/shared/sv-frame.scss) ;
+// ใช้ token --ts-* เท่านั้น (สีของ mockup อยู่ใน src/styles/_tokens.scss)
+@use 'settings-controls';
+
+:host {
+  display: block;
+  color: var(--ts-text);
+  font-size: var(--ts-fs-0);
+}
+
+// ---- แท็บหมวด (แถบเทา ติดกับการ์ดขาวด้านล่าง) ----------------------------------------
+.tabbar {
+  display: flex;
+  gap: 2px;
+  height: 44px;
+  padding: 4px 4px 0;
+  overflow-x: auto;
+  border-radius: 8px 8px 0 0;
+  background: var(--ts-tabbar);
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+.ptab {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 8px 8px 0 0;
+  background: none;
+  color: var(--ts-muted);
+  font: inherit;
+  font-weight: 500;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--ts-text);
+  }
+  &[aria-current='true'] {
+    background: var(--ts-surface);
+    color: var(--ts-text);
+    font-weight: 600;
+  }
+}
+.pn {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--ts-border-strong);
+  border-radius: 50%;
+  background: var(--ts-surface-2);
+  color: var(--ts-muted);
+  font-size: calc(11px + var(--ts-fs-adj));
+
+  &.ok {
+    border-color: var(--ts-accent);
+    background: var(--ts-accent);
+    color: var(--ds-on-color);
+  }
+}
+.ptab[aria-current='true'] .pn:not(.ok) {
+  border-color: var(--ts-selected-bar);
+  background: var(--ts-selected-bar);
+  color: var(--ds-on-color);
+}
+// สลับไปหน้าอีกเวอร์ชัน (ไม่มีใน mockup — เล็กและอยู่ท้ายแถบแท็บ)
+.ver-link {
+  align-self: center;
+  margin-left: auto;
+  padding: 0 12px;
+  color: var(--ts-muted);
+  font-size: var(--ts-fs-small);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--ts-selected-text);
+  }
+}
+
+// ---- การ์ดขาวใต้แท็บ -----------------------------------------------------------------
+.mainc {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+  min-height: calc(100vh - var(--ts-topbar-h) - 2 * var(--ts-content-pad) - 44px - var(--ts-footer-h));
+  padding: 16px;
+  border-radius: 0 0 8px 8px;
+  background: var(--ts-surface);
+}
+// ฟอร์มเป็นหน้าเต็ม : ไม่มีการ์ดขาวครอบ (ฟอร์มเป็นการ์ดของตัวเอง ใต้ breadcrumb)
+.mainc.pg {
+  min-height: 0;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.sechead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+}
+.ph-r {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+.lbl {
+  color: var(--ts-muted);
+  font-size: var(--ts-fs-small);
+}
+.ent {
+  display: block;
+  width: 190px;
+
+  // dropdown กลาง (open_down_select) ถูกแทรกเป็น div ภายหลัง → ต้องเจาะ encapsulation
+  ::ng-deep .ods-btn {
+    height: 38px;
+    padding: 0 12px;
+    border-color: var(--ts-border-strong);
+    border-radius: 6px;
+    background: var(--ts-surface);
+    color: var(--ts-text);
+  }
+}
+.go {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 38px;
+  padding: 0 14px;
+  border: 1px solid var(--ts-border-strong);
+  border-radius: 6px;
+  background: var(--ts-surface);
+  font-size: var(--ts-fs-0);
+  white-space: nowrap;
+
+  b {
+    font-variant-numeric: tabular-nums;
+  }
+}
+.meter {
+  width: 110px;
+  height: 8px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: var(--ts-line);
+
+  i {
+    display: block;
+    height: 100%;
+    border-radius: 99px;
+    background: var(--ts-accent);
+  }
+}
+
+// ---- แถบขั้นตอน : กลุ่ม "ตั้งค่าได้ทันที" / "ต้องมีข้อมูลอื่นก่อน" --------------------------
+.sgrp {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: 6px;
+  padding: 6px;
+  border: 1px solid var(--ts-line);
+  border-radius: 12px;
+  background: var(--ts-surface-2);
+
+  &.dep {
+    border-color: var(--ts-violet-soft);
+    background: var(--ts-violet-tint);
+  }
+}
+.sgi {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.step {
+  position: relative;
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  padding: 0 14px 0 8px;
+  border-radius: 999px;
+  background: var(--ts-surface);
+  box-shadow: 0 0 0 1px var(--ts-border-strong);
+  color: var(--ts-muted);
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    color 0.15s;
+
+  &:hover {
+    color: var(--ts-text);
+  }
+  &:focus-visible {
+    outline: 2px solid var(--ts-selected-bar);
+    outline-offset: 2px;
+  }
+  &.done {
+    box-shadow: 0 0 0 1px var(--ts-green-line);
+    color: var(--ts-green-ink);
+  }
+  &.sel {
+    padding-right: 4px;
+    background: var(--ts-violet-soft);
+    box-shadow: 0 0 0 1.5px var(--ts-selected-bar);
+    color: var(--ts-selected-text);
+  }
+}
+.sh {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+.num {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid var(--ts-border-strong);
+  border-radius: 50%;
+  background: var(--ts-surface);
+  color: var(--ts-muted);
+}
+.done .num {
+  border-color: var(--ts-accent);
+  background: var(--ts-accent);
+  color: var(--ds-on-color);
+}
+.sel .num {
+  border-color: var(--ts-selected-bar);
+  background: var(--ts-selected-bar);
+  color: var(--ds-on-color);
+}
+.sname {
+  font-weight: 500;
+  white-space: nowrap;
+}
+// เครื่องหมายตกใจ "ต้องตั้งค่าก่อน" ทับมุมบนของวงกลมขั้น (ไม่กินที่ใน flow) — เฉพาะปุ่ม ; `.note.warn` เป็นกล่องข้อความคนละอย่าง
+button.warn {
+  position: absolute;
+  top: -6px;
+  left: 16px;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 15px;
+  height: 15px;
+  padding: 0;
+  border: 2px solid var(--ts-surface);
+  border-radius: 50%;
+  background: var(--ts-amber);
+  color: var(--ts-on-amber);
+  font-size: calc(8px + var(--ts-fs-adj));
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+}
+.pop {
+  position: fixed;
+  z-index: var(--ts-z-dropdown);
+  width: 250px;
+  padding: 12px;
+  border: 1px solid var(--ts-border-strong);
+  border-radius: 8px;
+  background: var(--ts-surface);
+  box-shadow: var(--ts-shadow-pop);
+  color: var(--ts-text);
+  font-size: var(--ts-fs-0);
+
+  // สะพานกันเมาส์หลุดระหว่างปุ่มกับ tip
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -12px 0 auto;
+    height: 12px;
+  }
+  b {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--ts-amber-ink);
+    font-weight: 600;
+  }
+  p {
+    margin: 8px 0 0;
+    color: var(--ts-muted);
+    font-size: var(--ts-fs-small);
+  }
+}
+.go-i {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  margin-top: 5px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--ts-amber-soft);
+  color: var(--ts-amber-ink);
+  font: inherit;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover {
+    filter: brightness(0.97);
+  }
+}
+.arr {
+  display: grid;
+  place-items: center;
+  color: var(--ts-violet-line);
+
+  &.ok {
+    color: var(--ts-accent);
+  }
+}
+.gap {
+  width: 6px;
+}
+// ชิปตารางย่อยของขั้นที่เลือก
+.subs {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 22px;
+  margin-left: 2px;
+  padding-left: 8px;
+  border-left: 1px solid var(--ts-violet-line);
+}
+.sub {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 999px;
+  color: var(--ts-selected-text);
+  font-size: calc(13px + var(--ts-fs-adj));
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &:hover {
+    background: color-mix(in srgb, var(--ts-surface) 55%, transparent);
+  }
+  &.on {
+    background: var(--ts-surface);
+    box-shadow: var(--ts-shadow-sm);
+    font-weight: 600;
+  }
+}
+.tk {
+  display: grid;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--ts-accent);
+  color: var(--ds-on-color);
+}
+.ssep {
+  display: grid;
+  place-items: center;
+  color: var(--ts-violet-line);
+}
+
+// ---- เนื้อหาของขั้น + ข้อความอธิบาย --------------------------------------------------
+.work {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+.note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin: 0;
+  padding: 10px 14px;
+  border: 1px solid var(--ts-border);
+  border-radius: 8px;
+  background: var(--ts-surface-2);
+  color: var(--ts-text);
+  font-size: var(--ts-fs-small);
+
+  &.warn {
+    border-color: var(--ts-amber);
+    background: var(--ts-amber-soft);
+    color: var(--ts-amber-ink);
+  }
+  &.err {
+    border-color: var(--ts-danger);
+    background: var(--ts-pink-soft);
+    color: var(--ts-pink-ink);
+  }
+}
+.empty {
+  padding: 34px 16px;
+  color: var(--ts-muted);
+  text-align: center;
+}
+
+@media (max-width: 760px) {
+  .ph-r {
+    flex-wrap: wrap;
+    margin-left: 0;
+  }
+  .ent {
+    width: 100%;
+  }
+}

@@ -1,0 +1,120 @@
+/* The look of the form it replaces (prospect-form.scss: base 13px, labels 13/500, values 14/400 line-height 20, section titles 16/600,
+   tabs 14, buttons 40px high) — sizes in px + --ts-fs-adj (the A A A buttons), colours from the --ts-* tokens. */
+:host {
+  display: block;
+  --pd-soft: color-mix(in srgb, var(--ts-text-muted) 9%, var(--ts-surface));
+  font-family: var(--ts-font);
+  font-size: calc(13px + var(--ts-fs-adj, 0px));
+  line-height: normal;
+  color: var(--ts-text);
+}
+
+.pd-state, .pd-empty { margin: 48px 0; text-align: center; color: var(--ts-text-muted); }
+
+/* the page stretches down to the footer; the header stays, the white card under it fills what is left */
+.pd-page { display: flex; flex-direction: column; gap: 12px; height: calc(100vh - 90px); min-height: 420px; }
+.pd-head { flex: 0 0 auto; display: flex; align-items: flex-start; gap: 16px; padding: 16px; flex-wrap: wrap;
+  background: var(--ts-surface); border: 1px solid var(--ts-border); border-radius: 8px; }
+.pd-body { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; overflow: hidden;
+  background: var(--ts-surface); border: 1px solid var(--ts-border); border-radius: 8px; }
+.pd-scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+
+/* header */
+.pd-back { background: none; border: 0; color: var(--ts-text); cursor: pointer; padding: 8px; align-self: center; font-size: calc(16px + var(--ts-fs-adj, 0px)); }
+.pd-avatar { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; flex: none; }
+.pd-head-main { flex: 1 1 360px; min-width: 0; }
+.pd-title { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.pd-title h1 { margin: 0; color: var(--ts-text-header); font-size: calc(18px + var(--ts-fs-adj, 0px)); font-weight: 600; line-height: 120%; letter-spacing: .08px; }
+.pd-meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px 24px; margin-top: 12px; }
+.pd-meta .pd-field { display: flex; flex-direction: column; gap: 6px; }
+.pd-meta b { font-size: calc(14px + var(--ts-fs-adj, 0px)); font-weight: 600; line-height: 20px; color: var(--ts-text); }
+.pd-actions { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+
+.pd-status { display: inline-flex; align-items: center; gap: 8px; padding: 2px 12px; border-radius: 999px; font-size: calc(12px + var(--ts-fs-adj, 0px)); line-height: 18px; background: var(--ts-line-soft); color: var(--ts-text-secondary); }
+.pd-status::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex: none; }
+.pd-status[data-status='release'] { background: var(--ts-accent-soft); color: #00a276; }
+.pd-status[data-status='block'] { color: var(--ts-danger); }
+.pd-chip { display: inline-block; padding: 2px 10px; border-radius: 999px; background: var(--ts-line-soft); color: var(--ts-text-muted); font-size: calc(12px + var(--ts-fs-adj, 0px)); line-height: 18px; }
+.pd-chip--on { background: var(--ts-accent-soft); color: #00a276; }
+.pd-chip .fas { margin-right: 4px; }
+
+/* buttons: #form .btn-master-save-lead (40px, radius 8, 14/500); create = green */
+.pd-btn, .pd-icon-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 40px; padding: 0 24px; cursor: pointer;
+  border: 1px solid var(--ts-border); border-radius: 8px; background: var(--ts-surface); color: var(--ts-text);
+  font: inherit; font-size: calc(14px + var(--ts-fs-adj, 0px)); font-weight: 500;
+  &:hover:not(:disabled) { background: var(--ts-surface-hover); }
+  &:disabled { opacity: .5; cursor: not-allowed; }
+}
+.pd-icon-btn { padding: 0; width: 40px; }
+.pd-btn--primary { background: #00c08b; border-color: #00c08b; color: #fff; &:hover:not(:disabled) { background: #00c08b; opacity: .9; } }
+
+.pd-menu-wrap { position: relative; }
+.pd-menu {
+  position: absolute; right: 0; top: 46px; min-width: 190px; z-index: var(--ts-z-dropdown);
+  display: flex; flex-direction: column; padding: 6px; background: var(--ts-surface); border-radius: 8px; box-shadow: var(--ts-shadow-menu);
+  button { display: flex; align-items: center; gap: 10px; padding: 8px 10px; background: none; border: 0; border-radius: var(--ts-radius-sm); color: var(--ts-text);
+    font: inherit; font-size: calc(14px + var(--ts-fs-adj, 0px)); text-align: left; cursor: pointer;
+    &:hover:not(:disabled) { background: var(--ts-surface-hover); } &:disabled { opacity: .5; cursor: not-allowed; } }
+  .pd-danger:not(:disabled) { color: var(--ts-danger); }
+}
+
+/* tab bar: .contract-tabbar (grey strip, 14px tabs; the open tab is white with the corners of the card and bold — no underline on any tab) */
+.pd-tabs { flex: 0 0 auto; display: flex; gap: 4px; padding: 0 12px; background: var(--pd-soft); flex-wrap: wrap;
+  button { padding: 10px 16px; background: transparent; border: 0; border-radius: 0; color: var(--ts-text-secondary);
+    font: inherit; font-size: calc(14px + var(--ts-fs-adj, 0px)); font-weight: 500; line-height: 20px; white-space: nowrap; cursor: pointer;
+    &:hover { color: var(--ts-tab-label-active); }
+    &.is-active { background: var(--ts-surface); color: var(--ts-tab-label-active); font-weight: 700; border-radius: 8px 8px 0 0; } } }
+
+/* accordion: #form .panel-text-toggle + .togglepanel-container — bordered card (radius 8, 10px below), white header 13px 18px,
+   open = tinted header (the form's #F4F5F9), hover grey, title 16/600, chevron 13px */
+.pd-card { flex: none; border: 1px solid var(--ts-border); border-radius: 8px; margin-bottom: 10px; background: var(--ts-surface); overflow: hidden; }
+.pd-card-head, .pd-card-title { display: flex; width: 100%; justify-content: space-between; align-items: center; gap: 12px; padding: 13px 18px; border: 0; border-radius: 8px 8px 0 0;
+  background: var(--ts-surface); color: var(--ts-text); font: inherit; font-size: calc(16px + var(--ts-fs-adj, 0px)); font-weight: 600; line-height: 120%; letter-spacing: .08px; text-align: left; }
+.pd-card-head { cursor: pointer; &:hover { background: var(--ts-surface-hover); } &[aria-expanded='true'] { background: var(--pd-soft); } .pi { color: var(--ts-text); font-size: calc(13px + var(--ts-fs-adj, 0px)); } }
+.pd-card-title { background: var(--pd-soft); }
+
+/* body of a section: .master-data-container (16px 18px 18px, gap 16px 24px); the first one is the 24px 32px / 20px grid of the form */
+.pd-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px 24px; padding: 16px 18px 18px; }
+.pd-grid--lead { gap: 20px 32px; padding: 24px 32px; }
+.pd-field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.pd-field--wide { grid-column: 1 / -1; }
+/* the labels of the header and of the tabs' content are grey (#7C848D, no token for it); the values keep the text colour */
+.pd-label { color: var(--ts-text); font-size: calc(13px + var(--ts-fs-adj, 0px)); font-weight: 500; }
+.pd-scroll .pd-label, .pd-meta .pd-label { color: #7c848d; }
+.pd-value { color: var(--ts-text); font-size: calc(14px + var(--ts-fs-adj, 0px)); font-weight: 400; line-height: 20px; overflow-wrap: break-word; word-break: break-word; }
+
+/* address: a small badge, then the six fields (address · province · country / district · sub-district · postcode) */
+.pd-addr { padding: 16px 18px 0; &:last-child { padding-bottom: 18px; } }
+.pd-badge { display: inline-block; padding: 2px 10px; border-radius: var(--ts-radius-sm); background: var(--pd-soft); color: var(--ts-text); font-size: calc(13px + var(--ts-fs-adj, 0px)); font-weight: 500; line-height: 20px; }
+.pd-grid--flush { padding: 12px 0 0; }
+
+/* social channels: .ctd-social-* / .ctd-soc-* */
+.pd-social { padding: 0 18px 18px;
+  h3 { margin: 8px 0 0; font-size: calc(16px + var(--ts-fs-adj, 0px)); line-height: 24px; font-weight: 700; color: var(--ts-text-header); } }
+.pd-hint { margin: 2px 0 12px; color: var(--ts-text-muted); font-size: calc(13px + var(--ts-fs-adj, 0px)); line-height: 20px; }
+.pd-social-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.pd-social-card { background: var(--pd-soft); border-radius: 16px; padding: 14px 20px 18px; min-width: 0; }
+.pd-social-head { display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+  b { font-size: calc(15px + var(--ts-fs-adj, 0px)); font-weight: 700; color: var(--ts-text-header); } }
+.pd-soc-ic { font-size: calc(18px + var(--ts-fs-adj, 0px)); line-height: 1; display: inline-flex; width: 20px; justify-content: center; }
+.pd-soc-line { color: #06c755; } .pd-soc-facebook { color: #1877f2; } .pd-soc-x { color: var(--ts-text); } .pd-soc-instagram { color: #e4405f; }
+.pd-social-body { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 16px;
+  .pd-field { gap: 6px; } b { font-size: calc(14px + var(--ts-fs-adj, 0px)); font-weight: 400; line-height: 20px; } }
+
+/* extra-info tab: the form's own pane (./extra, global ld2 styles) and the update button under it */
+.pd-extra { flex: none; &[hidden] { display: none; } }
+
+/* documents tab: the form's own pane (./docs) */
+.pd-docs-tab { flex: none; &[hidden] { display: none; } }
+
+@media (max-width: 1023px) { .pd-social-grid { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 900px) { .pd-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) {
+  .pd-grid, .pd-social-body { grid-template-columns: 1fr; }
+  .pd-actions { margin-left: 0; }
+}
+.pd-owner-bar {
+  display: block;
+  margin: 0 0 12px;
+}

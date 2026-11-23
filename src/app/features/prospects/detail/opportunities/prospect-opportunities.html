@@ -1,0 +1,88 @@
+<section class="po">
+  <!-- two blocks: the title with the filter pills on the left, the summary on the right -->
+  <header class="po-head">
+    <div class="po-head-left">
+      <h2>{{ t('app.prospects.detail.tabOpps') }}</h2>
+      <div class="po-pills" role="group">
+        @for (c of counts(); track c.key) {
+          <button type="button" class="po-pill" [class.is-active]="filter() === c.key" [attr.aria-pressed]="filter() === c.key" (click)="filter.set(c.key)">
+            {{ t('app.prospects.detail.opp.' + c.key) }} ({{ c.count }})
+          </button>
+        }
+      </div>
+    </div>
+    <div class="po-stats">
+      <div class="po-stat">
+        <span class="po-stat-label">{{ t('app.prospects.detail.opp.wonTotal') }}</span>
+        <b class="po-stat-value">{{ won().count }}</b>
+      </div>
+      <div class="po-stat">
+        <span class="po-stat-label">{{ t('app.prospects.detail.opp.totalValue') }}</span>
+        <b class="po-stat-value po-stat-value--money" [style.color]="wonColor">{{ money(won().amount) }} <small>THB</small></b>
+      </div>
+    </div>
+  </header>
+
+  @if (shown().length === 0) {
+    <p class="po-empty">{{ t('app.prospects.detail.noOpps') }}</p>
+  } @else {
+    <div class="po-grid">
+      @for (o of shown(); track o.id) {
+        <article class="po-card">
+          <div class="po-card-head">
+            <div class="po-card-top">
+              <span class="po-badge" [style.background]="badgeColor(o)">{{ o.status }}</span>
+              <button type="button" class="po-go" (click)="open.emit(o.id)">{{ t('app.prospects.detail.opp.goTo') }} <i class="pi pi-arrow-right"></i></button>
+            </div>
+            <div class="po-stage">
+              <span class="po-dot" [style.background]="stageColor(o)"></span>
+              <b>{{ o.stageName }}</b>
+              <span class="po-step">{{ o.stepName }}</span>
+            </div>
+          </div>
+
+          <div class="po-card-body">
+            <div class="po-customer">
+              <img class="po-avatar" [src]="avatar(o.customerAvatar)" alt="" />
+              <div class="po-customer-main">
+                <b class="po-name">{{ o.customerName }}</b>
+                <b class="po-amount">{{ money(o.amount) }} THB</b>
+              </div>
+              @if (o.dueMonth) {
+                <span class="po-due"><i class="pi pi-clock"></i>{{ due(o) }}</span>
+              }
+            </div>
+
+            <div class="po-people">
+              <span class="po-team"><i class="pi pi-users"></i>{{ o.team }}</span>
+              <span class="po-owner"><i class="pi pi-user"></i>{{ o.owner }}</span>
+              <span class="po-stack">
+                @for (p of o.participants; track $index) {
+                  <img class="po-avatar po-avatar--sm" [src]="avatar(p.avatar)" [attr.title]="p.name" alt="" />
+                }
+                @if (more(o) > 0) {
+                  <span class="po-more">{{ more(o) }}+</span>
+                }
+              </span>
+            </div>
+          </div>
+
+          <div class="po-card-foot">
+            <div class="po-row">
+              <span class="po-row-item"><i class="pi pi-tag"></i>{{ o.code }}</span>
+              <span class="po-row-item"><i class="pi pi-clock"></i>{{ t('app.prospects.detail.opp.lastSaved') }} {{ savedDate(o.lastSavedAt) }}</span>
+            </div>
+            <div class="po-need"><i class="pi pi-align-left"></i><span [attr.title]="o.need">{{ o.need }}</span></div>
+            @if (o.tags.length) {
+              <div class="po-tags">
+                @for (tag of o.tags; track tag) {
+                  <span class="po-tag">{{ tag }}</span>
+                }
+              </div>
+            }
+          </div>
+        </article>
+      }
+    </div>
+  }
+</section>

@@ -1,0 +1,79 @@
+# The Datasource + Storage of the mockup as a service all developers share (each one runs the app on their own machine).
+#
+#   1) .env.mockup-server (git-ignored) must hold:   MOCKUP_TOKEN=<a long random secret>
+#                                                    MOCKUP_DATA_DIR=D:/mockup-data   (optional; default ./.mockup-data)
+#      The server refuses to start without MOCKUP_TOKEN — it listens on the network.
+#   2) docker compose -f docker-compose.mockup-server.yml --env-file .env.mockup-server up -d --build
+#   3) the gateway (nginx-gateway) puts https in front of it: location /mockup-api/ /mockup-idp/ /mockup-tps/ -> http://<this host>:8101
+#      (see MOCKUP.md "Datasource + Storage ที่ใช้ร่วมกัน"); each developer then sets MOCKUP_REMOTE_URL + MOCKUP_TOKEN in .env.mockup.local
+#
+# The data is two plain folders on the host (<MOCKUP_DATA_DIR>/Datasource, /Storage) and NOWHERE ELSE (the project and the image keep no copy): readable and editable by hand — back them up there.
+name: triple_sales_mockup
+services:
+  mockup-data:
+    build:
+      context: .
+      dockerfile: docker/mockup-server/Dockerfile
+    image: triple-sales-mockup-data:develop-v3
+    container_name: triple-sales-mockup-data
+    restart: unless-stopped
+    environment:
+      MOCKUP_TOKEN: ${MOCKUP_TOKEN:?set MOCKUP_TOKEN in .env.mockup-server}
+      # [21/11/2026] the IdP only redirects back to localhost unless the origin is listed here (the public door of the web app: 52336; it was 52337 until that port went back to triple-sales-web)
+      MOCKUP_IDP_REDIRECT_ORIGINS: ${MOCKUP_IDP_REDIRECT_ORIGINS:-https://acedemo.acecloud.co.th:52336}
+    ports:
+      # all interfaces: the gateway reaches the host by its LAN address (like the other services); the token is what protects it
+      - "${MOCKUP_PUBLISH_PORT:-8101}:4310"
+    volumes:
+      - ${MOCKUP_DATA_DIR:-./.mockup-data}/Datasource:/data/Datasource
+      - ${MOCKUP_DATA_DIR:-./.mockup-data}/Storage:/data/Storage
+
+  # [21/11/2026] the web app itself (Angular, configuration mockup-tenant) for users outside: https://acedemo.acecloud.co.th:52336/login (vhost of nginx-gateway -> host :8102)
+  # Published on :8102 for nginx-gateway (vhost acedemo:52336). Token stays in this container (nginx adds x-mockup-token).
+  mockup-web:
+    build:
+      context: .
+      dockerfile: docker/mockup-web/Dockerfile
+    image: triple-sales-mockup-web:develop-v3
+    container_name: triple-sales-mockup-web
+    restart: unless-stopped
+    depends_on:
+      - mockup-data
+    ports:
+      # [21/11/2026] nginx-gateway (vhost acedemo:52336) reaches the web app by the host address, like the other sites
+      - "${MOCKUP_WEB_HOST_PORT:-8102}:80"
+    environment:
+      MOCKUP_TOKEN: ${MOCKUP_TOKEN:?set MOCKUP_TOKEN in .env.mockup-server}
+      MOCKUP_WORKSPACE: ${MOCKUP_WEB_WORKSPACE:-}
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # [20/11/2026] the https door of its own: https://acedemo.acecloud.co.th:7339/mockup-api  (see docker/mockup-server/gateway.conf)
+  # Separate from nginx-gateway (the other sites): own container, own port, same wildcard certificate (read-only).
+  mockup-gateway:
+    image: nginx:1.27-alpine
+    container_name: triple-sales-mockup-gateway
+    restart: unless-stopped
+    depends_on:
+      - mockup-data
+      - mockup-web
+    ports:
+      - "${MOCKUP_GATEWAY_PORT:-7339}:7339"
+    volumes:
+      - ./docker/mockup-server/gateway.conf:/etc/nginx/nginx.conf:ro
+      # the *.acecloud.co.th certificate of the gateway machine (star_acecloud_co_th.crt / .key)
+      - ${MOCKUP_CERT_DIR:-D:/nginx/cert}:/etc/nginx/cert:ro
+
+# [20/11/2026] pin the subnet of this project's network.
+# Without it Docker picked 192.168.16.0/20 from its default pool (172.17-31 were all used),
+# which covers the office LAN 192.168.24.x: every container (nginx-gateway too) lost its route
+# to 192.168.24.233 and ALL sites behind acedemo.acecloud.co.th timed out from 11:33.
+# Keep it outside 192.168.x / 172.16-31.x. 10.88.16.0/24 is unused here (checked docker + Windows routes).
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 10.88.16.0/24

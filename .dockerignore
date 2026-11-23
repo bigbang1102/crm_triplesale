@@ -1,0 +1,10 @@
+node_modules
+dist
+.angular
+.git
+.compare
+.vscode
+npm-debug.log
+.env.mockup.local
+.env.mockup-server
+.mockup-data

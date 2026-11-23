@@ -1,0 +1,158 @@
+@if (store.wsCfg(); as w) {
+  <div class="ph">
+    <div>
+      <h1>Sales Target<ts-forecast-tip k="pg_target" /></h1>
+      <p>{{ t('app.forecast.target.sub', store.year(store.wsYear())) }}</p>
+    </div>
+  </div>
+
+  @if (w.status === 'draft') {
+    <div class="note">{{ t('app.forecast.target.draftNote') }}</div>
+  }
+  @if (w.status === 'block') {
+    <div class="lockban">⛔ {{ t('app.forecast.ban.block', w.code) }}</div>
+  }
+
+  <!-- 1. เลือก Pipeline -->
+  <div class="card">
+    <div class="card-b pick">
+      <div class="fld pick-f">
+        <span>{{ t('app.forecast.target.pickPipe') }}<ts-forecast-tip k="tg_pipe" /></span>
+        <select class="sel" data-ods-nosearch="1" [attr.aria-label]="t('app.forecast.target.pickPipe')" [tsFcValue]="store.tgPipe()" (tsFcChange)="store.setTgPipe($event)">
+          @for (p of store.pipelines(); track p.id) {
+            <option [value]="p.id">{{ p.name }}{{ months().length ? t('app.forecast.target.filled', store.pipeFilledCount(p.id)) : '' }}</option>
+          }
+        </select>
+      </div>
+      <span class="sub">{{ t('app.forecast.target.steps') }}</span>
+    </div>
+  </div>
+
+  <!-- 2. เลือกเดือน -->
+  <div class="card">
+    <div class="card-h">
+      <h3 class="mp-h">
+        {{ t('app.forecast.fiscalYear') }}<ts-forecast-tip k="tg_year" />
+        <span class="fc-sel">
+          <select class="sel sm" data-ods-nosearch="1" [attr.aria-label]="t('app.forecast.target.pickYear')" [tsFcValue]="store.cfgId() ?? ''" (tsFcChange)="store.switchCfg($event, 'target')">
+            @if (!store.cfgId()) {
+              <option value="">{{ t('app.forecast.target.newYear', store.year(w.year), w.code) }}</option>
+            }
+            @for (c of yearList(); track c.id) {
+              <option [value]="c.id">{{ store.year(c.year) }} · {{ c.code }} ({{ STATUS_LABEL[c.status] }})</option>
+            }
+          </select>
+        </span>
+        <span class="mp-pick">{{ t('app.forecast.target.pickMonths') }}<ts-forecast-tip k="tg_pick" /></span>
+      </h3>
+      <span class="grow"></span>
+      <button type="button" class="btn btn-g btn-s" (click)="store.targetWholeYear()">{{ t('app.forecast.target.wholeYear') }}</button>
+      <button type="button" class="btn btn-g btn-s" (click)="store.targetClear()">{{ t('app.forecast.target.clear') }}</button>
+    </div>
+    <div class="card-b col">
+      <div class="qgrid">
+        @for (q of quarters; track q) {
+          <div class="q">
+            <button type="button" [class.on]="quarterOn(q)" (click)="store.toggleQuarter(q)">Q{{ q }}</button>
+            <div class="ms">
+              @for (m of store.quarterMonths(q); track m) {
+                <button type="button" [class.on]="store.targetMonths().includes(m)" (click)="store.toggleMonth(m)">
+                  {{ mShort(m) }}
+                  @if (!store.periodOpen(m)) {
+                    <span class="lk">🔒</span>
+                  }
+                </button>
+              }
+            </div>
+          </div>
+        }
+      </div>
+      <div class="selsum">
+        <span class="lab">{{ t('app.forecast.target.selected', store.targetMonths().length) }}<ts-forecast-tip k="tg_sel" /></span>
+        @for (m of store.targetMonths(); track m) {
+          <span class="chip">{{ store.mName(m) }}<button type="button" [attr.aria-label]="t('app.forecast.target.remove')" (click)="store.toggleMonth(m)">×</button></span>
+        } @empty {
+          <span class="sub">{{ t('app.forecast.target.none') }}</span>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. กรอก Target -->
+  @if (!months().length) {
+    <div class="empty">{{ t('app.forecast.target.pickOne') }}</div>
+  } @else {
+    <div class="card">
+      <div class="card-h">
+        <h3>{{ t('app.forecast.target.tableTitle', store.pipeName(store.tgPipe())) }}<ts-forecast-tip k="tg_td" /></h3>
+      </div>
+      <div class="card-b">
+        <div class="tw">
+          <table>
+            <thead>
+              <tr>
+                <th>{{ t('app.forecast.col.teamEmp') }}</th>
+                @for (m of months(); track m) {
+                  <th class="n">{{ store.mName(m) }}{{ store.periodOpen(m) ? '' : ' 🔒' }}</th>
+                }
+                <th class="n">{{ t('app.forecast.col.sum') }}<ts-forecast-tip k="tg_sum" /></th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (team of store.teams(); track team.id) {
+                <tr class="grp">
+                  <td>{{ team.name }} · {{ t('app.forecast.target.team') }}<ts-forecast-tip k="tg_team" /></td>
+                  @for (m of months(); track m) {
+                    <td class="n">
+                      <input
+                        class="mini num"
+                        type="number"
+                        step="1000"
+                        [attr.aria-label]="t('app.forecast.target.team') + ' ' + team.name + ' ' + store.mName(m)"
+                        [attr.data-chg]="store.ttChanged(store.tgKey(m, team.id)) ? '1' : null"
+                        [tsFcVal]="store.ttVal(store.tgKey(m, team.id))"
+                        [placeholder]="B(teamSum(team.id, m))"
+                        [disabled]="!can() || !store.periodOpen(m)"
+                        (change)="store.setTeamTarget(store.tgKey(m, team.id), $any($event.target).value)"
+                      />
+                      @if (teamGap(team.id, m); as g) {
+                        <div class="delta" [class]="g.over ? 'up' : 'down'">{{ t(g.over ? 'app.forecast.target.over' : 'app.forecast.target.short', B(g.sum), B(g.diff)) }}</div>
+                      }
+                    </td>
+                  }
+                  <td class="n">{{ B(teamTotal(team.id)) }}</td>
+                </tr>
+                @for (e of team.employees; track e.id) {
+                  <tr>
+                    <td class="indent">{{ e.name }}</td>
+                    @for (m of months(); track m) {
+                      <td class="n">
+                        <input
+                          class="mini num"
+                          type="number"
+                          min="0"
+                          step="1000"
+                          placeholder="—"
+                          [attr.aria-label]="'Target ' + e.name + ' ' + store.mName(m)"
+                          [attr.data-chg]="store.tgChanged(store.tgKey(m, e.id)) ? '1' : null"
+                          [tsFcVal]="store.tgRaw(store.tgKey(m, e.id))"
+                          [disabled]="!can() || !store.periodOpen(m)"
+                          (change)="store.setTarget(store.tgKey(m, e.id), $any($event.target).value)"
+                        />
+                      </td>
+                    }
+                    <td class="n"><b>{{ B(empTotal(e.id)) }}</b></td>
+                  </tr>
+                }
+              }
+            </tbody>
+          </table>
+        </div>
+        <div class="sub foot">{{ t('app.forecast.target.empCell') }}<ts-forecast-tip k="tg_emp" /></div>
+      </div>
+    </div>
+    @if (!can()) {
+      <div class="right"><span class="chip c-grey">{{ t('app.forecast.readonly') }}</span></div>
+    }
+  }
+}

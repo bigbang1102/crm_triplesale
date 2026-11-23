@@ -1,0 +1,99 @@
+# INTEGRATION — home (หน้าแรก "CRM Dashboard", route `/crm/home`) + work modal (page=dashboard)
+
+> **อัปเดต 2026-10-21 — เฟส B (live adapter) ของหน้านี้ทำแล้ว: ดู `docs/integration/home-live.md`.** ข้อความ "ยังไม่มี live adapter / `<ts-live-missing />` / เหลือ REST" ในไฟล์นี้เป็นสถานะของเฟส A (ตารางที่ต้องพอร์ตด้านล่างยังใช้เป็นแผนที่ของ servlet ได้)
+
+workspace: `triple_sale_angular_ws_home` · ขอบเขต: เฟส A (mock) — ไม่มี live adapter · เขียนโดย worker ของหน้า `home`
+
+## 0. การแก้ไฟล์ shared / lib ใน workspace นี้ (ผู้ประสานงานต้อง merge เอง)
+
+**ไม่มีการแก้ `tools/lib/**` หรือ `tools/compare/lib/**`** (generator ใช้ `adaptation()` / `engineScaffold()` / `workModalPieces()` ตามเดิม; กฎ global ที่หน้านี้ต้องการเพิ่ม — `a { text-decoration:none }` ของ layout-modify.css + สี link ของ browser + ขนาด/สีตัวอักษรของ `<body>` สำหรับ dialog ที่ย้ายตัวเองไป `<body>` — อยู่ใน `tools/sync-home.mjs` เอง ดู §4).
+
+| ไฟล์ | เปลี่ยนอะไร / ทำไม |
+| --- | --- |
+| `src/app/app.routes.ts` | `IMPLEMENTED` เพิ่ม `home: { load: () => import('@features/home/home').then((m) => m.Home) }` |
+| `src/app/core/navigation/page-registry.json` | `home` → `"implemented": true` (เทสต์ตรวจให้ตรงกับ routes) |
+| `src/app/core/navigation/java-links.ts` | (ไฟล์ใน workspace = ฉบับล่าสุดของ main หลัง `workspace refresh` + ส่วนที่เพิ่ม) เพิ่มกฎ `market_plan: (q) => '/market-plan' + query(q)` (ลิงก์ในการ์ด "แผนเดินตลาด" ที่ซ่อนอยู่ — `market_plan.face?pid=1&page_id=5&act=12`; generator หยุดถ้าลิงก์ไม่มี route) — กฎอื่นที่หน้านี้ใช้ (`schedule`, `lead_detail`, `contracts_master_data`, `index`) มีครบแล้ว |
+| `src/app/core/navigation/java-links.spec.ts` | เพิ่ม `it('CRM home (index.xhtml): …')` ครอบกฎ `market_plan` และลิงก์ที่หน้านี้ใช้ |
+| `package.json` | script `"home:sync": "node tools/sync-home.mjs"` (ใน workspace **ไม่ได้แก้** — รันด้วย `node tools/sync-home.mjs`) |
+| `CLAUDE.md` | เพิ่ม bullet: "**หน้า CRM home เป็นไฟล์ที่ถูกสร้างเช่นกัน** (`features/home/home.{html,scss,engine.ts}` จาก `pages/index.xhtml` + `resources/js/dashboard.js` + `components/work_modal.xhtml` (ชิ้นส่วนของ modal จาก `tools/lib/work-modal.mjs`)) — ห้ามแก้ด้วยมือ: แก้ `tools/sync-home.mjs` แล้วรัน `npm run home:sync`; ส่วนที่เขียนเองคือ host `home.ts` + `home-view.ts`, สัญญา `home-backend.ts` และ mock `home.mock.ts`" และเติม `npm run home:sync` ในบรรทัดคำสั่ง |
+| `README.md` | แถวของตาราง: CRM home · `/crm/home` · พอร์ตแล้ว (mock) · ผ่าน harness `node tools/compare/run.mjs home` |
+| `manual/index.html` | หัวข้อใหม่จากชิ้นส่วน `manual-home.html` (ที่ราก workspace) |
+| `public/assets/…` | **ไฟล์ใหม่ล้วน (merge ได้เลย)**: `images/icon/{fi_calendar2,fi_folder,fi_time_arrow_right}.svg`, `images/background/no_data_table.png` (byte-identical กับ `web/images/…`, เลย์เอาต์เดียวกัน). ไฟล์อื่นที่หน้านี้ใช้ (`java-js/step_group_color.js`, `images/icon/{default_avatar,fi_phone,Calendar,external-link,…}.svg`, ไอคอนของ work modal) มีใน main อยู่แล้ว — generator คัดลอกซ้ำแบบ byte-identical (ไม่มีความต่าง) |
+
+i18n: **ไม่มี key `app.*` ใหม่** — ทุกข้อความมาจาก key เดิมของ Java (th.json/en.json มีครบ; replica ของ harness โยน error ถ้า key หาย). ข้อความที่ Java ฝังเป็นภาษาไทยตายตัวใน markup/สคริปต์ (คงตามต้นฉบับ — Java ก็ไม่แปล): `สิงหาคม 2024` (ค่าตั้งต้นของ `#tsCalLabel` ก่อนสคริปต์ทำงาน), `รอเช็คเอาท์` (การ์ดแผนเดินตลาดที่ซ่อนอยู่), ข้อความ fallback ของ `dashboard.js` (ใช้เมื่อ `TS_I18N` ไม่มี key — ไม่เกิดขึ้นเพราะ generator สร้าง bridge ครบ 33 key + 12 เดือน), `'ข้อความแจ้งเตือน!'` / `'บันทึกไม่สำเร็จ!'` ของ work modal.
+
+## 1. ไฟล์ที่เพิ่ม (เฉพาะของหน้านี้ — `workspace merge --apply` ได้)
+
+```
+tools/sync-home.mjs                             generator (+ tools/lib/work-modal.mjs, port-script.mjs, port-kit.mjs — ใช้ตามเดิม)
+tools/compare/pages/home/{page,scenarios}.mjs
+src/app/features/home/
+  home.html · home.scss · home.engine.ts        GENERATED
+  home.ts · home-view.ts                        route + host
+  home-backend.ts                               สัญญา: HomeBackend (BFF) + ตาราง URL → servlet → REST + รูปคำตอบ (DashboardSummary, ScheduleItem)
+  home.mock.ts                                  mock (seed เดียว: crm-seed) — servlet layer + ข้อมูล
+  home.mock.spec.ts · home.spec.ts
+manual-home.html · INTEGRATION.md
+public/assets/images/{icon,background}/…       (4 ไฟล์ใหม่ — §0)
+```
+
+## 2. สถาปัตยกรรม (ย่อ)
+
+- **ต้นฉบับ → generator → engine**: `sync-home.mjs` อ่าน `index.xhtml` (head `<style>`, markup, `<style>` ท้าย markup, dialog มอบหมายงาน, สคริปต์ inline 3 ตัว) + `dashboard.js` (151 KB, 1,831 บรรทัด) + `work_modal.xhtml` (ผ่าน `workModalPieces({ page: 'dashboard' })`) แล้วสร้าง `home.html` / `home.scss` / `home.engine.ts` (`startHome(env)` คืน destroy). ลำดับสคริปต์ใน engine = ลำดับที่เอกสาร Java รัน (flag `window.LD2_*` → work modal → `window.TS_I18N` → `dashboard.js` → สคริปต์ toggle ของ dropdown ผลิตภัณฑ์) เพื่อให้ handler `DOMContentLoaded` ทำงานลำดับเดิม (modal ก่อน `init()`). swap ทุกจุดมีเหตุผลและหยุดเมื่อต้นฉบับเปลี่ยน; `undeclaredNames()` ตรวจ strict mode (ไม่มีชื่อที่ไม่ได้ประกาศ — `dashboard.js` เป็น `"use strict"` อยู่แล้ว).
+- **สิ่งที่ generator เปลี่ยนจากต้นฉบับ** (ทั้งหมดอยู่ที่ `sync-home.mjs`): `fetch(` → `env.fetch(`; `swal(` / `window.swal` → `env.swal`; `TS_PREF` (ui_pref.js) → `env.pref` (ฟังก์ชัน save/load ของผลิตภัณฑ์ที่จำไว้ — ตัดทางเลือก `localStorage` ตรงที่ไม่เคยถูกใช้ใน Java จริง); `../docproxy?url=…` → `env.docProxy(u)`; `../images/…` → `env.assetBase + 'images/…'`; `window.location.href = …` (4 จุด) → `env.navigate(…)` (host แปลงด้วย `javaLinkToRoute`); `setTimeout`/`requestAnimationFrame`/`document|window.addEventListener` → `tmo`/`raf`/`listen` (เก็บกวาดตอน destroy); `DOMContentLoaded` → `onReady`; `#{commonBean.msg[…]}` → `env.t(…)`; flag สิทธิ์/`ssEmployeeId` → `env.can(…)`/`env.myEmployeeId`; ลิงก์ในมาร์คอัป (`schedule.face?…`, `market_plan.face?…`) → route (`/crm/schedule`, `/market-plan`); `#crm_main_body_page{…}` และ `body{overflow-y:hidden}` ถูกจำกัดด้วย `:has(.ts-root)` (มีผลเฉพาะตอนอยู่หน้านี้ — stylesheet ของหน้า Java เป็นของหน้านั้นหน้าเดียว).
+- **host**: `home-view.ts` โหลด `step_group_color.js`, ให้ `window.TsPhone` (ของ shell), สร้าง `env`, เริ่ม/หยุด engine; ภาษาเปลี่ยน/บันทึกใน work modal = view ใหม่ (เหมือน `location.reload()`); `mock:false` → `<ts-live-missing />`. ไอคอน external-link ข้างหัวข้อ "นัดลูกค้า"/"ตารางงาน" (anchor ในมาร์คอัป) นำทางด้วย router (listener ระยะ capture บน host — anchor เรียก `event.stopPropagation()` ใน inline handler เอง จึงดัก bubbling ไม่ได้; modifier key / ลิงก์ที่มี `id` ไม่ถูกดัก). dialog "มอบหมายงาน" ย้ายตัวเองไป `<body>` (โค้ดเดิมของ Java) — engine ลบมันออกตอน destroy.
+- **สัญญา backend**: `HomeBackend.fetch(url, init)` = URL ของ BFF ที่หน้า Java เรียก (ตารางใน `home-backend.ts`); mock ทำ servlet layer (`handleHomeRequest`) บนข้อมูลชุดเดียว (`seedLead(n)` 240 ลีดแจก 3 ผลิตภัณฑ์ + ผลิตภัณฑ์ที่ไม่มีลีด): ตัวเลขสถิติ / โดนัท (นับตามขั้นตอนของลีดที่ยังเปิด) / แถวของตาราง (เฉพาะลีดสถานะ NEW) ออกมาจากชุดเดียวกัน — "New" บนการ์ด = จำนวนแถวที่ตารางโหลดจนจบ (เทสต์ตรวจ). นัดหมาย/งานสร้างต่อ "วัน" จาก hash ของเลขวัน (ทุกเดือนมีข้อมูล ไม่ผูกกับ "วันนี้" ของ mock) และผูกกับลีดของผลิตภัณฑ์ที่เลือก; รายการที่ work modal เพิ่ม/แก้ถูกรวมเข้าไป. mock รับ `AbortSignal` ของ fetch (หน้ายกเลิกคำขอของตัวกรองที่ถูกแทนที่ด้วย `AbortController` — ต้อง reject เป็น `AbortError` เหมือน browser), `/board/leads` ช้ากว่าตัวอื่น 120 ms (query หนักฝั่ง backend — ทำให้ลำดับ "รอบเร็ว/รอบช้า" ของหน้าแน่นอนทั้งสองฝั่ง harness).
+- **สวิตช์ของ mock** (sessionStorage `ts.mock.home.config` หรือ option `config`): `noProducts`, `failProducts`, `failSummary`, `failSchedules`, `failLeads`, `failLeadsOnce`, `emptySchedules`, `employeesEmpty`, `sparseNew` (ลีด NEW อยู่ท้ายรายการ → หน้าโหลดข้ามหน้า 5 หน้าแล้วโชว์ "โหลดเพิ่ม"), `assign500`, `delayMs`, `leadsExtraMs`. อินพุตพิเศษ: ค้นหาลูกค้าใน modal ที่มี `~500` = HTTP 500; หัวข้อนัดหมายที่มี `~fail` = backend ปฏิเสธ (400 + ข้อความ); มอบหมายให้พนักงาน E108 (ปรียา แสงทอง, id 1008) = backend ปฏิเสธ (400 "ต้องส่งต่อ…"); lead id หาร 17 ลงตัว (NEW) = มีผู้รับผิดชอบแต่ flag `unassigned` ค้าง true (quirk ที่ Java รู้จัก), หาร 19 ลงตัว = มี `employeeId` แต่ไม่มีชื่อ/รหัส (แสดง "-"), หาร 53 ลงตัว = โหลดรายละเอียดไม่ได้ (500, ใน work modal).
+
+## 3. สิ่งที่ live adapter (เฟสถัดไป) ต้องทำ — servlet / bean / service ของ Java ที่หน้านี้พึ่ง
+
+(รายละเอียด URL → servlet → REST อยู่ที่หัวไฟล์ `home-backend.ts`; ตารางนี้เน้น "ตรรกะที่ servlet ทำเองและต้องย้ายเป็น TS")
+
+| URL ที่หน้าเรียก | Java | REST ที่เรียก / ตรรกะที่ต้องย้าย | สถานะ |
+| --- | --- | --- | --- |
+| `GET ../dashboardapi?action=summary&page=1&perPage=100[&movementTypeId&startDate&endDate]` | `DashboardApiServlet` → `DashboardApiService.summaryJson` | `GET /dashboard` (param ว่างไม่ส่ง; envelope ส่งต่อตรง ๆ; ตอบที่ไม่ใช่ JSON → `{status:502,message:'backend ไม่ตอบหรือ response ไม่ใช่ JSON'}`). **ตรรกะของ servlet**: `enrichOpportunityImages` — item ที่ `attachFile` ว่างเติมรูปจาก `GET /prospects?page=1&pageSize=500` โดยจับคู่ `name` = `prospectName` (ตัวแรกที่มีรูป). exception → HTTP 500 `{"message":"internal error"}`; `action` อื่น → 400 `{"message":"unknown action"}` | เหลือ REST + enrich |
+| `GET ../dashboardapi?action=schedules&viewMode=list\|year\|day[&date\|dateFrom&dateTo][&movementTypeId]` | เดียวกัน → `schedulesJson` | `GET /dashboard/schedules` ส่งต่อตรง ๆ (`viewMode=year` ให้ `result.marks[]`; `day` ให้ `result.items[]` พร้อม `scheduleType`; `list` ให้ `result.list.{appointment,task}.items[]`) | เหลือ REST |
+| `GET ../board/movement-types` | `MovementTypesServlet` → `LeadBoardView.fetchMovementTypesJson` | `GET /master-data/movement-types/LD` → `result[]` (`id, code, name, usesWorkflowStep`); ภาษาอังกฤษ: `MasterDataI18n.translate(code, name)` เขียนทับ `name`; ล้ม → `[]` | เหลือ |
+| `GET ../board/leads?viewMode=list&activityGroupId=0&sortBy=txdate_desc&page&perPage=20[&movementTypeId&dateRangeType=custom&dateFrom&dateTo]` (+ `search`, `showClosed=false`, `employeeId` จากช่องค้นหาลูกค้าของ work modal) | `LeadsBoardServlet` → `LeadBoardView.fetchLeadsJson` | `GET /leads?viewMode=list&…` → คืน `result` (object: `statusSummary`, `wfStepSummary`, `leads{items, meta}`). **ตรรกะของ servlet**: ไม่มี role `CRM_Lead_View` → ตอบ `[]` ทันที (ไม่เรียก service); ล้ม/ไม่ใช่ JSON → `[]` (+HTTP 500 เมื่อ exception); `localizeLocationNames` (ภาษาอังกฤษ: ชื่อจังหวัด/เขต; ไทย: ชื่อประเทศ) — หน้านี้ไม่แสดงฟิลด์เหล่านี้ ข้ามได้ถ้าไม่ได้ทำหน้า Opportunities ก่อน. หน้านี้อ่านเฉพาะ `leads.items[]`/`leads.meta.{total,totalPages}`/`wfStepSummary[].{id,name}` | เหลือ REST + role check |
+| `GET ../board/master/activity-groups?movementTypeId=` | `MasterActivityGroupsServlet` | `GET /master-data/activity-groups?movementTypeId=` + `MasterDataI18n.translateEnvelopeResult` (ใช้หาตำแหน่งกลุ่มสำหรับสีแท็ก `StepGroupColor`) | เหลือ (ใช้ร่วมกับ Activities) |
+| `GET ../board/sale-groups` · `../board/sale-persons[?saleGroupId=]` · `../board/employees[?saleGroupId=]` | `SaleGroupsServlet` · `SalePersonsServlet` · `EmployeesServlet` → `LeadBoardView.fetchMasterArrayJson` | `GET /master-data/{sale-groups,sale-persons,employees}` → normalise ด้วย `MasterDataItemBean` เป็น `{id, code, name, nameTh, colorCode, attachFile, postCode[, employee{…}]}`; ล้ม → `[]`. หน้านี้มี fallback: ถ้า `employees` ว่าง ใช้ `employee` ที่ฝังใน sale-persons | เหลือ |
+| `POST ../board/lead-assign` `{leadId, saleGroupId?, salePersonId?, employeeId?}` | `AssignLeadServlet` | `PATCH /leads/assign` body ส่งต่อตรง ๆ, ตอบ envelope ของ service ตรง ๆ (หน้าอ่าน `status==200` หรือ `message=='success'`; ข้อความผิดพลาดจาก `error.message`); body ว่าง → 400 `{"error":"body required"}`; exception → 500 `{"error":"…"}`. หมายเหตุจาก Java: backend ตั้ง `employeeId` ได้เฉพาะตอนที่ lead ยังไม่มีผู้รับผิดชอบ และ flag `unassigned` ถูกปลดด้วย `salePersonId` เท่านั้น | เหลือ REST |
+| work modal: `POST ../board/schedule/add` · `PATCH ../board/schedule/edit` · `GET ../board/master/employees-by-activity-group` · `GET ../board/lead?id=&activityGroupId=` | `AddScheduleServlet` · `EditScheduleServlet` · `MasterEmployeesByActivityGroupServlet` · `LeadDetailServlet` | ดูตาราง §4 ของ `docs/integration/activities.md` (ชุดเดียวกัน; ตรรกะ rewrite ของ add/edit อยู่ใน `shared/work-modal/work-modal.mock.ts`) | เหลือ REST |
+| `GET ../board/chat-master-data?type=countries` (TsPhone: รหัสโทร + mask เบอร์) | `ChatMasterDataServlet` | master ประเทศ — `PhoneFormat` ของ shell (`core/dom/phone-format.service.ts`) | shell |
+| รูป `http://` ของ backend (`attachFile`, `prospectImage`, `prospectAvatar`) | `../docproxy?url=` = `DocProxyServlet` | กัน mixed-content บน https. ไม่มี BFF: `env.docProxy(url)` คืน URL ตรง — **live ต้องตัดสินใจ** (backend เสิร์ฟ https? หรือทำ proxy) | host (mock ไม่มีรูป `http://`) |
+| EL ของหน้า | `commonBean.hasFeature('CRM_Schedule_View' / 'CRM_Schedule_Create' / 'CRM_Schedule_Create_Sup')`, `commonBean.ssEmployeeId`, `request.contextPath`, `commonBean.msg[…]` | `PermissionService.has`, `AuthService.session().employeeId`, `I18n.t` | host ทำแล้ว |
+| `TS_PREF` (ui_pref.js) | — | key `ts_dash_selected_mt` / `_wf` / `_name` (ผลิตภัณฑ์ที่เลือกล่าสุด) เก็บใน `localStorage` (Java เก็บคู่กับ cookie `tsp_…` — ไม่ทำ cookie) | host ทำแล้ว |
+
+## 4. ความต่างจาก Java ที่ตั้งใจ (และเหตุผล)
+
+- รูป/ไอคอน: `../images/…`, `#{request.contextPath}/images/…` → `assets/images/…` (เลย์เอาต์ mirror, ไฟล์ byte-identical). harness map `../images/` ↔ `assets/images/` ใน `normalize`.
+- ลิงก์ข้ามหน้า: `window.location.href = 'lead_detail.face?…'` → `env.navigate(javaLink)` → `javaLinkToRoute` + router (`/crm/opportunities/:id?activityGroupId=`); anchor external-link → router (route `/crm/schedule`). harness แปลงลิงก์ฝั่ง Java ด้วยฟังก์ชันเดียวกันก่อนเทียบ (`baseNorm` ใน `compare/lib/diff.mjs`).
+- `location.reload()` ของ work modal (3 วินาทีหลังบันทึก) → `env.reload()` = host สร้างหน้าใหม่ (ไม่โหลดเพจ); ออกจากหน้าก่อน 3 วินาที = ยกเลิก (spec ตรวจ).
+- `TS_PREF`: localStorage อย่างเดียว (ไม่มี cookie สำรอง). `swal`: ไลบรารีตัวจริง (`@core/dom/swal`).
+- ปุ่ม A A A: `--fs-adj` → `--ts-fs-adj` (CSS, template และสตริง HTML ที่สคริปต์สร้าง); ธีมมืดบน `<html>`.
+- `body { overflow-y: hidden }`, `#crm_main_body_page { padding:0; background }` (+ธีมมืด) → `:has(.ts-root)`; `.layout-main .layout-content { padding:0 }` ไม่มีผล (ไม่มี element นี้ใน shell) — เหมือน Activities/Dashboard.
+- กฎ global ของ stack Java ที่เพิ่มใน scss ของหน้า (อ่านจากไฟล์จริงโดย generator): บล็อก "Angular adaptation" มาตรฐาน + (เฉพาะหน้านี้) `a { color: revert; text-decoration: none }` (layout-modify.css มี `a{text-decoration:none}`, ส่วน shell Angular ตั้ง `a{color:inherit}` — Java ใช้สี link ของ browser) และ `.ts-asg-overlay { font-size; color }` (dialog ที่ย้ายไป `<body>` ได้ขนาด/สีตัวอักษรของ `<body>` ของ Java เหมือนที่ host ได้). ขอบเขตของกฎ global/dark-port = `:where(ts-home-view, .ts-asg-overlay)`.
+- ภาษาอังกฤษ: ชื่อผลิตภัณฑ์/กลุ่ม/พนักงานที่ BFF แปลตามภาษา (`MasterDataI18n`) — mock ตอบชื่อไทยเสมอทั้งสองภาษา (ทั้งสองฝั่ง harness เหมือนกัน).
+- ปฏิทิน/ช่วงวันที่เริ่มต้นใช้ `new Date()` ของ browser (โค้ดเดิม) — mock จึงสร้างนัดหมาย/งานตาม "วัน" ที่ถูกขอ ไม่ผูกกับ `SEED_TODAY`; ลีดใช้วันที่สร้างจาก seed (ช่วง ~ก.ย. 2025 – ต.ค. 2026): ถ้าวันที่ของเครื่องเก่ากว่า 15/10/2026 ลีดบางรายจะอยู่นอกช่วงเริ่มต้น (ทั้งสองฝั่งเหมือนกัน).
+
+## 5. ความเสี่ยง / สิ่งที่ยังไม่ได้ทำ / ข้อควรรู้
+
+- ไม่มี live adapter (ตามขอบเขตเฟส A) — `mock:false` แสดง `<ts-live-missing />`.
+- harness เปรียบเทียบ attribute / ข้อความ / ตำแหน่ง / ขนาด / computed style ที่ dump ไว้ + checksum ของ `<canvas>` (โดนัท) + ค่าของ input/select/textarea + flag `LD2_*` + `TS_I18N` + `localStorage` ของผลิตภัณฑ์ + ลิงก์ที่นำทาง; **ไม่เทียบ**: hover/focus (tooltip ของ "+ อีก N ขั้นตอน" เปิดด้วย `:hover` — เทียบเนื้อหา/ตำแหน่งโดยบังคับ `display:block` ด้วยกฎเดียวกันทั้งสองฝั่ง), ไอคอน `mask-image`, `<img>` ที่โหลดไม่สำเร็จ, ช่วงระหว่างทาง (ลำดับของคำตอบ API มีความหน่วงเท่ากันทั้งสองฝั่ง).
+- เส้นทางที่ harness พิสูจน์ไม่ได้ (ทดสอบใน `home.spec.ts` แทน): `fetch` ล้มด้วย network error ตอนมอบหมายงาน (ข้อความ `backend_error`), `AbortError` ของคำขอที่ถูกยกเลิก (ใช้ใน scenario `*-quick-*` เพียงทางอ้อม), `proxyImg` กับ URL `http://`.
+- การรัน generator ใน Node 22 พิมพ์คำเตือน `MODULE_TYPELESS_PACKAGE_JSON` (จาก `port-kit.mjs` ที่ import `core/navigation/java-links.ts`) — ไม่เกี่ยวกับหน้านี้.
+- harness ใช้เวลาจริงของเครื่อง (`new Date()` ของหน้า) — ค่าที่ขึ้นกับ "วันนี้" ทั้งสองฝั่งเท่ากัน แต่ถ้ารันคร่อมเที่ยงคืนอาจมี scenario เดียวที่ต่างกัน (รันซ้ำเดี่ยว ๆ ก็ตรง).
+- คำถามถึงเจ้าของระบบ: (1) `stepSummary` ของ `/dashboard` นับลีดสถานะไหนบ้าง (mock นับลีดที่ยังเปิดอยู่ทั้งหมด); (2) `/board/leads?viewMode=list` ส่งลีด NEW มาในหน้าแรก ๆ มากน้อยแค่ไหน (หน้าเตรียมกลไก "โหลดข้าม 5 หน้า → ปุ่มโหลดเพิ่ม" ไว้ เพราะ NEW อาจกระจายห่าง) — ทำไมไม่ส่ง `leadStatus=new` เป็น filter ให้ backend; (3) รูป `http://` ของ backend ผ่าน `/docproxy` — แผนของ live คืออะไร; (4) การ์ด "แผนเดินตลาด" ซ่อนอยู่ (`display:none`, ไม่มี endpoint) — พอร์ตมาคงเดิม.
+
+## 6. ผลสุดท้าย (รันหลังโค้ดนิ่งแล้ว — วันที่ 20/10/2026)
+
+| รายการ | ผล |
+| --- | --- |
+| `node tools/compare/run.mjs home --jobs 3` | **309 / 309 scenario ตรงกับ Java ทุกบรรทัด** (exit 0) — DOM + attribute + ข้อความ + ตำแหน่ง/ขนาด + computed style + checksum ของ canvas + ค่า input + flag `LD2_*` + `TS_I18N` + localStorage + ลิงก์ที่นำทาง; ใช้เวลา ~17 นาที (เครื่องถูกใช้พร้อมกับ harness ของ worker อื่น). รอบแรก 1 scenario (`perm-nolead-390`) ฝั่ง Angular ยังไม่ขึ้นหน้าตอนเครื่องแน่น (dump 10 บรรทัด) — harness รันซ้ำเดี่ยว ๆ ตรงทุกบรรทัด และรันกลุ่ม `perm-nolead*` ซ้ำอีก 3 รอบ ตรงทุกรอบ (timing ของเครื่อง ไม่ใช่ความต่างของหน้า). error ของ browser ที่รายงานมีเฉพาะ HTTP 4xx/5xx ที่ scenario ตั้งใจให้เกิด (ฝั่ง Java: `fail-*`, `assign-fail-*`, lead id 53 ใน work modal) — ไม่มี `pageerror` |
+| ชุด scenario (309) | หน้าแรก สว่าง/มืด × 12 ขนาดจอ (390 → 1920×1200) · อังกฤษ · ปุ่ม A A A (11) · ผลิตภัณฑ์ (dropdown, 4 ตัว, เปลี่ยนรัว, จำค่า + reload, ผลิตภัณฑ์ที่จำไว้หายไป, ไม่มี/ล้มรายการ) · โดนัท (hover ทุกส่วน, ชี้นอก/กลาง/ออก, legend "+ อีก N ขั้นตอน") · ตาราง (เลื่อนโหลดต่อ/จนสุด/จอสูงเติมเอง, คลิกแถว/ชื่อ/ปุ่มมอบหมาย, ช่วงวันที่ 15 แบบ, skeleton / ก่อนข้อมูลชุดแรก / ว่าง / error / ลองใหม่ / ปุ่มโหลดเพิ่ม) · dialog มอบหมายงาน (~65: เปิด, dropdown + ค้นหา + ไม่พบ, cascade ทีม, validation, สำเร็จ / ปฏิเสธ / 500 / กำลังบันทึก, ปิด) · ปฏิทินและการ์ด (~45) · สิทธิ์ (16) · work modal จากหน้า (~35 รวมบันทึกแล้ว reload) |
+| ที่ harness จับได้และแก้ที่ต้นทาง (ไม่ได้ผ่อน harness) | (1) link ของ Java ไม่มีขีดเส้นใต้ / ใช้สี link ของ browser — เพิ่มกฎใน generator; (2) dialog ที่ย้ายไป `<body>` ได้ขนาด/สีตัวอักษรผิด (ไม่อยู่ใต้ host) — เพิ่มกฎ; (3) `[type="text"]{padding:10px!important}` ไม่ครอบ dialog ใน body — เพิ่มกฎ; (4) `cursor` ของปุ่ม disabled ใน dialog (`not-allowed` ของ shell) — เพิ่มกฎ (+ generator ตรวจว่าต้นฉบับยังตั้ง `cursor:pointer`); (5) mock: ลีดที่มี employeeId แต่ไม่มีชื่อต้องไม่มี `salePersonName` ด้วย; (6) mock: ข้อมูลที่หน้าเขียน (มอบหมายงาน, นัดหมาย) ต้องคงอยู่เมื่อ reload เต็มหน้า (Java เก็บที่ server) — เก็บใน sessionStorage |
+| `CI=1 node node_modules/@angular/cli/bin/ng.js test --no-watch --include 'src/app/features/home/**/*.spec.ts' --include 'src/app/core/navigation/**/*.spec.ts'` | **86 / 86 ผ่าน** (home.mock.spec + home.spec = 59 · navigation รวม java-links = 27) |
+| `ng build` (production) | ผ่าน ไม่มี warning; chunk `home` 167 KB (33 KB หลังบีบอัด); mock เป็น chunk แยกที่โหลดเฉพาะ `mock: true`; ไม่เกินงบ (`anyComponentStyle` ไม่เตือน) |
+| `node tools/sync-home.mjs` รันซ้ำ | ไฟล์ที่สร้างไม่เปลี่ยน (md5 เท่าเดิม); swap ที่ไม่ตรงต้นฉบับ = หยุด |
+
+หมายเหตุ: หลัง `node tools/workspace.mjs refresh` (port-kit.mjs ของ main เพิ่ม `blob` / `arrayBuffer` ใน guard ของ response) ได้สร้าง engine ใหม่แล้วรันเทียบซ้ำทั้งชุด — ผลข้างบนคือหลังจากนั้น. `java-links.ts` / `java-links.spec.ts` ใน workspace = ฉบับล่าสุดของ main + ส่วนที่หน้านี้เพิ่ม (กฎ `market_plan` และ `it(...)` ของหน้านี้) — merge ได้โดยเพิ่มเฉพาะส่วนนั้น.

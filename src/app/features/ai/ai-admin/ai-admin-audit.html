@@ -1,0 +1,176 @@
+<section class="aad-section" [attr.aria-busy]="state.loading()">
+  <form class="aad-card aad-filters" [formGroup]="form" (ngSubmit)="search()">
+    <h3 class="aad-h3">{{ t('app.aiAdmin.audit.filters') }}</h3>
+    <div class="aad-form-grid">
+      <label>
+        <span>{{ t('app.aiAdmin.audit.days') }}</span>
+        <select data-ods-skip="1" (change)="onDays($any($event.target).value)">
+          @for (days of dayChoices; track days) {
+            <option [value]="days" [selected]="days === form.controls.days.value">
+              {{ t('app.aiAdmin.audit.lastDays', days) }}
+            </option>
+          }
+        </select>
+      </label>
+      <ts-aad-scope-picker [month]="month" [depth]="3" [autoSelect]="false" [(value)]="scope" />
+      <label>
+        <span>{{ t('app.aiAdmin.col.tool') }}</span>
+        <select data-ods-skip="1" (change)="onTool($any($event.target).value)">
+          <option value="" [selected]="!form.controls.tool.value">
+            {{ t('app.aiAdmin.audit.allTools') }}
+          </option>
+          @for (id of toolIds; track id) {
+            <option [value]="id" [selected]="id === form.controls.tool.value">
+              {{ t('app.nav.aiTool.' + id) }}
+            </option>
+          }
+        </select>
+      </label>
+      <label class="aad-wide">
+        <span>{{ t('app.aiAdmin.audit.search') }}</span>
+        <input
+          type="search"
+          formControlName="q"
+          maxlength="100"
+          [placeholder]="t('app.aiAdmin.audit.searchHint')"
+        />
+      </label>
+    </div>
+    <div class="aad-form-actions">
+      <button type="submit" class="aad-btn is-primary" [disabled]="state.loading()">
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+        {{ t('app.aiAdmin.audit.apply') }}
+      </button>
+      @if (canExport()) {
+        <button type="button" class="aad-btn" (click)="download()" [disabled]="exporting()">
+          <i class="fa-solid fa-file-csv" aria-hidden="true"></i>
+          {{ t('app.aiAdmin.audit.export') }}
+        </button>
+      }
+    </div>
+  </form>
+
+  @if (state.error(); as message) {
+    <p class="aad-alert is-error" role="alert">{{ message }}</p>
+  }
+  @if (state.loading() && !data()) {
+    <p class="aad-muted" role="status">{{ t('app.aiAdmin.loading') }}</p>
+  }
+
+  @if (data(); as d) {
+    <div class="aad-card">
+      <div class="aad-card-head">
+        <h3 class="aad-h3">{{ t('app.aiAdmin.audit.title') }}</h3>
+        <span class="aad-muted" role="status">{{ range() }}</span>
+      </div>
+      <div class="aad-table-wrap">
+        <table class="aad-table aad-table-wide">
+          <caption class="aad-sr">
+            {{
+              t('app.aiAdmin.audit.title')
+            }}
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">{{ t('app.aiAdmin.audit.colTime') }}</th>
+              <th scope="col">{{ t('app.aiAdmin.audit.colCompany') }}</th>
+              <th scope="col">{{ t('app.aiAdmin.audit.colDepartment') }}</th>
+              <th scope="col">{{ t('app.aiAdmin.audit.colEmployee') }}</th>
+              <th scope="col">{{ t('app.aiAdmin.col.module') }}</th>
+              <th scope="col">{{ t('app.aiAdmin.col.tool') }}</th>
+              <th scope="col">{{ t('app.aiAdmin.col.model') }}</th>
+              <th scope="col" class="num">{{ t('app.aiAdmin.tile.input') }}</th>
+              <th scope="col" class="num">{{ t('app.aiAdmin.tile.output') }}</th>
+              <th scope="col" class="num">{{ t('app.aiAdmin.tile.total') }}</th>
+              <th scope="col">{{ t('app.aiAdmin.audit.colTask') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of d.rows; track row.id) {
+              <tr>
+                <td class="aad-nowrap">{{ formatDateTime(row.at) }}</td>
+                <td>{{ row.company?.name }}</td>
+                <td>{{ row.department?.name }}</td>
+                <td>
+                  {{ row.name }}
+                  <small class="aad-muted">{{ row.username }}</small>
+                </td>
+                <td>{{ row.groupTitle }}</td>
+                <td>{{ row.toolTitle }}</td>
+                <td>{{ row.modelLabel }}</td>
+                <td class="num">{{ formatNumber(row.inputTokens) }}</td>
+                <td class="num">{{ formatNumber(row.outputTokens) }}</td>
+                <td class="num">
+                  <strong>{{ formatNumber(row.tokens) }}</strong>
+                </td>
+                <td class="aad-note" [title]="row.task">{{ row.task }}</td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="11" class="aad-muted">{{ t('app.aiAdmin.empty') }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <div class="aad-pager">
+        <button
+          type="button"
+          class="aad-btn"
+          (click)="page(-1)"
+          [disabled]="!hasPrev() || state.loading()"
+        >
+          <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+          {{ t('app.aiAdmin.audit.prev') }}
+        </button>
+        <button
+          type="button"
+          class="aad-btn"
+          (click)="page(1)"
+          [disabled]="!hasNext() || state.loading()"
+        >
+          {{ t('app.aiAdmin.audit.next') }}
+          <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="aad-card">
+      <h3 class="aad-h3">{{ t('app.aiAdmin.audit.events') }}</h3>
+      <p class="aad-muted aad-hint">{{ t('app.aiAdmin.audit.eventsHint') }}</p>
+      <div class="aad-table-wrap">
+        <table class="aad-table">
+          <caption class="aad-sr">
+            {{
+              t('app.aiAdmin.audit.events')
+            }}
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">{{ t('app.aiAdmin.audit.colTime') }}</th>
+              <th scope="col">{{ t('app.aiAdmin.audit.colActor') }}</th>
+              <th scope="col">{{ t('app.aiAdmin.audit.colAction') }}</th>
+              <th scope="col">{{ t('app.aiAdmin.audit.colTarget') }}</th>
+              <th scope="col">{{ t('app.aiAdmin.audit.colDetail') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (event of d.events; track $index) {
+              <tr>
+                <td class="aad-nowrap">{{ formatDateTime(event.at) }}</td>
+                <td>{{ event.actor }}</td>
+                <td>{{ event.action }}</td>
+                <td>{{ event.target }}</td>
+                <td>{{ event.detail }}</td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="5" class="aad-muted">{{ t('app.aiAdmin.empty') }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+</section>

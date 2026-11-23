@@ -1,0 +1,1406 @@
+// เมนู Forecast — สไตล์ของต้นแบบ TripleSales_Forecast_Prototype_v19.html ย้ายมาทั้งชุด (ชื่อ class เดิม) ใต้ขอบเขต `ts-forecast`
+// (คอมโพเนนต์ใช้ ViewEncapsulation.None : คอมโพเนนต์ลูกของหน้านี้ใช้ class ชุดเดียวกันได้ และไม่มีกฎรั่วไปหน้าอื่น).
+//
+// สี : ใช้ token `--ts-*` ที่ host (`ts-forecast.ts-ds`) map มาจากชุดสี Design System ใน src/styles/_ds-page.scss
+// (ค่าตามรูป "Color modes" / "COLORS" เก็บเป็น `--ds-*` ใน _tokens.scss — Light + Dark). สีเฉพาะของหน้านี้ (หมวด Forecast · กราฟ ·
+// ปุ่มหลักตอนชี้ · toast) รวมไว้ที่บล็อก `--fc-*` ด้านล่างที่เดียว และอ้างจาก palette `--ds-*` เท่านั้น ไม่ฮาร์ดโค้ดสี.
+// ขนาดตัวอักษรทุกจุดบวก `--ts-fs-adj` (ปุ่ม A A A).
+
+@function fs($px) {
+  @return calc(#{$px} + var(--ts-fs-adj));
+}
+
+ts-forecast {
+  // ── สีของต้นแบบที่ไม่มี token ตรง (ที่เดียวของหน้านี้) ───────────────────────────────
+  --fc-primary: var(--ts-selected-bar); // Secondary : Light 35236A · Dark 7F63D2
+  --fc-primary-hover: var(--ds-secondary-800); // ปุ่มหลักตอนชี้
+  --fc-link: var(--ts-primary-fg); // ข้อความสีแบรนด์
+  --fc-ink: var(--ds-grey-800); // พื้นข้อความแจ้ง (toast)
+  --fc-tip-bg: var(--ds-grey-800); // กล่องคำอธิบายปุ่ม i
+  --fc-tip-fg: var(--ds-on-color);
+  --fc-shadow-lg: 0 18px 40px rgba(25, 18, 70, 0.18);
+  // หมวด Forecast และกราฟ (palette Secondary ไล่เข้ม→อ่อน · Primary · Pending) — ธีมมืด : committed ใช้ Secondary 500 ให้มองเห็นบนพื้นการ์ด
+  --fc-cat-committed: var(--ds-secondary-900);
+  --fc-cat-bestcase: var(--ds-secondary-400);
+  --fc-cat-pipeline: var(--ds-secondary-300);
+  --fc-cat-closed: var(--ds-primary-600);
+  --fc-cat-omitted: var(--ds-pending-500); // และแถบ Coverage
+  --fc-kpi-gap: var(--ds-cancel-500); // Gap to Target · แท่ง Judgment
+  --fc-kpi-adjust: var(--ds-res-2); // "ปรับรวม" (Resource Color 2)
+  --fc-target-line: var(--ds-grey-500); // เส้น Target ของ Sales Outlook
+
+  display: block;
+  color: var(--ts-text);
+  font-size: fs(14px);
+  line-height: 1.45;
+  letter-spacing: normal;
+
+  // คอมโพเนนต์ลูกไม่มีกล่องของตัวเอง : เนื้อหาเป็นลูกของ .panel (flex column, gap 14px) เหมือน DOM ของต้นแบบ
+  ts-forecast-listing,
+  ts-forecast-workspace,
+  ts-forecast-config-form,
+  ts-forecast-target,
+  ts-forecast-adjust,
+  ts-forecast-close,
+  ts-forecast-overview,
+  ts-forecast-dashboard,
+  ts-forecast-history,
+  ts-forecast-scenario,
+  ts-forecast-filters,
+  ts-forecast-tip {
+    display: contents;
+  }
+
+  .grow {
+    flex: 1;
+  }
+  .mt6 {
+    margin-top: 6px;
+  }
+  .mt12 {
+    margin-top: 12px;
+  }
+  .right {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .fc-sel {
+    display: inline-flex;
+    min-width: 0;
+  }
+
+  // ── แถบบน : ตำแหน่งในเมนู (+ บริษัท / บทบาทจำลองเมื่อใช้ข้อมูลตัวอย่าง) ─────────────────
+  .top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    min-height: 40px;
+    padding: 0 4px 6px;
+  }
+  .crumb {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    color: var(--fc-link);
+    font-weight: 600;
+
+    .sep {
+      color: var(--ts-text-disabled);
+      font-weight: 400;
+    }
+    .cur {
+      color: var(--ts-text);
+    }
+  }
+  .top-r {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+  }
+
+  // ── ช่องกรอก / ตัวเลือก ────────────────────────────────────────────────────────────
+  .inp,
+  .sel {
+    width: 100%;
+    min-width: 0;
+    height: 36px;
+    // `!important` : shell มีกฎ global `[type="text"] { padding: 10px !important }` (จาก template Java)
+    padding: 0 10px !important;
+    border: 1px solid var(--ts-border-strong);
+    border-radius: 6px;
+    background: var(--ts-surface);
+    font-size: fs(14px);
+  }
+  .sel.sm {
+    width: auto;
+    height: 32px;
+  }
+  .filters .sel,
+  .top .sel {
+    width: auto;
+    min-width: 130px;
+  }
+  .inp:focus,
+  .sel:focus {
+    border-color: var(--ts-accent);
+    outline: none;
+  }
+  .inp:disabled,
+  .sel:disabled {
+    background: var(--ts-surface-2);
+    opacity: 0.8;
+  }
+  .ibtn {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--ts-border-strong);
+    border-radius: 6px;
+    color: var(--ts-muted);
+  }
+
+  // dropdown กลางของระบบ (open_down_select แปลงทุก <select> ใน shell เป็นปุ่ม .ods-btn ที่แทรกต่อจาก select) :
+  // ให้ปุ่มมีรูปทรงของ .sel / .mini ของต้นแบบ. `.ods-btn.ods-btn` = ชนะกฎธีมมืดของสคริปต์ (html[data-theme] .ods-btn)
+  .sel + .ods-btn.ods-btn {
+    height: 36px;
+    padding: 0 10px;
+    border-color: var(--ts-border-strong);
+    border-radius: 6px;
+    background: var(--ts-surface);
+    color: var(--ts-text);
+    font-size: fs(14px);
+    line-height: 1.45;
+  }
+  .sel.sm + .ods-btn.ods-btn,
+  .adjbar .sel + .ods-btn.ods-btn {
+    height: 32px;
+  }
+  .sel.sm + .ods-btn.ods-btn,
+  .filters .sel + .ods-btn.ods-btn,
+  .top .sel + .ods-btn.ods-btn {
+    width: auto;
+    min-width: 130px;
+  }
+  .adjbar .sel + .ods-btn.ods-btn {
+    width: auto;
+    min-width: 110px;
+  }
+  .mini + .ods-btn.ods-btn {
+    width: 110px;
+    height: 32px;
+    padding: 0 8px;
+    border-color: var(--ts-border-strong);
+    border-radius: 5px;
+    background: var(--ts-surface);
+    color: var(--ts-text);
+    font-size: fs(13px);
+    line-height: 1.45;
+  }
+  .mini.w70 + .ods-btn.ods-btn {
+    width: 70px;
+  }
+  .mini.w95 + .ods-btn.ods-btn {
+    width: 100px;
+  }
+  .mini.chg + .ods-btn.ods-btn {
+    border-color: var(--ts-amber);
+    background: var(--ts-amber-soft);
+  }
+  .ods-btn.ods-btn.open {
+    border-color: var(--ts-accent);
+    box-shadow: none;
+  }
+  .sel + .ods-btn.ods-btn.ods-disabled {
+    background: var(--ts-surface-2);
+    color: var(--ts-text);
+    opacity: 0.8;
+  }
+  .mini + .ods-btn.ods-btn.ods-disabled {
+    background: var(--ts-surface-2);
+    color: var(--ts-text);
+    opacity: 0.7;
+  }
+
+  // ── แท็บระดับ 1 + การ์ดขาว ─────────────────────────────────────────────────────────
+  .l1 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    padding: 4px 4px 0;
+    overflow-x: auto;
+    border-radius: 8px 8px 0 0;
+    background: var(--ts-tabbar);
+    scrollbar-width: none;
+
+    button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 42px;
+      padding: 0 14px;
+      border-radius: 8px 8px 0 0;
+      color: var(--ts-muted);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    button:hover {
+      color: var(--ts-text);
+    }
+    button.on {
+      background: var(--ts-surface);
+      color: var(--ts-text);
+      font-weight: 600;
+    }
+  }
+  .panel {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-height: calc(100vh - var(--ts-topbar-h) - 2 * var(--ts-content-pad) - var(--ts-footer-h) - 92px);
+    padding: 16px 18px 24px;
+    border-radius: 0 0 8px 8px;
+    background: var(--ts-surface);
+  }
+
+  // ── workspace : แถบบันทึก + เมนูย่อย ────────────────────────────────────────────────
+  .wsbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+  }
+  .wsdirty {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--ts-muted);
+    font-size: fs(12.5px);
+  }
+  .wsdirty .dot,
+  .l2 .dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--ts-amber);
+  }
+  .l2 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--ts-line);
+
+    button {
+      height: 34px;
+      padding: 0 14px;
+      border: 1px solid var(--ts-border-strong);
+      border-radius: 999px;
+      background: var(--ts-surface);
+      font-size: fs(13.5px);
+      white-space: nowrap;
+    }
+    button:disabled {
+      opacity: 0.55;
+    }
+    button.on {
+      border-color: var(--fc-primary);
+      background: var(--fc-primary);
+      color: var(--ds-on-color);
+    }
+  }
+  .seg {
+    display: inline-flex;
+    overflow: hidden;
+    border: 1px solid var(--ts-border-strong);
+    border-radius: 8px;
+    background: var(--ts-surface);
+
+    button {
+      height: 36px;
+      padding: 0 16px;
+      border-right: 1px solid var(--ts-border-strong);
+      font-size: fs(13.5px);
+    }
+    button:last-child {
+      border-right: 0;
+    }
+    button.on {
+      background: var(--ts-violet-soft);
+      color: var(--fc-link);
+      font-weight: 600;
+    }
+  }
+
+  // ── หัวหน้า / ตัวกรอง / ปุ่ม / ป้าย ──────────────────────────────────────────────────
+  .ph {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 12px;
+
+    h1 {
+      display: flex;
+      align-items: center;
+      margin: 0;
+      font-size: fs(20px);
+      font-weight: 700;
+    }
+    p {
+      margin: 3px 0 0;
+      color: var(--ts-muted);
+      font-size: fs(13px);
+    }
+    .r {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+    }
+  }
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 10px;
+  }
+  .fld {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+    color: var(--ts-muted);
+    font-size: fs(12.5px);
+  }
+  .fld > span,
+  .lab {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    color: var(--ts-muted);
+    font-size: fs(12.5px);
+    font-weight: 500;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 36px;
+    padding: 0 14px;
+    border-radius: 6px;
+    font-size: fs(14px);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .btn-p {
+    background: var(--fc-primary);
+    color: var(--ds-on-color);
+  }
+  .btn-p:hover {
+    background: var(--fc-primary-hover);
+  }
+  .btn-g {
+    border: 1px solid var(--ts-border-strong);
+    background: var(--ts-surface);
+  }
+  .btn-g:hover {
+    background: var(--ts-row-hover);
+  }
+  .btn-d {
+    background: var(--ts-pink-soft);
+    color: var(--ts-pink-ink);
+  }
+  .btn-s {
+    height: 30px;
+    padding: 0 10px;
+    font-size: fs(12.5px);
+  }
+  .btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: var(--ts-violet-soft);
+    color: var(--fc-link);
+    font-size: fs(11.5px);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .c-good {
+    background: var(--ts-green-soft);
+    color: var(--ts-green-ink);
+  }
+  .c-bad {
+    background: var(--ts-pink-soft);
+    color: var(--ts-pink-ink);
+  }
+  .c-warn {
+    background: var(--ts-amber-soft);
+    color: var(--ts-amber-ink);
+  }
+  .c-blue {
+    background: var(--ts-blue-soft);
+    color: var(--ts-blue-ink);
+  }
+  .c-grey {
+    background: var(--ts-surface-2);
+    color: var(--ts-muted);
+  }
+  .note {
+    padding: 10px 12px;
+    border-left: 3px solid var(--fc-primary);
+    border-radius: 4px;
+    background: var(--ts-violet-tint);
+    font-size: fs(13px);
+    line-height: 1.6;
+  }
+  .note.inset {
+    margin: 10px 16px 0;
+  }
+  .warn {
+    padding: 10px 12px;
+    border-radius: 6px;
+    background: var(--ts-amber-soft);
+    color: var(--ts-amber-ink);
+    font-size: fs(13px);
+    line-height: 1.6;
+  }
+  .lockban {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 1px solid var(--ts-line);
+    border-radius: 6px;
+    background: var(--ts-surface-2);
+    font-size: fs(13px);
+  }
+  .empty {
+    padding: 28px;
+    border: 1px dashed var(--ts-border-strong);
+    border-radius: 8px;
+    color: var(--ts-muted);
+    text-align: center;
+  }
+  .empty.big {
+    padding: 48px;
+  }
+
+  // ── การ์ด / ตาราง ───────────────────────────────────────────────────────────────────
+  .card {
+    border: 1px solid var(--ts-line);
+    border-radius: 8px;
+    background: var(--ts-surface);
+  }
+  .card-h {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--ts-line);
+
+    h3 {
+      display: flex;
+      align-items: center;
+      margin: 0;
+      font-size: fs(15px);
+    }
+  }
+  .card-b {
+    padding: 14px;
+  }
+  .card-b.col {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .tw {
+    overflow: auto;
+    border: 1px solid var(--ts-line);
+    border-radius: 8px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: fs(13px);
+  }
+  th {
+    padding: 10px 12px;
+    background: var(--ts-th);
+    color: var(--ts-muted);
+    font-size: fs(12.5px);
+    font-weight: 600;
+    text-align: left;
+    white-space: nowrap;
+  }
+  td {
+    padding: 8px 12px;
+    border-top: 1px solid var(--ts-line);
+    vertical-align: middle;
+  }
+  .n {
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    white-space: nowrap;
+  }
+  tr.grp td {
+    background: var(--ts-surface-2);
+    font-weight: 600;
+  }
+  tr.tot td {
+    background: var(--ts-violet-tint);
+    font-weight: 700;
+  }
+  tr.dirty td:first-child {
+    box-shadow: inset 3px 0 0 var(--ts-amber);
+  }
+  tr.click {
+    cursor: pointer;
+  }
+  tr.cur {
+    background: var(--ts-row-hover);
+  }
+  tr.click:hover td {
+    background: var(--ts-row-hover);
+  }
+  tr.pick td {
+    background: var(--ts-violet-tint);
+  }
+  td.indent {
+    padding-left: 24px;
+  }
+  .indent16 {
+    padding-left: 16px;
+  }
+  .sub {
+    color: var(--ts-muted);
+    font-size: fs(11.5px);
+  }
+  .sub.foot {
+    margin-top: 8px;
+  }
+  .strike {
+    text-decoration: line-through;
+  }
+  .up {
+    color: var(--ts-green-ink);
+  }
+  .down {
+    color: var(--ts-pink-ink);
+  }
+  .flat {
+    color: var(--ts-muted);
+  }
+  .delta {
+    font-size: fs(11.5px);
+    font-weight: 600;
+  }
+  .acts,
+  .pair {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .dot8,
+  .dot9 {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 5px;
+    border-radius: 2px;
+  }
+  .dot9 {
+    width: 9px;
+    height: 9px;
+    margin-right: 7px;
+    border-radius: 3px;
+  }
+
+  // ปุ่มไอคอนของรายการ Configuration
+  .ibtn-s {
+    display: inline-grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border: 1px solid var(--ts-border-strong);
+    border-radius: 8px;
+    background: var(--ts-surface);
+    color: var(--ts-text);
+    font-size: fs(14px);
+    line-height: 1;
+
+    svg {
+      width: 16px;
+      height: 16px;
+      fill: none;
+      stroke: currentColor;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 2;
+    }
+  }
+  .ibtn-s:hover {
+    background: var(--ts-row-hover);
+  }
+  .ibtn-s.p {
+    border-color: var(--fc-primary);
+    background: var(--fc-primary);
+    color: var(--ds-on-color);
+  }
+  .ibtn-s.d {
+    border-color: var(--ts-pink-soft);
+    background: var(--ts-pink-soft);
+    color: var(--ts-pink-ink);
+  }
+
+  // ── ปุ่ม i + กล่องคำอธิบาย ────────────────────────────────────────────────────────────
+  .tip {
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    width: 16px;
+    height: 16px;
+    margin-left: 5px;
+    border: 1px solid var(--ts-violet-line);
+    border-radius: 50%;
+    background: var(--ts-surface);
+    color: var(--fc-link);
+    font-family: Inter, sans-serif;
+    font-size: fs(10px);
+    font-style: normal;
+    font-weight: 600;
+    line-height: 1;
+    vertical-align: 1px;
+    cursor: help;
+  }
+  .tip:hover,
+  .tip:focus {
+    border-color: var(--fc-primary);
+    outline: none;
+    background: var(--fc-primary);
+    color: var(--ds-on-color);
+  }
+  .tipbox {
+    position: fixed;
+    z-index: calc(var(--ts-z-dialog) + 1);
+    max-width: 360px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: var(--fc-tip-bg);
+    box-shadow: var(--fc-shadow-lg);
+    color: var(--fc-tip-fg);
+    font-size: fs(12.5px);
+    font-weight: 400;
+    line-height: 1.6;
+    text-align: left;
+    white-space: normal;
+    pointer-events: none;
+
+    b {
+      font-weight: 600;
+    }
+    .o {
+      display: block;
+      margin-top: 5px;
+      padding-left: 10px;
+      border-left: 2px solid var(--ts-accent);
+    }
+  }
+
+  // ── Adjustment : สมการยอด ────────────────────────────────────────────────────────────
+  .adjtop {
+    overflow: visible;
+  }
+  .adjbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 16px;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--ts-line);
+
+    .fld {
+      flex-direction: row;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+    .sel {
+      width: auto;
+      min-width: 110px;
+      height: 32px;
+    }
+  }
+  .eq {
+    display: grid;
+    grid-template-columns: minmax(140px, auto) 14px minmax(140px, auto) 14px minmax(140px, auto) 14px minmax(280px, auto) 1fr;
+    align-items: center;
+    gap: 6px 22px;
+    padding: 10px 16px;
+
+    .op {
+      color: var(--ts-text-disabled);
+      font-size: fs(16px);
+      text-align: center;
+    }
+  }
+  .eqc {
+    .l {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      color: var(--ts-muted);
+      font-size: fs(12px);
+    }
+    .v {
+      font-size: fs(19px);
+      font-variant-numeric: tabular-nums;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+    .s {
+      color: var(--ts-muted);
+      font-size: fs(11.5px);
+    }
+  }
+  .eqc.fin {
+    padding: 6px 12px;
+    border: 1px solid var(--ts-violet-line);
+    border-radius: 8px;
+    background: var(--ts-violet-soft);
+  }
+  .eqst {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-self: end;
+    gap: 4px;
+    font-size: fs(11.5px);
+  }
+  .catline {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 22px;
+    padding: 8px 16px 10px;
+    border-top: 1px dashed var(--ts-line);
+    font-size: fs(12.5px);
+    font-variant-numeric: tabular-nums;
+
+    .ci {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+    .ci i {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+    }
+  }
+  .empchips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+
+    button {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      height: 30px;
+      padding: 0 12px;
+      border: 1px solid var(--ts-border-strong);
+      border-radius: 999px;
+      background: var(--ts-surface);
+      font-size: fs(12.5px);
+    }
+    button.on {
+      border-color: var(--ts-violet-line);
+      background: var(--ts-violet-soft);
+      color: var(--fc-link);
+      font-weight: 600;
+    }
+  }
+  .mini {
+    width: 110px;
+    height: 32px;
+    padding: 0 8px !important;
+    border: 1px solid var(--ts-border-strong);
+    border-radius: 5px;
+    background: var(--ts-surface);
+    font-size: fs(13px);
+  }
+  .mini.num {
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+  .mini.w70 {
+    width: 70px;
+  }
+  .mini.w150 {
+    width: 170px;
+  }
+  .mini.w95 {
+    width: 100px;
+  }
+  .mini:disabled {
+    background: var(--ts-surface-2);
+    opacity: 0.7;
+  }
+  .mini.chg,
+  .mini[data-chg] {
+    border-color: var(--ts-amber);
+    background: var(--ts-amber-soft);
+  }
+  .mini.err {
+    border-color: var(--ts-pink-ink);
+    background: var(--ts-pink-soft);
+  }
+
+  // ── หน้าต่างตรวจสอบก่อนบันทึก ─────────────────────────────────────────────────────────
+  .ba-wrap {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .ba-c {
+    min-width: 0;
+    padding: 12px;
+    border: 1px solid var(--ts-line);
+    border-radius: 8px;
+    background: var(--ts-surface);
+
+    .l {
+      display: flex;
+      align-items: center;
+      color: var(--ts-muted);
+      font-size: fs(12px);
+    }
+    .v {
+      margin-top: 6px;
+      overflow: hidden;
+      font-family: Inter, var(--ts-font);
+      font-size: fs(19px);
+      font-variant-numeric: tabular-nums;
+      font-weight: 700;
+      line-height: 1.21; // ความสูงบรรทัดของ Inter (แอปไม่มีฟอนต์ Inter : ตัวเลขใช้ฟอนต์ของแอป)
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+  .ba-c.before {
+    background: var(--ts-surface-2);
+  }
+  .ba-c.after {
+    border-color: var(--ts-violet-line);
+    background: var(--ts-violet-tint);
+  }
+  .ba-c.after .v {
+    color: var(--fc-link);
+  }
+
+  // ── การ์ดตัวเลข ───────────────────────────────────────────────────────────────────────
+  .kpis {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .kpis.k3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .kpi {
+    position: relative;
+    min-width: 0;
+    padding: 12px 14px;
+    overflow: hidden;
+    border: 1px solid var(--ts-line);
+    border-radius: 8px;
+
+    &::before {
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 3px;
+      background: var(--c, var(--fc-primary));
+      content: '';
+    }
+    .l {
+      display: flex;
+      align-items: center;
+      color: var(--ts-muted);
+      font-size: fs(12px);
+    }
+    .v {
+      margin-top: 6px;
+      overflow: hidden;
+      font-family: Inter, var(--ts-font);
+      font-size: fs(20px);
+      font-variant-numeric: tabular-nums;
+      font-weight: 700;
+      line-height: 1.21;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .s {
+      margin-top: 2px;
+      font-size: fs(11.5px);
+    }
+  }
+  .bar {
+    min-width: 80px;
+    height: 8px;
+    overflow: hidden;
+    border-radius: 9px;
+    background: var(--ts-surface-2);
+
+    i {
+      display: block;
+      height: 100%;
+      border-radius: 9px;
+      background: var(--ts-accent);
+    }
+  }
+  .attain {
+    min-width: 120px;
+  }
+  .grid2 {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  // ── ฟอร์ม Configuration ───────────────────────────────────────────────────────────────
+  .cfg {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px 16px;
+  }
+  .cf {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+  }
+  .grp-t {
+    display: flex;
+    grid-column: 1 / -1;
+    align-items: center;
+    margin-top: 2px;
+    padding-top: 10px;
+    border-top: 1px solid var(--ts-line);
+    color: var(--fc-link);
+    font-size: fs(13px);
+    font-weight: 700;
+  }
+  .grp-t:first-child {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+  }
+  .sw {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    height: 40px;
+    padding: 0 10px;
+    border: 1px solid var(--ts-line);
+    border-radius: 6px;
+    font-size: fs(13px);
+
+    span {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    input {
+      position: relative;
+      flex: none;
+      width: 34px;
+      height: 20px;
+      margin: 0;
+      border-radius: 20px;
+      background: var(--ts-border-strong);
+      cursor: pointer;
+      appearance: none;
+    }
+    input:checked {
+      background: var(--fc-primary);
+    }
+    input::after {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--ds-on-color);
+      content: '';
+      transition: left 0.15s;
+    }
+    input:checked::after {
+      left: 16px;
+    }
+    input:disabled {
+      opacity: 0.55;
+      cursor: default;
+    }
+  }
+  .ro-sec {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--ts-border-strong);
+  }
+  .ro-row {
+    display: flex;
+    align-items: center;
+  }
+  .ro-hint {
+    margin-left: 8px;
+  }
+  .ro-h {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--ts-muted);
+    font-weight: 700;
+    cursor: pointer;
+
+    .car {
+      display: inline-block;
+      transition: transform 0.15s;
+    }
+  }
+  .ro-h.open .car {
+    transform: rotate(90deg);
+  }
+
+  // ── Sales Target : เลือก Pipeline / เดือน ───────────────────────────────────────────────
+  .pick {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+  }
+  .pick-f {
+    min-width: 240px;
+  }
+  .mp-h {
+    gap: 8px;
+  }
+  .mp-pick {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 10px;
+  }
+  .qgrid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .q {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 6px;
+    border: 1px solid var(--ts-line);
+    border-radius: 8px;
+
+    > button {
+      height: 26px;
+      border-radius: 5px;
+      background: var(--ts-surface-2);
+      color: var(--ts-muted);
+      font-size: fs(12px);
+      font-weight: 600;
+      text-align: center;
+    }
+    > button.on {
+      background: var(--fc-primary);
+      color: var(--ds-on-color);
+    }
+    .ms {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+    }
+    .ms button {
+      position: relative;
+      height: 32px;
+      border: 1px solid var(--ts-border-strong);
+      border-radius: 5px;
+      font-size: fs(12.5px);
+      text-align: center;
+    }
+    .ms button.on {
+      border-color: var(--fc-primary);
+      background: var(--ts-violet-soft);
+      color: var(--fc-link);
+      font-weight: 700;
+    }
+    .ms button .lk {
+      position: absolute;
+      top: -6px;
+      right: -4px;
+      font-size: fs(10px);
+    }
+  }
+  .selsum {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    font-size: fs(12.5px);
+
+    .chip button {
+      margin-left: 2px;
+      color: inherit;
+      font-size: fs(12px);
+    }
+  }
+
+  // ── Dashboard ─────────────────────────────────────────────────────────────────────────
+  .chart {
+    display: block;
+    width: 100%;
+    height: auto;
+
+    .grid {
+      stroke: var(--ts-line);
+    }
+    .ln {
+      fill: none;
+      stroke-width: 3;
+    }
+    .s-target {
+      stroke: var(--fc-target-line);
+      stroke-dasharray: 6 6;
+    }
+    .s-final {
+      stroke: var(--fc-cat-committed);
+    }
+    .s-closed {
+      stroke: var(--fc-cat-closed);
+    }
+    .pt-target {
+      fill: var(--fc-target-line);
+    }
+    .pt-final {
+      fill: var(--fc-cat-committed);
+    }
+    .pt-closed {
+      fill: var(--fc-cat-closed);
+    }
+    .ax {
+      fill: var(--ts-muted);
+      font-size: 11px;
+      font-weight: 400;
+    }
+    .ax.on {
+      fill: var(--ts-text);
+      font-weight: 600;
+    }
+  }
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    color: var(--ts-muted);
+    font-size: fs(12px);
+
+    i {
+      display: inline-block;
+      width: 9px;
+      height: 9px;
+      margin-right: 5px;
+      border-radius: 3px;
+    }
+    .lg-final {
+      background: var(--fc-cat-committed);
+    }
+    .lg-closed {
+      background: var(--fc-cat-closed);
+    }
+    .lg-target {
+      background: var(--fc-target-line);
+    }
+  }
+  .trow {
+    display: grid;
+    grid-template-columns: 70px 1fr 100px;
+    align-items: center;
+    gap: 10px;
+    margin: 12px 0;
+  }
+  .tbar {
+    position: relative;
+    height: 12px;
+    border-radius: 9px;
+    background: var(--ts-surface-2);
+
+    i {
+      display: block;
+      height: 100%;
+      border-radius: 9px;
+      background: var(--fc-cat-committed);
+    }
+    i.mark {
+      position: absolute;
+      top: -5px;
+      width: 3px;
+      height: 22px;
+      border-radius: 0;
+      background: var(--fc-cat-closed);
+    }
+  }
+  .health {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px;
+  }
+  .donut {
+    width: 170px;
+    transform: rotate(-90deg);
+
+    .ring,
+    .seg-c {
+      fill: none;
+      stroke-width: 22;
+    }
+    .ring {
+      stroke: var(--ts-surface-2);
+    }
+  }
+  .hlist {
+    flex: 1;
+    min-width: 180px;
+  }
+  .hrow {
+    display: flex;
+    justify-content: space-between;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--ts-line);
+  }
+  .brow {
+    display: grid;
+    grid-template-columns: 140px 1fr 110px;
+    align-items: center;
+    gap: 10px;
+    margin: 12px 0;
+  }
+  .bbar {
+    height: 12px;
+    border-radius: 9px;
+    background: var(--ts-surface-2);
+
+    i {
+      display: block;
+      height: 100%;
+      border-radius: 9px;
+    }
+  }
+
+  // ── หน้าต่าง / ข้อความแจ้ง ────────────────────────────────────────────────────────────
+  .overlay {
+    position: fixed;
+    inset: 0;
+    z-index: var(--ts-z-dialog);
+    display: grid;
+    place-items: center;
+    padding: 16px;
+    background: var(--ts-overlay);
+  }
+  .dlg {
+    display: flex;
+    flex-direction: column;
+    width: min(820px, 100%);
+    max-height: 88vh;
+    border-radius: 10px;
+    background: var(--ts-surface);
+    box-shadow: var(--fc-shadow-lg);
+  }
+  .dlg-h {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--ts-line);
+
+    h3 {
+      margin: 0;
+      font-size: fs(17px);
+    }
+  }
+  .dlg-b {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px 20px;
+    overflow: auto;
+  }
+  .dlg-f {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 12px 20px;
+    border-top: 1px solid var(--ts-line);
+  }
+  .toast {
+    position: fixed;
+    bottom: calc(var(--ts-footer-h) + 22px);
+    left: 50%;
+    z-index: var(--ts-z-toast);
+    padding: 10px 18px;
+    border-radius: 8px;
+    background: var(--fc-ink);
+    box-shadow: var(--fc-shadow-lg);
+    color: var(--ds-on-color);
+    font-size: fs(13px);
+    transform: translateX(-50%);
+  }
+
+  @media (max-width: 1250px) {
+    .kpis {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .qgrid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 1100px) {
+    .eq {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .eq .op {
+      display: none;
+    }
+    .eqst {
+      align-items: flex-start;
+    }
+  }
+  @media (max-width: 900px) {
+    .cfg {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 760px) {
+    .grid2 {
+      grid-template-columns: 1fr;
+    }
+    .ph .r {
+      margin-left: 0;
+    }
+    .kpis {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+}
+
+// ธีมมืด : ค่าเฉพาะของหน้านี้ (ที่เหลือเปลี่ยนตาม token --ds-* ของ Dark mode)
+:root[data-theme='dark'] ts-forecast {
+  --fc-primary-hover: var(--ds-secondary-500);
+  --fc-ink: var(--ds-grey-700);
+  --fc-tip-bg: var(--ds-grey-100);
+  --fc-tip-fg: var(--ds-grey-800);
+  --fc-shadow-lg: 0 18px 40px rgba(0, 0, 0, 0.5);
+  --fc-cat-committed: var(--ds-secondary-500);
+}

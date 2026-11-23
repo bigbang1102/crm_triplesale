@@ -1,0 +1,39 @@
+@switch (kind()) {
+  @case ('radio') {
+    <div class="rad" role="radiogroup" [attr.aria-label]="label()">
+      @for (o of options(); track o.value) {
+        <label>
+          <input type="radio" [disabled]="locked()" [name]="group" [value]="o.value" [checked]="value() === o.value" (change)="set(o.value)" />
+          {{ o.label }}
+        </label>
+      }
+    </div>
+  }
+  @case ('select') {
+    <select class="in" [disabled]="locked()" [attr.aria-label]="label()" [attr.aria-invalid]="invalid()" [class.bad]="invalid()" (change)="set($any($event.target).value)">
+      <option value="" [selected]="!value()">{{ placeholder() }}</option>
+      @for (o of options(); track o.value) {
+        <option [value]="o.value" [selected]="value() === o.value">{{ o.label }}</option>
+      }
+    </select>
+  }
+  @case ('check') {
+    <input type="checkbox" class="chk" [disabled]="locked()" [attr.aria-label]="label()" [checked]="value() === 'true'" (change)="set($any($event.target).checked ? 'true' : '')" />
+  }
+  @case ('file') {
+    <input type="file" class="in file" [disabled]="locked()" [attr.aria-label]="label()" (change)="setFile($event)" />
+  }
+  @default {
+    <input
+      class="in"
+      [disabled]="locked()"
+      [type]="kind() === 'datetime' ? 'datetime-local' : kind()"
+      [attr.step]="field().type === 'double' ? 'any' : null"
+      [attr.aria-label]="label()"
+      [attr.aria-invalid]="invalid()"
+      [class.bad]="invalid()"
+      [value]="value()"
+      (input)="set($any($event.target).value)"
+    />
+  }
+}

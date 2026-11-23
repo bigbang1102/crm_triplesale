@@ -1,0 +1,60 @@
+// ปุ่มและช่องกรอกของหน้า Configuration & Master data — รูปทรงตาม mockup master-setup final (30-10-2026):
+// สูง 38px มุม 6px (แทนปุ่ม pill / ช่องกรอก padding 10px ของ .ts-btn .ts-input ส่วนกลาง) ; ใช้ token --ts-* เท่านั้น.
+// `@use` จากทุกคอมโพเนนต์ของหน้านี้ที่มีปุ่ม/ช่องกรอก (กฎมีผลเฉพาะในคอมโพเนนต์นั้น ไม่รั่วไปหน้าอื่น)
+
+.ts-btn {
+  gap: 8px;
+  height: 38px;
+  padding: 0 12px;
+  border-width: 0; // ปุ่มหลักไม่มีขอบ (เหมือน mockup) ; ปุ่มขอบ (ghost) ด้านล่างเปิดขอบ 1px
+  border-radius: 6px;
+  font-weight: 500;
+  line-height: 20px;
+
+  &--ghost {
+    border-width: 1px;
+    border-color: var(--ts-border-strong);
+    background: var(--ts-surface);
+    color: var(--ts-text);
+
+    &:hover:not(:disabled) {
+      background: var(--ts-row-hover);
+      filter: none;
+    }
+  }
+}
+
+.ts-input {
+  height: 38px;
+  // `!important` : shell ครอบทุกหน้า มีกฎ global `:where(ts-shell, .ods-list) [type="text"] { padding: 10px !important }` (จาก template Java) ซึ่งชนะ padding ปกติ — mockup ใช้ 0 12px
+  padding: 0 12px !important;
+  border-color: var(--ts-border-strong);
+  border-radius: 6px;
+  line-height: 20px;
+
+  &:hover:not(:disabled) {
+    border-color: var(--ts-border-strong);
+  }
+  &:focus {
+    border-color: var(--ts-accent);
+    box-shadow: none;
+  }
+  &:disabled {
+    background: var(--ts-surface-2);
+    color: var(--ts-text);
+    opacity: 1;
+    cursor: default;
+  }
+}
+
+// ช่องหลายบรรทัด (ที่อยู่/คำอธิบาย/หมายเหตุ) — mockup: สูง 38px เท่าช่องอื่น ไม่มีมือจับย่อ/ขยาย ;
+// พิมพ์ยาวขึ้นแล้วขยายตามเนื้อหา (field-sizing) แทนการซ่อนข้อความ
+textarea.ts-input {
+  height: auto;
+  min-height: 38px;
+  padding: 8px 12px !important;
+  overflow: auto;
+  resize: none;
+  line-height: 1.4;
+  field-sizing: content;
+}

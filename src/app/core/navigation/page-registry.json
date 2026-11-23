@@ -1,0 +1,1027 @@
+{
+  "$comment": "Single source of truth for every screen of the migration: routes, menu placement, permission, legacy source and roadmap phase. The router (app.routes.ts), the nav config, the placeholder page and manual/index.html are all generated from this file. Edit here, then run `npm run manual:sync`.",
+  "phases": [
+    {
+      "id": 0,
+      "name": "รากฐาน (Foundation)",
+      "goal": "โครงสร้างโปรเจกต์ · core layer · shell/layout/theme · login · page registry"
+    },
+    {
+      "id": 1,
+      "name": "โอกาสขาย (Lead)",
+      "goal": "Shared UI + master data + Lead board/list + Lead detail"
+    },
+    {
+      "id": 2,
+      "name": "งานประจำวัน",
+      "goal": "CRM Home · การติดต่อ · ปฏิทินงาน (ใช้ WorkModal / filter ร่วมกัน)"
+    },
+    {
+      "id": 3,
+      "name": "ลูกค้า & เอกสาร",
+      "goal": "ลูกค้าเป้าหมาย · ใบรับเงิน RV · ข้อมูลประกอบ 7 ชนิด"
+    },
+    {
+      "id": 4,
+      "name": "BI & รายงาน",
+      "goal": "Dashboard 10 แท็บ · DrillDown · Report"
+    },
+    {
+      "id": 5,
+      "name": "แชท & AI",
+      "goal": "Chat (Socket.IO) · AI แปลเอกสาร · AI HUB · AI FAB"
+    },
+    {
+      "id": 6,
+      "name": "เอกสารงานขายใหม่",
+      "goal": "QT / BK / OB / AQ / AD — ทำเมื่อ backend พร้อม"
+    },
+    {
+      "id": 7,
+      "name": "รอ PO ยืนยัน (Deferred)",
+      "goal": "แต้มสะสม · โปรโมชั่น · แผนเดินตลาด · คำร้อง — ปัจจุบันเป็น mock/ซ่อนเมนู"
+    }
+  ],
+  "statuses": {
+    "live": "ใช้งานจริง ต่อ API จริง",
+    "live-ui": "หน้าจอเสร็จแต่ยังไม่มี API บันทึก",
+    "mock": "ข้อมูลจำลอง (mock JSON)",
+    "system": "หน้าระบบ"
+  },
+  "pages": [
+    {
+      "id": "login",
+      "route": "login",
+      "title": {
+        "th": "ลงชื่อเข้าใช้",
+        "en": "Sign in"
+      },
+      "navGroup": null,
+      "navTab": null,
+      "requires": null,
+      "feature": "auth",
+      "legacy": [
+        "web/index.xhtml"
+      ],
+      "status": "live",
+      "phase": 0,
+      "size": "S",
+      "implemented": true,
+      "apis": [
+        "POST {auth}/auth/login · POST {auth}/auth/select-org",
+        "GET {service}/master-data/branches · GET {service}/auth/user-detail · GET {service}/me/roles"
+      ],
+      "notes": "Login 3 ขั้นตอน: login → (ถ้ามีหลายบริษัท) เลือกบริษัท → เข้าโปรแกรม · รองรับ ?auth=NO_TOKEN|TOKEN_EXPIRED · ไม่มี BFF: ตรรกะของ LoginProxyServlet อยู่ใน AuthService.proxy()"
+    },
+    {
+      "id": "forbidden",
+      "route": "forbidden",
+      "title": {
+        "th": "ไม่มีสิทธิ์เข้าถึง",
+        "en": "Access denied"
+      },
+      "navGroup": null,
+      "navTab": null,
+      "requires": null,
+      "feature": "system",
+      "legacy": [
+        "web/error.jsp",
+        "web/access.xhtml"
+      ],
+      "status": "system",
+      "phase": 0,
+      "size": "S",
+      "implemented": true,
+      "apis": [],
+      "notes": "แทน 403 ของ PageAccessRules"
+    },
+    {
+      "id": "settings",
+      "route": "settings",
+      "title": {
+        "th": "ตั้งค่า",
+        "en": "Settings"
+      },
+      "navGroup": "settings",
+      "navTab": null,
+      "requires": null,
+      "feature": "settings",
+      "legacy": ["master-setup final mock up 30-10-2026.html (mockup ของดีไซน์ ไม่มีใน Java)"],
+      "status": "live",
+      "phase": 0,
+      "size": "L",
+      "implemented": true,
+      "apis": [],
+      "notes": "Configuration & Master data · เมนูใหม่ ไม่มีใน Java · แสดงตลอด ไม่เช็กสิทธิ์ (ยังไม่กำหนด key) · โครง UI ตาม mockup (แท็บหมวด → แถบขั้นตอน → รายการ) · **แท็บเมนู (หมวด/ขั้น/ชิปตาราง/ชื่อ/ลำดับ/ขั้นที่ต้องมีก่อน) มาจากตาราง backoffice.menu ผ่าน GET /master-setup/steps (docs/guide/menu-api.md ของโปรเจกต์ configmaster)** · ที่เหลือมาจาก DB ผ่าน backend ของโปรเจกต์ configmaster (เส้นทาง /master-service ของ proxy · พอร์ต 8085) : นิติบุคคลที่ใช้กับ · สถานะ ✓/ล็อก/พร้อมเปิดใช้งาน x/y · รายการ · ฟอร์มสร้าง/แก้ไข/ดู (ต้องรัน configmaster ก่อน) · คัดลอกเป็นรายการใหม่ · ลบ (หน้าลบ + ใช้อยู่ใน + เปลี่ยนเป็น block) ทำแล้ว ตาม mockup v33 ; นำเข้า Excel + อัปโหลดไฟล์ ยังไม่ทำ · หน้า settings/v2/* ใช้ข้อมูลชุดเดียวกัน (settings.store.ts)"
+    },
+    {
+      "id": "settings-v2-p0",
+      "route": "settings/v2/initial",
+      "title": {
+        "th": "ตั้งค่า v2 · ข้อมูลตั้งต้น (ACE)",
+        "en": "Settings v2 · Initial data (ACE)"
+      },
+      "navGroup": "settings",
+      "navTab": null,
+      "requires": null,
+      "feature": "settings",
+      "legacy": ["master-setup final mock up 30-10-2026.html (mockup ของดีไซน์ ไม่มีใน Java)"],
+      "status": "live",
+      "phase": 0,
+      "size": "M",
+      "implemented": true,
+      "apis": [],
+      "notes": "ตั้งค่า v2 — 1 เมนู = 1 หน้า (หมวด ข้อมูลตั้งต้น (ACE)) · แต่ละแท็บเป็นไฟล์แยกใน features/settings/v2/initial/ · เมนู/ชื่อแท็บอ่านจาก settings.config.ts · ข้อมูล mock · ไม่เช็กสิทธิ์"
+    },
+    {
+      "id": "settings-v2-p1",
+      "route": "settings/v2/organization",
+      "title": {
+        "th": "ตั้งค่า v2 · องค์กรและคน",
+        "en": "Settings v2 · Organization & people"
+      },
+      "navGroup": "settings",
+      "navTab": null,
+      "requires": null,
+      "feature": "settings",
+      "legacy": ["master-setup final mock up 30-10-2026.html (mockup ของดีไซน์ ไม่มีใน Java)"],
+      "status": "live",
+      "phase": 0,
+      "size": "M",
+      "implemented": true,
+      "apis": [],
+      "notes": "ตั้งค่า v2 — 1 เมนู = 1 หน้า (หมวด องค์กรและคน) · แต่ละแท็บเป็นไฟล์แยกใน features/settings/v2/organization/ · เมนู/ชื่อแท็บอ่านจาก settings.config.ts · ข้อมูล mock · ไม่เช็กสิทธิ์ · แท็บ Role สิทธิ์ (role.ts) = จัดการ Role/Permission/ตำแหน่งงาน ↔ Role ตามต้นแบบ master-setup_role-permission_v4 (ข้อมูลใน shared-db roleModel) — ชุดสิทธิ์ขั้นต่ำของผู้รับ (View + Edit) ใช้กับคิว Prospect/โอกาสขาย/Lead"
+    },
+    {
+      "id": "settings-v2-p2",
+      "route": "settings/v2/sales-flow",
+      "title": {
+        "th": "ตั้งค่า v2 · ขั้นตอนการขาย",
+        "en": "Settings v2 · Sales flow"
+      },
+      "navGroup": "settings",
+      "navTab": null,
+      "requires": null,
+      "feature": "settings",
+      "legacy": ["master-setup final mock up 30-10-2026.html (mockup ของดีไซน์ ไม่มีใน Java)"],
+      "status": "live",
+      "phase": 0,
+      "size": "M",
+      "implemented": true,
+      "apis": [],
+      "notes": "ตั้งค่า v2 — 1 เมนู = 1 หน้า (หมวด ขั้นตอนการขาย) · แต่ละแท็บเป็นไฟล์แยกใน features/settings/v2/sales-flow/ · เมนู/ชื่อแท็บอ่านจาก settings.config.ts · ข้อมูล mock · ไม่เช็กสิทธิ์"
+    },
+    {
+      "id": "settings-v2-p3",
+      "route": "settings/v2/customer",
+      "title": {
+        "th": "ตั้งค่า v2 · ลูกค้าและการตลาด",
+        "en": "Settings v2 · Customers & marketing"
+      },
+      "navGroup": "settings",
+      "navTab": null,
+      "requires": null,
+      "feature": "settings",
+      "legacy": ["master-setup final mock up 30-10-2026.html (mockup ของดีไซน์ ไม่มีใน Java)"],
+      "status": "live",
+      "phase": 0,
+      "size": "M",
+      "implemented": true,
+      "apis": [],
+      "notes": "ตั้งค่า v2 — 1 เมนู = 1 หน้า (หมวด ลูกค้าและการตลาด) · แต่ละแท็บเป็นไฟล์แยกใน features/settings/v2/customer/ · เมนู/ชื่อแท็บอ่านจาก settings.config.ts · ข้อมูล mock · ไม่เช็กสิทธิ์"
+    },
+    {
+      "id": "settings-v2-p4",
+      "route": "settings/v2/finance",
+      "title": {
+        "th": "ตั้งค่า v2 · การเงินและทั่วไป",
+        "en": "Settings v2 · Finance & general"
+      },
+      "navGroup": "settings",
+      "navTab": null,
+      "requires": null,
+      "feature": "settings",
+      "legacy": ["master-setup final mock up 30-10-2026.html (mockup ของดีไซน์ ไม่มีใน Java)"],
+      "status": "live",
+      "phase": 0,
+      "size": "M",
+      "implemented": true,
+      "apis": [],
+      "notes": "ตั้งค่า v2 — 1 เมนู = 1 หน้า (หมวด การเงินและทั่วไป) · แต่ละแท็บเป็นไฟล์แยกใน features/settings/v2/finance/ · เมนู/ชื่อแท็บอ่านจาก settings.config.ts · ข้อมูล mock · ไม่เช็กสิทธิ์"
+    },
+    {
+      "id": "settings-v2-p5",
+      "route": "settings/v2/extra",
+      "title": {
+        "th": "ตั้งค่า v2 · โมดูลเสริม",
+        "en": "Settings v2 · Extra modules"
+      },
+      "navGroup": "settings",
+      "navTab": null,
+      "requires": null,
+      "feature": "settings",
+      "legacy": ["master-setup final mock up 30-10-2026.html (mockup ของดีไซน์ ไม่มีใน Java)"],
+      "status": "live",
+      "phase": 0,
+      "size": "M",
+      "implemented": true,
+      "apis": [],
+      "notes": "ตั้งค่า v2 — 1 เมนู = 1 หน้า (หมวด โมดูลเสริม) · แต่ละแท็บเป็นไฟล์แยกใน features/settings/v2/extra/ · เมนู/ชื่อแท็บอ่านจาก settings.config.ts · ข้อมูล mock · ไม่เช็กสิทธิ์"
+    },
+    {
+      "id": "under-construction",
+      "route": "under-construction",
+      "title": {
+        "th": "กำลังพัฒนา",
+        "en": "Under construction"
+      },
+      "navGroup": null,
+      "navTab": null,
+      "requires": null,
+      "feature": "system",
+      "legacy": [
+        "pages/underconstruction.xhtml"
+      ],
+      "status": "system",
+      "phase": 0,
+      "size": "S",
+      "implemented": true,
+      "apis": [],
+      "notes": "ปลายทางของเมนูที่ซ่อนอยู่ (คำร้อง/คลังสินค้า/การตลาด)"
+    },
+    {
+      "id": "home",
+      "route": "crm/home",
+      "title": {
+        "th": "CRM แดชบอร์ด",
+        "en": "CRM Dashboard"
+      },
+      "navGroup": "home",
+      "navTab": "dashboard",
+      "requires": null,
+      "feature": "home",
+      "legacy": [
+        "pages/index.xhtml",
+        "resources/js/dashboard.js"
+      ],
+      "status": "live",
+      "phase": 2,
+      "size": "L",
+      "implemented": true,
+      "apis": [
+        "GET /dashboardapi?action=summary|schedules",
+        "GET /board/movement-types",
+        "GET /board/leads?viewMode=list",
+        "POST /board/lead-assign",
+        "GET /board/sale-groups · sale-persons · employees"
+      ],
+      "notes": "หน้าแรกหลัง login · donut วาดด้วย canvas · infinite scroll 20 แถว · มี modal มอบหมายงาน · calendar เล็ก + นัดหมาย/งาน"
+    },
+    {
+      "id": "leads",
+      "route": "crm/lead",
+      "title": {
+        "th": "Lead",
+        "en": "Lead"
+      },
+      "navGroup": "home",
+      "navTab": "lead",
+      "requires": "Pipeline_Lead_View",
+      "feature": "lead",
+      "legacy": [
+        "ดีไซน์ Figma Triple Sales - Web App › CRM › Lead (ไม่มีหน้า Java — Lead เดิมของ Java คือโอกาสขายในปัจจุบัน)"
+      ],
+      "status": "live-ui",
+      "phase": 3,
+      "size": "L",
+      "implemented": true,
+      "apis": [],
+      "notes": "เมนูใหม่ ไม่มีใน Java · รายชื่อผู้สนใจก่อนเป็นลูกค้าเป้าหมาย: รายการ + สถานะ 5 แบบ (New Lead · Contacting · Inactive · Disqualified · Converted) · ค้นหา/กรอง/เรียง · แผงรายละเอียด 3 แท็บ · เพิ่ม/แก้/ลบ · นำเข้า-ส่งออก CSV · บันทึกเป็นลูกค้าเป้าหมาย / สร้างโอกาสขาย (ไปอยู่ฐานข้อมูลร่วมของ mockup) · เขียนด้วยมือ ข้อมูลจาก features/leads/leads.mock.ts — backend ยังไม่มี · route crm/lead (ไม่ใช้ crm/leads เพราะเป็น URL เก่าของโอกาสขายที่ redirect อยู่)"
+    },
+    {
+      "id": "waitlist",
+      "route": "crm/waitlist",
+      "title": {
+        "th": "Waitlist",
+        "en": "Waitlist"
+      },
+      "navGroup": "home",
+      "navTab": "waitlist",
+      "requires": "Pipeline_Wait_list_Access",
+      "feature": "lead",
+      "legacy": [
+        "ดีไซน์ Figma Triple Sales - Web App (แท็บ Waitlist) + lead-prospect-opportunity-flow.md §2.4, §3.5 (ไม่มีหน้า Java)"
+      ],
+      "status": "live-ui",
+      "phase": 3,
+      "size": "M",
+      "implemented": true,
+      "apis": [],
+      "notes": "คิวของใบที่ยังไม่มีเจ้าของ แยก 3 แท็บ: Lead (features/leads/leads.mock.ts) · ลูกค้าเป้าหมาย · โอกาสขาย (คิวต่อกลุ่มกิจกรรม กรองได้ — features/leads/waitlist.mock.ts ข้อมูลในฐานร่วม core/mock/shared-db.ts) · เรียงเก่าสุดก่อน · รับให้ตัวเอง / แจกให้คนอื่น (ทีละใบ คนแรกได้) · แท็บเห็นเมื่อมี Pipeline_Wait_list_Access + Pipeline_<Doc>_View · เขียนด้วยมือ — backend ยังไม่มี"
+    },
+    {
+      "id": "prospects",
+      "route": "crm/prospects",
+      "title": {
+        "th": "ลูกค้าเป้าหมาย",
+        "en": "Prospects"
+      },
+      "navGroup": "home",
+      "navTab": "prospect",
+      "requires": "FEATURE_CRM_Prospect",
+      "feature": "prospect",
+      "legacy": [
+        "pages/contracts.xhtml"
+      ],
+      "status": "live",
+      "phase": 3,
+      "size": "L",
+      "implemented": true,
+      "apis": [
+        "GET /board/prospect-list",
+        "GET /board/prospect-enrich",
+        "POST /board/lead-create"
+      ],
+      "notes": "ชื่อไฟล์เดิม 'contracts' = รายการลูกค้าเป้าหมาย (ไม่ใช่สัญญา) · มีแผงรายละเอียดด้านข้าง + modal สร้าง Lead · badge 'ที่มา' ใช้ Tag palette (hash FNV-1a ไม่ใช่ h*31 — ต้องเลือกให้ชัด)"
+    },
+    {
+      "id": "prospect-form",
+      "route": "crm/prospects/:id",
+      "title": {
+        "th": "ข้อมูลลูกค้าเป้าหมาย",
+        "en": "Prospect"
+      },
+      "navGroup": "home",
+      "navTab": "prospect",
+      "requires": "FEATURE_CRM_Prospect",
+      "feature": "prospect",
+      "legacy": [
+        "pages/contracts_master_data.xhtml"
+      ],
+      "status": "live",
+      "phase": 3,
+      "size": "XL",
+      "implemented": true,
+      "apis": [
+        "GET /board/prospect?id=",
+        "POST /board/prospect/save",
+        "POST /board/prospect/avatar",
+        "GET|POST|DELETE /board/prospect/attachments",
+        "GET /board/provinces · districts · metro-geo"
+      ],
+      "notes": ":id = 'new' เพื่อสร้างใหม่ · 3 แท็บ (เพิ่ม/แก้ไข/ดู) · ฟอร์มใหญ่ที่สุดที่ใช้ PrimeFaces (146 p: tags) · ที่อยู่ province→district→sub-district (sub-district ใช้ metro-geo)"
+    },
+    {
+      "id": "prospect-detail",
+      "route": "crm/prospects/:id/detail",
+      "title": {
+        "th": "รายละเอียดลูกค้าเป้าหมาย",
+        "en": "Prospect detail"
+      },
+      "navGroup": "home",
+      "navTab": "prospect",
+      "requires": "FEATURE_CRM_Prospect",
+      "feature": "prospect",
+      "legacy": [
+        "pages/contracts_master_data.xhtml"
+      ],
+      "status": "live",
+      "phase": 3,
+      "size": "L",
+      "implemented": true,
+      "apis": [
+        "GET /prospects/{id} (bean ของฟอร์มเดิม โหมด view)",
+        "GET /board/prospect?id=",
+        "GET /board/prospect/attachments"
+      ],
+      "notes": "หน้าอ่านอย่างเดียว (ไม่มีฟอร์ม) แทนโหมด view ของ prospect-form · เพิ่ม/แก้ไขยังอยู่ที่ crm/prospects/:id · ยังไม่มี API: OPP ของ prospect, ประวัติการแก้ไข, วันที่เชื่อมต่อโซเชียล, Waitlist/ระงับ/ลบ, modal สร้าง OPP"
+    },
+    {
+      "id": "opportunities",
+      "route": "crm/opportunities",
+      "title": {
+        "th": "โอกาสขาย",
+        "en": "Opportunity"
+      },
+      "navGroup": "home",
+      "navTab": "opportunity",
+      "requires": "FEATURE_CRM_Lead",
+      "feature": "opportunities",
+      "legacy": [
+        "pages/lead.xhtml",
+        "pages/components/lead/filter_modal.xhtml",
+        "pages/components/move_step_modal.xhtml",
+        "pages/components/access_pop.xhtml",
+        "css/lead.css"
+      ],
+      "status": "live",
+      "phase": 1,
+      "size": "XL",
+      "implemented": true,
+      "apis": [
+        "GET /board/leads?viewMode=board|list",
+        "GET /board/master/movement-types?type=LD",
+        "POST /board/filter-state",
+        "POST /board/contact-activities",
+        "GET /board/tags · sale-groups · provinces · employees"
+      ],
+      "notes": "Board (kanban) + List · drag&drop ระหว่างคอลัมน์ (เฉพาะเจ้าของ/Sup) · infinite scroll แยกต่อคอลัมน์ · ต้องส่ง activityGroupId ต่อไปยังหน้ารายละเอียด · usesWorkflowStep แตกแขนงหลายจุด"
+    },
+    {
+      "id": "opportunity-detail",
+      "route": "crm/opportunities/:opportunityId",
+      "title": {
+        "th": "รายละเอียดโอกาสขาย",
+        "en": "Opportunity detail"
+      },
+      "navGroup": "home",
+      "navTab": "opportunity",
+      "requires": "FEATURE_CRM_Lead",
+      "feature": "opportunities",
+      "legacy": [
+        "pages/lead_detail.xhtml",
+        "pages/components/lead_detail/*.xhtml (8 modals)",
+        "pages/components/work_modal.xhtml",
+        "css/lead_detail.css",
+        "css/lead_detail_modal.css"
+      ],
+      "status": "live",
+      "phase": 1,
+      "size": "XL",
+      "implemented": true,
+      "apis": [
+        "GET /board/lead?id&activityGroupId",
+        "GET /board/activity-groups?leadId",
+        "POST /board/lead-update",
+        "POST /board/contact-activities",
+        "POST /board/lead/forward · return · close-step · close",
+        "GET|POST|DELETE /board/prospect/attachments"
+      ],
+      "notes": "ไฟล์เดียว 7.9k บรรทัด · stepbar (CLAUDE.md §1) · แท็บ: ข้อมูลติดต่อ/ข้อมูลหลัก/ข้อมูลเพิ่มเติม/เอกสารประกอบ/เอกสารงานขาย · แผงประวัติ + Table view · 8 modal"
+    },
+    {
+      "id": "activities",
+      "route": "crm/activities",
+      "title": {
+        "th": "การติดต่อ",
+        "en": "Activities"
+      },
+      "navGroup": "home",
+      "navTab": "activity",
+      "requires": "FEATURE_CRM_ContactActivity",
+      "feature": "activity",
+      "legacy": [
+        "pages/activity.xhtml",
+        "pages/components/work_modal.xhtml"
+      ],
+      "status": "live",
+      "phase": 2,
+      "size": "L",
+      "implemented": true,
+      "apis": [
+        "GET /board/activity-list",
+        "GET /board/activity-detail",
+        "POST /board/contact-activities",
+        "POST /board/lead-assign",
+        "POST /board/schedule/add"
+      ],
+      "notes": "Table A0 (ตามโอกาสขาย) / A1 (ตามกลุ่มขั้นตอน) / Type B (ไม่มี workflow) · แผงรายละเอียดด้านขวา 360px · logic รวมยอดอยู่ใน BFF (ContactActivityApiService)"
+    },
+    {
+      "id": "schedule",
+      "route": "crm/schedule",
+      "title": {
+        "th": "ปฏิทินงาน",
+        "en": "Calendar"
+      },
+      "navGroup": "home",
+      "navTab": "calendar",
+      "requires": "FEATURE_CRM_Calendar",
+      "feature": "schedule",
+      "legacy": [
+        "pages/schedule.xhtml",
+        "pages/components/work_modal.xhtml"
+      ],
+      "status": "live",
+      "phase": 2,
+      "size": "XL",
+      "implemented": true,
+      "apis": [
+        "GET /board/schedule/fetch?viewMode=",
+        "PATCH /board/schedule/edit",
+        "POST /board/schedule/add",
+        "POST /board/schedule-filter-state"
+      ],
+      "notes": "3 แท็บ Calendar (ปี/เดือน/สัปดาห์/วัน) · Board (drag&drop เปลี่ยนสถานะ) · List · ปฏิทินเขียนเอง ไม่ใช้ FullCalendar"
+    },
+    {
+      "id": "supporting-docs",
+      "route": "crm/supporting-docs",
+      "title": {
+        "th": "ข้อมูลประกอบ",
+        "en": "Supporting documents"
+      },
+      "navGroup": "home",
+      "navTab": "supportDoc",
+      "requires": "FEATURE_CRM_Document",
+      "feature": "supporting-doc",
+      "legacy": [
+        "pages/supporting_documents.xhtml"
+      ],
+      "status": "live",
+      "phase": 3,
+      "size": "S",
+      "implemented": true,
+      "apis": [],
+      "notes": "หน้า hub (orphan) — ลิงก์ไป 7 ชนิดเอกสาร"
+    },
+    {
+      "id": "supporting-doc-list",
+      "route": "crm/supporting-docs/:type",
+      "title": {
+        "th": "รายการข้อมูลประกอบ",
+        "en": "Supporting document list"
+      },
+      "navGroup": "home",
+      "navTab": "supportDoc",
+      "requires": "FEATURE_CRM_Document",
+      "feature": "supporting-doc",
+      "legacy": [
+        "pages/sales_document.xhtml",
+        "pages/sales_document_2.xhtml … sales_document_7.xhtml"
+      ],
+      "status": "live",
+      "phase": 3,
+      "size": "M",
+      "implemented": true,
+      "apis": [
+        "GET /api/v1/documents?formType=&page=&pageSize=",
+        "GET /board/sales-document-list (servlet: answered by the page's host from the same REST call)"
+      ],
+      "notes": ":type = letter-of-intent | legal-credit-request | service-contract | loan-agreement | preliminary-credit-approval | property-project-contract | credit-application · 7 ไฟล์เดิมโคลนกัน → component เดียว + cfg ต่อชนิด (tools/sync-supporting-doc-list.mjs เทียบทั้ง 7 ไฟล์) · สิทธิ์ CRM_Document_<Type>_View"
+    },
+    {
+      "id": "supporting-doc-form",
+      "route": "crm/supporting-docs/:type/:id",
+      "title": {
+        "th": "เอกสารข้อมูลประกอบ",
+        "en": "Supporting document"
+      },
+      "navGroup": "home",
+      "navTab": "supportDoc",
+      "requires": "FEATURE_CRM_Document",
+      "feature": "supporting-doc",
+      "legacy": [
+        "pages/sales_document_sub_1.xhtml … sales_document_sub_6.xhtml",
+        "pages/sales_document_sub_7.xhtml (ใบคำขอสินเชื่อ — 635 p: tags)",
+        "pages/inc/*.xhtml"
+      ],
+      "status": "live",
+      "phase": 3,
+      "size": "XL",
+      "implemented": true,
+      "apis": [
+        "GET /api/v1/documents/{id}?formType=",
+        "POST /api/v1/documents (formType)",
+        "PUT /api/v1/documents/{id}?formType=",
+        "POST /api/v1/documents/{id}/attachments?formType=",
+        "GET /api/v1/master-data/prospects/search?key=&page=&perPage=",
+        "GET /api/v1/master-data/employees",
+        "GET /api/v1/prospects/{id}",
+        "GET /board/provinces|districts|sub-districts (sub_7: answered from /master-data/*)"
+      ],
+      "notes": ":id = 'new' (สร้าง) หรือรหัสเอกสาร · ?action_type=edit|detail · sub_1–6 = ฟอร์มเดียว (6 ไฟล์เดิมโคลนกัน เทียบด้วย tools/sync-supporting-doc-form.mjs) · sub_7 = ใบคำขอสินเชื่อ (ผู้กู้/ผู้กู้ร่วม/ผู้ค้ำ ~270 ช่อง ไม่มีแท็บเอกสาร) · สิทธิ์ CRM_Document_<Type>_View/Edit"
+    },
+    {
+      "id": "drilldown",
+      "route": "crm/drilldown/:code",
+      "title": {
+        "th": "DrillDown",
+        "en": "DrillDown"
+      },
+      "navGroup": "home",
+      "navTab": "supportDoc",
+      "requires": "CRM_Dashboard_View",
+      "feature": "drilldown",
+      "legacy": [
+        "pages/drilldown.xhtml"
+      ],
+      "status": "live",
+      "phase": 4,
+      "size": "M",
+      "implemented": true,
+      "apis": [
+        "GET /board/drilldown?action=data&code=&page=&pageSize="
+      ],
+      "notes": "รายงาน 11 ชุด (T-CS-01, T-PLS-01..03, T-LS-01..05, T-LE-01, T-FI-01) ใช้หน้าเดียว คอลัมน์มาจาก server · export CSV · ตัวกรองคอลัมน์ฝั่ง client"
+    },
+    {
+      "id": "forecast",
+      "route": "forecast",
+      "title": {
+        "th": "Sales Forecast",
+        "en": "Sales Forecast"
+      },
+      "navGroup": "forecast",
+      "navTab": "forecast",
+      "requires": "MODULE_Pipeline",
+      "feature": "forecast",
+      "legacy": ["TripleSales_Forecast_Prototype_v19.html (ต้นแบบของดีไซน์ ไม่มีใน Java)"],
+      "status": "live-ui",
+      "phase": 4,
+      "size": "XL",
+      "implemented": true,
+      "apis": [
+        "GET /forecast/lookups",
+        "GET|POST /forecast/configs · GET|PUT /forecast/configs/{id} · POST /forecast/configs/{id}/status",
+        "GET /forecast/configs/{id}/targets · GET /forecast/configs/{id}/periods · POST /forecast/periods/{id}/status",
+        "POST /forecast/summary · GET /forecast/opportunities · POST /forecast/adjustments",
+        "GET /forecast/dashboard · GET /forecast/history (+ format=xlsx)"
+      ],
+      "notes": "เมนูใหม่ ไม่มีใน Java · อยู่ถัดจาก CRM ในแถบซ้าย (สิทธิ์ MODULE_Pipeline เหมือน CRM — ต้นแบบไม่ได้กำหนด key) · เขียนด้วยมือจากต้นแบบ v19: Sales Forecast Listing · Sales Forecast Configuration (Configuration / Sales Target / Adjustment / Close Forecast Period) · Forecast Overview · Forecast Dashboard · Forecast Change History (ไม่มีแท็บ ERD / Endpoint ของต้นแบบ) · 14 endpoint ใต้ api.service ตามแท็บ Endpoint ของต้นแบบ (features/forecast/forecast.api.ts) — backend ยังไม่มี: เรียก API จริงก่อนทุกครั้ง ถ้าไม่สำเร็จ (ต่อไม่ได้ / 404 / 5xx) ใช้ข้อมูลจำลองชุดเดียวกับต้นแบบ (forecast.mock.ts) และแสดงป้าย \"ข้อมูลตัวอย่าง\" + ตัวเลือกบริษัท / บทบาทจำลอง"
+    },
+    {
+      "id": "dashboard",
+      "route": "dashboard",
+      "title": {
+        "th": "แดชบอร์ด",
+        "en": "Dashboard"
+      },
+      "navGroup": "sun",
+      "navTab": "dashboard",
+      "requires": "FEATURE_CRM_Dashboard",
+      "feature": "sales-dashboard",
+      "legacy": [
+        "dashboard-snapshot.html (ดีไซน์ใหม่ 20/11/2026 — tools/sync-sales-dashboard.mjs)",
+        "pages/dashboard.xhtml",
+        "pages/dashboard_company.xhtml (7.5k บรรทัด)",
+        "pages/dashboard_calendar_frame.xhtml",
+        "pages/dashboard_kpi_frame.xhtml"
+      ],
+      "status": "live",
+      "phase": 4,
+      "size": "XL",
+      "implemented": true,
+      "apis": [
+        "GET /dashboard/chart-single?chart=",
+        "GET /dashboard/overview · months · masterdata-all",
+        "GET /dashboard/api/v1/sundashboard/*",
+        "GET|POST /dashboard/widget-layout"
+      ],
+      "notes": "ดีไซน์ใหม่ 6 แท็บ (ภาพรวม · Lead & การตลาด · Pipeline & ยอดขาย · ทีมขาย · กิจกรรม · แชท) = features/sales-dashboard สร้างจาก snapshot ของผู้ออกแบบ (npm run sales-dashboard:sync) — ตัวเลขตายตัวตาม snapshot ตัวกรอง/ปรับแดชบอร์ดยังไม่ทำงาน · หน้าเดิมที่พอร์ตจาก Java (10 แท็บ, ECharts, features/dashboard) ยังอยู่ในโค้ดแต่ไม่ได้ผูก route แล้ว"
+    },
+    {
+      "id": "receipts",
+      "route": "sales/receipts",
+      "title": {
+        "th": "ใบรับเงิน (RV)",
+        "en": "Receipt (RV)"
+      },
+      "navGroup": "sale",
+      "navTab": "rv",
+      "requires": "FEATURE_CRM_Document",
+      "feature": "sales-doc",
+      "legacy": [
+        "pages/sales_doc_rv_list.xhtml",
+        "resources/support/sd2_list.css"
+      ],
+      "status": "live",
+      "phase": 3,
+      "size": "M",
+      "implemented": true,
+      "apis": [
+        "GET /rvapi?action=list|leads|products|detail",
+        "POST /rvapi?action=approve&txno=",
+        "GET /rvreport?txno= · /rvreceipt?id="
+      ],
+      "notes": "โหลดครั้งเดียว 500 แถวแล้วค้นหา/กรอง/เรียงฝั่ง client · ปุ่มอนุมัติ + modal เลือกเงื่อนไข · พิมพ์ฟอร์ม RV-01 (PDF/PNG)"
+    },
+    {
+      "id": "receipt-form",
+      "route": "sales/receipts/:id",
+      "title": {
+        "th": "ใบรับเงิน",
+        "en": "Receipt"
+      },
+      "navGroup": "sale",
+      "navTab": "rv",
+      "requires": "FEATURE_CRM_Document",
+      "feature": "sales-doc",
+      "legacy": [
+        "pages/sales_doc_rv.xhtml"
+      ],
+      "status": "live",
+      "phase": 3,
+      "size": "L",
+      "implemented": true,
+      "apis": [
+        "POST /rvapi?action=create",
+        "GET /rvapi?action=materials|branches|currencies|receiveMethods|attachFileTypes",
+        "GET /board/lead · prospect (prefill)"
+      ],
+      "notes": ":id = 'new' · query leadId, activityGroupId, listMaterialId · แก้ไขหลังสร้างไม่ได้ · VAT รวม → ส่ง value*100/107 · numpad dialog ชำระเงิน"
+    },
+    {
+      "id": "sales-doc-list",
+      "route": "sales/docs/:type",
+      "title": {
+        "th": "เอกสารงานขาย",
+        "en": "Sales documents"
+      },
+      "navGroup": "sale",
+      "navTab": null,
+      "requires": "FEATURE_CRM_Document",
+      "feature": "sales-doc",
+      "legacy": [
+        "pages/sales_doc_type_list.xhtml",
+        "pages/components/sales_doc_list_legacy.xhtml"
+      ],
+      "status": "live-ui",
+      "phase": 6,
+      "size": "S",
+      "implemented": true,
+      "apis": [],
+      "notes": ":type = qt | bk | ob | aq | ad · ตารางว่างเสมอเพราะยังไม่มี API"
+    },
+    {
+      "id": "sales-doc-form",
+      "route": "sales/docs/:type/:id",
+      "title": {
+        "th": "ฟอร์มเอกสารงานขาย",
+        "en": "Sales document form"
+      },
+      "navGroup": "sale",
+      "navTab": null,
+      "requires": "FEATURE_CRM_Document",
+      "feature": "sales-doc",
+      "legacy": [
+        "pages/sales_doc_qt_form.xhtml",
+        "sales_doc_bk_form.xhtml",
+        "sales_doc_ob_form.xhtml",
+        "sales_doc_aq_form.xhtml",
+        "sales_doc_ad_form.xhtml",
+        "pages/components/sales_doc_*.xhtml (22 ไฟล์)",
+        "resources/support/sales_doc_*.js (engine ~15 ไฟล์)"
+      ],
+      "status": "live-ui",
+      "phase": 6,
+      "size": "XL",
+      "implemented": true,
+      "apis": [
+        "(ยังไม่มี API บันทึก)",
+        "GET /board/prospect-list (เลือกลูกค้า)",
+        "GET /rvapi?action=materials"
+      ],
+      "notes": "QT → BK → OB → RV · engine คำนวณ (items/VAT/ส่วนลด/ชำระเงิน/พิมพ์ + ตัวอักษรบาท) ต้องย้ายเป็น service พร้อมเทสต์ · AQ/AD ใช้ master จาก auto_dealer_master.json (mock)"
+    },
+    {
+      "id": "smart-doc",
+      "route": "sales/smart-doc/:doc",
+      "title": {
+        "th": "เอกสารงานขาย (Smart Doc)",
+        "en": "Sales documents (Smart Doc)"
+      },
+      "navGroup": "sale",
+      "navTab": null,
+      "requires": "FEATURE_CRM_Document",
+      "feature": "smart-docs",
+      "legacy": [
+        "Triple_Sales_Smart_Doc_Mockup_QT_SO_DO_RV_v14.html (BA 20/11/2026 — tools/sync-smart-doc.mjs)",
+        "BRD_SmartDoc_UseCase_Exception_v0.4.docx",
+        "SmartDoc_Field_Specification_QT_SO_DO_RV_v1.3.xlsx"
+      ],
+      "status": "mock",
+      "phase": 6,
+      "size": "XL",
+      "implemented": true,
+      "apis": [
+        "(mock) Datasource state.smart-docs.json — ข้อมูลหลัก + เอกสาร 4 ชนิด + เลขที่เอกสาร",
+        "ภายหลัง: triplesales-api SMD-QT / SO / OB / RV"
+      ],
+      "notes": ":doc = qt | so | do | rv · หน้ารายการแบบ TRCloud + ฟอร์ม + พิมพ์ ตาม mockup v14 ของ BA (สร้างด้วย npm run smart-doc:sync) · เมนูงานขาย ใบเสนอราคา/ใบจอง/ใบส่งสินค้า/ใบรับเงิน ชี้มาหน้านี้ · หน้าเดิม (sales/docs, sales/receipts) ยังเปิดได้ตาม URL"
+    },
+    {
+      "id": "report",
+      "route": "report",
+      "title": {
+        "th": "รายงาน",
+        "en": "Report"
+      },
+      "navGroup": "report",
+      "navTab": null,
+      "requires": "FEATURE_CRM_Report",
+      "feature": "report",
+      "legacy": [
+        "pages/report.xhtml",
+        "resources/mock/report_mock.json",
+        "src/java/report_config.properties"
+      ],
+      "status": "live",
+      "phase": 4,
+      "size": "M",
+      "implemented": true,
+      "apis": [
+        "GET /report-pdf?code=&…  (เปิดแท็บใหม่)",
+        "รายการรายงานปัจจุบันมาจาก mock JSON"
+      ],
+      "notes": "สิทธิ์รายงานรายตัว Report_<CODE>_View · filter form สร้างจาก filterDefs"
+    },
+    {
+      "id": "chat",
+      "route": "chat",
+      "title": {
+        "th": "จัดการแชท",
+        "en": "Chat"
+      },
+      "navGroup": "chat",
+      "navTab": "chat",
+      "requires": "MODULE_CHATBOX,MODULE_Chat_Box",
+      "feature": "chat",
+      "legacy": [
+        "pages/chatbot.xhtml (744KB: CSS + markup + script ~6.6k บรรทัด)"
+      ],
+      "status": "live",
+      "phase": 5,
+      "size": "XL",
+      "implemented": true,
+      "apis": [
+        "/chat-api/api/v1/* (conversations, messages, uploads, chatbot, chat-channels, ai-companies, quick-messages, prospect-social)",
+        "Socket.IO: message:new · conversation:update · conversation:join",
+        "/ai-api/api/analytics/customer*",
+        "/board/{prospect, prospect-leads, employees, chat-master-data, chat-prospect-create}"
+      ],
+      "notes": "แชทรวม LINE/Facebook/Instagram/WhatsApp/TikTok · พอร์ต 1:1 (markup + CSS + page script → chat.html / chat.scss / chat.engine.ts สร้างด้วย npm run chat:sync) · ปุ่มคุมด้วยสิทธิ์ Chat_* เหมือน ui:fragment ของ Java · Socket.IO แบบ polling ผ่าน /socket.io · โหมด mock ใช้ chat.mock.ts"
+    },
+    {
+      "id": "ai-translator",
+      "route": "ai/translator",
+      "title": {
+        "th": "AI แปลเอกสาร",
+        "en": "AI Document Translator"
+      },
+      "navGroup": "ai",
+      "navTab": "translator",
+      "requires": null,
+      "feature": "ai",
+      "legacy": [
+        "pages/ai_translator.xhtml",
+        "WEB-INF/pages/ai_menu.xhtml"
+      ],
+      "status": "live",
+      "phase": 5,
+      "size": "L",
+      "implemented": true,
+      "apis": [
+        "/aitran?action=list|save|edit|quotation|file|translated|chat",
+        "/aitran-api/*"
+      ],
+      "notes": "ไม่อยู่ใน PageAccessRules (ผู้ใช้ที่ login แล้วทุกคนเข้าได้) · พอร์ต 1:1 (markup + CSS + script → translator.engine.ts, สร้างด้วย npm run ai-translator:sync) · อัปโหลดไฟล์ด้วย XHR (progress) · swal → DialogService/ToastService · โหมด mock ใช้ translator.mock.ts"
+    },
+    {
+      "id": "ai-hub-home",
+      "route": "ai/hub",
+      "title": {
+        "th": "AI HUB",
+        "en": "AI HUB"
+      },
+      "navGroup": "aihub",
+      "navTab": null,
+      "requires": "AI_ACCESS_USE",
+      "flag": "aiHubEnabled",
+      "feature": "ai",
+      "legacy": [
+        "pages/ai_hub.xhtml (หน้ารวม ไม่มี ?tool=)",
+        "resources/js/ai_hub.js"
+      ],
+      "status": "live",
+      "phase": 5,
+      "size": "M",
+      "implemented": true,
+      "apis": [
+        "/aihub/tools",
+        "/aihub/usage"
+      ],
+      "notes": "หน้ารวม AI HUB: ค้นหาเครื่องมือ · งานล่าสุด · การใช้ token · เมื่อปิดด้วย flag จะแสดงประกาศ \"AI HUB ปิดใช้งานอยู่\" แทนการ 404 (เหมือนของเดิม)"
+    },
+    {
+      "id": "ai-hub",
+      "route": "ai/hub/:tool",
+      "title": {
+        "th": "AI HUB",
+        "en": "AI HUB"
+      },
+      "navGroup": "aihub",
+      "navTab": null,
+      "requires": "AI_ACCESS_USE",
+      "flag": "aiHubEnabled",
+      "feature": "ai",
+      "legacy": [
+        "pages/ai_hub.xhtml",
+        "resources/js/ai_hub.js"
+      ],
+      "status": "live",
+      "phase": 5,
+      "size": "L",
+      "implemented": true,
+      "apis": [
+        "/aihub/tools[/{id}]",
+        "/aihub/files/{id}",
+        "/aihub/library/{id}",
+        "/aihub/usage"
+      ],
+      "notes": "เปิดด้วย config aihub.menu.enabled · 13 เครื่องมือใน 4 กลุ่ม (Document AI, Content Creation, Developer AI, Knowledge & Strategy) · hard-code ภาษาไทย · พอร์ต 1:1 (markup + CSS + ai_hub.js → ai-hub.engine.ts) · โหมด mock ใช้ ai-hub.mock.ts"
+    },
+    {
+      "id": "points",
+      "route": "points",
+      "title": {
+        "th": "แต้มสะสม",
+        "en": "Loyalty Points"
+      },
+      "navGroup": "point",
+      "navTab": "home",
+      "requires": null,
+      "feature": "points",
+      "legacy": [
+        "pages/tk_dashboard.xhtml",
+        "tk_dashboard_mock.json"
+      ],
+      "status": "mock",
+      "phase": 7,
+      "size": "M",
+      "implemented": false,
+      "apis": [],
+      "notes": "ซ่อนจากเมนู (14/09) · ใช้ mock JSON + ECharts 2 ชุด"
+    },
+    {
+      "id": "promotions",
+      "route": "promotions",
+      "title": {
+        "th": "รายการโปรโมชั่น",
+        "en": "Promotions"
+      },
+      "navGroup": "point",
+      "navTab": "promotion",
+      "requires": null,
+      "feature": "promotion",
+      "legacy": [
+        "pages/promotion.xhtml",
+        "promotion_create_data.xhtml",
+        "promotion_detail_data.xhtml",
+        "WEB-INF/pages/fragments/coupon_dialog.xhtml"
+      ],
+      "status": "mock",
+      "phase": 7,
+      "size": "L",
+      "implemented": false,
+      "apis": [],
+      "notes": "ใช้ promotion_mock.json · promotion_create/detail (เวอร์ชัน p:tabView) เป็น legacy ไม่ต้องย้าย"
+    },
+    {
+      "id": "market-plan",
+      "route": "market-plan",
+      "title": {
+        "th": "แผนเดินตลาด",
+        "en": "Market Plan"
+      },
+      "navGroup": "home",
+      "navTab": "marketPlan",
+      "requires": null,
+      "feature": "market-plan",
+      "legacy": [
+        "pages/market_plan.xhtml",
+        "pages/market_plan_map.xhtml (Leaflet)"
+      ],
+      "status": "mock",
+      "phase": 7,
+      "size": "M",
+      "implemented": false,
+      "apis": [],
+      "notes": "ซ่อนจากเมนู · mock JSON · *_land.xhtml ฝัง Google Maps API key — ห้ามคัดลอก"
+    },
+    {
+      "id": "petitions",
+      "route": "petitions",
+      "title": {
+        "th": "คำร้อง",
+        "en": "Petitions"
+      },
+      "navGroup": "ticket",
+      "navTab": "petition",
+      "requires": null,
+      "feature": "petition",
+      "legacy": [
+        "pages/pt_customer_list.xhtml",
+        "pt_petition_list.xhtml",
+        "pt_petition_detail.xhtml",
+        "tk_petition_detail.xhtml"
+      ],
+      "status": "mock",
+      "phase": 7,
+      "size": "M",
+      "implemented": false,
+      "apis": [],
+      "notes": "ซ่อนจากเมนู · legacy/mock (PetitionView 8k บรรทัด) — ยืนยันกับ PO ก่อนทำ"
+    }
+  ]
+}

@@ -1,0 +1,166 @@
+<div class="ph">
+  <div>
+    <h1>Forecast Dashboard<ts-forecast-tip k="pg_dash" /></h1>
+    <p>{{ label() }} · {{ t('app.forecast.dash.sub') }}</p>
+  </div>
+</div>
+
+<div class="filters">
+  <div class="fld">
+    <span>{{ t('app.forecast.dash.level') }}<ts-forecast-tip k="db_type" /></span>
+    <div class="seg">
+      @for (lv of levels; track lv) {
+        <button type="button" [class.on]="store.dType() === lv" (click)="store.setDType(lv)">{{ t('app.forecast.dash.level.' + lv) }}</button>
+      }
+    </div>
+  </div>
+  <div class="fld">
+    <span>{{ t('app.forecast.dash.year') }}<ts-forecast-tip k="db_year" /></span>
+    <select class="sel" data-ods-nosearch="1" [attr.aria-label]="t('app.forecast.dash.year')" [tsFcValue]="store.dYear()" (tsFcChange)="store.setDYear($event)">
+      @for (y of years(); track y) {
+        <option [value]="y">{{ store.year(y) }}</option>
+      }
+    </select>
+  </div>
+  @if (store.dType() === 'quarter') {
+    <div class="fld">
+      <span>{{ t('app.forecast.dash.quarter') }}<ts-forecast-tip k="db_q" /></span>
+      <select class="sel" data-ods-nosearch="1" [attr.aria-label]="t('app.forecast.dash.quarter')" [tsFcValue]="store.dQ()" (tsFcChange)="store.setDQ($event)">
+        @for (q of quarters; track q) {
+          <option [value]="q">Q{{ q }}</option>
+        }
+      </select>
+    </div>
+  }
+  @if (store.dType() === 'month') {
+    <div class="fld">
+      <span>{{ t('app.forecast.dash.month') }}<ts-forecast-tip k="db_m" /></span>
+      <select class="sel" data-ods-nosearch="1" [attr.aria-label]="t('app.forecast.dash.month')" [tsFcValue]="store.dMonth()" (tsFcChange)="store.setDMonth($event)">
+        @for (m of months(); track m.value) {
+          <option [value]="m.value">{{ m.label }}</option>
+        }
+      </select>
+    </div>
+  }
+  <ts-forecast-filters [show]="filters" />
+</div>
+
+@if (view(); as v) {
+  <div class="kpis">
+    <div class="kpi" [style.--c]="'var(--fc-cat-committed)'">
+      <div class="l">Sales Target</div>
+      <div class="v">{{ B(v.target) }}</div>
+    </div>
+    <div class="kpi" [style.--c]="'var(--fc-cat-closed)'">
+      <div class="l">Closed Success</div>
+      <div class="v">{{ B(v.won) }}</div>
+    </div>
+    <div class="kpi" [style.--c]="'var(--fc-cat-bestcase)'">
+      <div class="l">Final Forecast</div>
+      <div class="v">{{ B(v.final) }}</div>
+    </div>
+    <div class="kpi" [style.--c]="'var(--fc-kpi-gap)'">
+      <div class="l">Gap to Target</div>
+      <div class="v"><span [class]="dcls(v.final - v.target)">{{ sgn(v.final - v.target) }}</span></div>
+    </div>
+    <div class="kpi" [style.--c]="'var(--fc-cat-omitted)'">
+      <div class="l">Coverage</div>
+      <div class="v">{{ (v.target ? (v.final / v.target) * 100 : 0).toFixed(1) }}%</div>
+    </div>
+    <div class="kpi" [style.--c]="'var(--fc-kpi-adjust)'">
+      <div class="l">{{ t('app.forecast.dash.adjustTotal') }}</div>
+      <div class="v">{{ sgn(v.final - v.base) }}</div>
+    </div>
+  </div>
+
+  <ts-forecast-scenario [min]="v.scenario.min" [final]="v.final" [max]="v.scenario.max" [target]="v.target" />
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-h">
+        <h3>Sales Outlook<ts-forecast-tip k="db_outlook" /></h3>
+      </div>
+      <div class="card-b">
+        <div class="legend">
+          <span><i class="lg-final"></i>Final Forecast</span>
+          <span><i class="lg-closed"></i>Closed Success</span>
+          <span><i class="lg-target"></i>Target</span>
+        </div>
+        <svg class="chart" viewBox="0 0 560 220" role="img" aria-label="Sales Outlook">
+          @for (y of v.outlook.grid; track $index) {
+            <line class="grid" x1="40" x2="540" [attr.y1]="y" [attr.y2]="y" />
+          }
+          @for (s of v.outlook.series; track s.key) {
+            <path class="ln" [class]="'s-' + s.key" [attr.d]="s.d" />
+            @for (p of s.points; track $index) {
+              <circle [class]="'pt-' + s.key" [attr.cx]="p.x" [attr.cy]="p.y" [attr.r]="p.r">
+                <title>{{ p.title }}</title>
+              </circle>
+            }
+          }
+          @for (l of v.outlook.labels; track $index) {
+            <text class="ax" [class.on]="l.on" [attr.x]="l.x" y="212" text-anchor="middle">{{ l.text }}</text>
+          }
+        </svg>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">
+        <h3>Team Performance<ts-forecast-tip k="db_team" /></h3>
+      </div>
+      <div class="card-b">
+        <div class="legend">
+          <span><i class="lg-final"></i>Final</span>
+          <span><i class="lg-closed"></i>Target</span>
+        </div>
+        @for (team of v.teams; track team.id) {
+          <div class="trow">
+            <b>{{ team.name }}</b>
+            <div class="tbar"><i [style.width.%]="team.final"></i><i class="mark" [style.left.%]="team.target"></i></div>
+            <span class="n">{{ B(team.value) }}</span>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">
+        <h3>Pipeline Health<ts-forecast-tip k="db_health" /></h3>
+      </div>
+      <div class="card-b health">
+        <svg class="donut" viewBox="0 0 180 180" role="img" aria-label="Pipeline Health">
+          <circle class="ring" cx="90" cy="90" r="70" />
+          @for (s of v.donut; track s.category) {
+            <circle class="seg-c" cx="90" cy="90" r="70" [style.stroke]="CATEGORY_COLOR[s.category]" [attr.stroke-dasharray]="s.dash" [attr.stroke-dashoffset]="s.offset">
+              <title>{{ CATEGORY_LABEL[s.category] }} {{ B(s.amount) }}</title>
+            </circle>
+          }
+        </svg>
+        <div class="hlist">
+          @for (h of v.health; track h.category) {
+            <div class="hrow">
+              <span><i class="dot9" [style.background]="CATEGORY_COLOR[h.category]"></i>{{ CATEGORY_LABEL[h.category] }}</span>
+              <b class="n">{{ B(h.amount) }}</b>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">
+        <h3>Forecast Bridge<ts-forecast-tip k="db_bridge" /></h3>
+      </div>
+      <div class="card-b">
+        @for (b of v.bridge; track b.key) {
+          <div class="brow">
+            <span>{{ b.label }}</span>
+            <div class="bbar"><i [style.width.%]="b.width" [style.background]="b.color"></i></div>
+            <b class="n" [class]="b.delta ? dcls(b.value) : ''">{{ b.delta ? sgn(b.value) : B(b.value) }}</b>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+}

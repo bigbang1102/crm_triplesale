@@ -1,0 +1,145 @@
+<h1 class="ts-sr-only">Configuration &amp; Master data v2</h1>
+
+<!-- ฟอร์มเปิดเป็นหน้าเต็ม (store.fullPage) = ซ่อนแท็บหมวดและแถบขั้นตอน เหลือ breadcrumb + ฟอร์ม -->
+@if (!store.fullPage()) {
+<nav class="tabbar" [attr.aria-label]="t('app.settings.phases')">
+  @for (p of menu(); track p.key; let i = $index) {
+    <a class="ptab" [routerLink]="p.link" [attr.aria-current]="phase() === p.key">
+      <span class="pn" [class.ok]="store.phaseDone(p.key)">
+        @if (store.phaseDone(p.key)) { <ts-icon name="check" [size]="12" /> } @else { {{ i }} }
+      </span>
+      {{ p.title }}
+    </a>
+  }
+  <a class="ver-link" routerLink="/settings">v1</a>
+</nav>
+}
+
+<section class="mainc" [class.pg]="store.fullPage()">
+  @if (!store.fullPage()) {
+  @if (store.failure(); as fail) {
+    <div class="note err" role="alert">
+      <span>{{ failureText(fail) }}</span>
+      <button type="button" class="ts-btn ts-btn--ghost" (click)="store.reload()">{{ t('app.settings.live.retry') }}</button>
+    </div>
+  } @else if (store.noEntity()) {
+    <div class="note warn" role="status">{{ t('app.settings.live.noEntity') }}</div>
+  }
+
+  <div class="sechead">
+    <ts-flow-scroll [selected]="stepKey()" (scrolled)="tip.set(null)">
+      @for (g of groups(); track $index) {
+        <div class="sgrp" [class.dep]="g.dependent" [title]="t(g.dependent ? 'app.settings.group.dep' : 'app.settings.group.free')">
+          <div class="sgi">
+            @for (it of g.steps; track it.step.stepKey) {
+              @if ($index > 0) {
+                @if (it.linked) {
+                  <span class="arr" [class.ok]="it.linkDone" aria-hidden="true"><ts-icon name="chevronRight" [size]="18" /></span>
+                } @else {
+                  <span class="gap" aria-hidden="true"></span>
+                }
+              }
+              <div
+                class="step"
+                [class.done]="it.step.done"
+                [class.sel]="stepKey() === it.step.stepKey"
+                role="button"
+                tabindex="0"
+                [attr.aria-pressed]="stepKey() === it.step.stepKey"
+                (click)="select(it.step.stepKey)"
+                (keydown.enter)="select(it.step.stepKey)"
+                (keydown.space)="select(it.step.stepKey); $event.preventDefault()"
+              >
+                <div class="sh">
+                  <span class="num nn">
+                    @if (it.step.done) { <ts-icon name="check" [size]="10" /> }
+                  </span>
+                  <span class="sname">{{ it.step.title }}</span>
+                  @if (it.step.locked) {
+                    <button
+                      type="button"
+                      class="warn"
+                      [attr.aria-label]="t('app.settings.fillFirst')"
+                      (mouseenter)="showTip($event, it.step)"
+                      (mouseleave)="hideTip()"
+                      (focus)="showTip($event, it.step)"
+                      (blur)="hideTip()"
+                      (click)="showTip($event, it.step); $event.stopPropagation()"
+                    >!</button>
+                  }
+                </div>
+                @if (stepKey() === it.step.stepKey && it.step.tables.length > 1 && !it.step.permFields.length) {
+                  <div class="subs" role="tablist">
+                    @for (tb of it.step.tables; track tb.tableKey; let last = $last) {
+                      <div
+                        class="sub"
+                        [class.on]="table() === tb.tableKey"
+                        role="tab"
+                        tabindex="0"
+                        [attr.aria-selected]="table() === tb.tableKey"
+                        (click)="selectTable(tb.tableKey); $event.stopPropagation()"
+                        (keydown.enter)="selectTable(tb.tableKey); $event.stopPropagation()"
+                      >
+                        @if (tb.hasRelease) { <span class="tk"><ts-icon name="check" [size]="9" /></span> }
+                        {{ tb.title }}
+                      </div>
+                      @if (!last) { <span class="ssep" aria-hidden="true"><ts-icon name="chevronRight" [size]="13" /></span> }
+                    }
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </ts-flow-scroll>
+
+    <div class="ph-r">
+      <label class="lbl" for="sv-ent">{{ t('app.settings.entity') }}</label>
+      <span class="ent">
+        <select id="sv-ent" (change)="store.setEntity($any($event.target).value)">
+          @for (e of store.entities(); track e.id) {
+            <option [value]="e.id" [selected]="e.id === store.entity()">{{ e.name }}</option>
+          }
+        </select>
+      </span>
+      <div class="go" [title]="t('app.settings.goLiveHint')">
+        <span>{{ t('app.settings.goLive') }} <b>{{ store.goLive().done }}/{{ store.goLive().total }}</b></span>
+        <span class="meter"><i [style.width.%]="store.goLive().pct"></i></span>
+      </div>
+    </div>
+  </div>
+  }
+
+  <div class="work">
+    @if (!step()) {
+      @if (store.loaded()) {
+        <div class="empty">{{ t('app.settings.live.phaseEmpty') }}</div>
+      } @else if (store.busy()) {
+        <div class="empty" role="status">{{ t('app.settings.live.loading') }}</div>
+      }
+    } @else {
+      @if (isPermStep()) {
+        <div class="note warn" role="status">{{ t('app.settings.permPending') }}</div>
+      }
+      @if (page.value(); as c) {
+        <ng-container [ngComponentOutlet]="c" />
+      }
+    }
+  </div>
+</section>
+
+@if (tip(); as tp) {
+  <div class="pop" role="tooltip" [style.left.px]="tp.left" [style.top.px]="tp.top" (mouseenter)="keepTip()" (mouseleave)="hideTip()">
+    <b>{{ t('app.settings.fillFirst') }}</b>
+    @for (m of store.stepMissing(tp.step); track m.stepKey) {
+      <button type="button" class="go-i" (click)="goTo(m.stepKey)">
+        {{ m.title }}
+        <ts-icon name="chevronRight" [size]="15" />
+      </button>
+    }
+    @if (tp.step.note) {
+      <p>{{ tp.step.note }}</p>
+    }
+  </div>
+}

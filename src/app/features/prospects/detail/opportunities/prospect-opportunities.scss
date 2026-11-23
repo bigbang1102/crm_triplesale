@@ -1,0 +1,68 @@
+:host {
+  display: block;
+  --po-soft: color-mix(in srgb, var(--ts-text-muted) 9%, var(--ts-surface));
+  font-family: var(--ts-font);
+  font-size: calc(13px + var(--ts-fs-adj, 0px));
+  color: var(--ts-text);
+}
+
+.po-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+.po-head-left { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.po-head h2 { margin: 0; color: var(--ts-text-header); font-size: calc(16px + var(--ts-fs-adj, 0px)); font-weight: 600; line-height: 24px; }
+.po-stats { display: flex; gap: 32px; }
+.po-stat { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+/* a vertical line between the two numbers */
+.po-stat + .po-stat { padding-left: 32px; border-left: 1px solid var(--ts-border); }
+.po-stat-label { color: var(--ts-text-muted); font-size: calc(12px + var(--ts-fs-adj, 0px)); }
+.po-stat-value { font-size: calc(18px + var(--ts-fs-adj, 0px)); font-weight: 700; line-height: 24px; small { font-size: calc(10px + var(--ts-fs-adj, 0px)); font-weight: 500; color: var(--ts-text-muted); } }
+
+.po-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.po-pill {
+  height: 32px; padding: 0 16px; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--ts-border); background: var(--ts-surface); color: var(--ts-text);
+  font: inherit; font-size: calc(13px + var(--ts-fs-adj, 0px)); font-weight: 500;
+  &:hover:not(.is-active) { background: var(--ts-surface-hover); }
+  &.is-active { background: var(--ts-primary); border-color: var(--ts-primary); color: #fff; }
+}
+
+.po-empty { margin: 32px 0; text-align: center; color: var(--ts-text-muted); }
+.po-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+
+.po-card { display: flex; flex-direction: column; min-width: 0; border: 1px solid var(--ts-border); border-radius: 8px; background: var(--ts-surface); overflow: hidden; }
+.po-card-head { padding: 12px 14px; background: var(--po-soft); display: flex; flex-direction: column; gap: 8px; }
+.po-card-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.po-badge { padding: 2px 12px; border-radius: 99px; color: #fff; font-size: calc(11px + var(--ts-fs-adj, 0px)); font-weight: 700; line-height: 16px; letter-spacing: .3px; text-transform: uppercase; }
+.po-go { display: inline-flex; align-items: center; gap: 6px; padding: 0; border: 0; background: none; color: var(--ts-primary-fg); cursor: pointer; font: inherit; font-size: calc(12px + var(--ts-fs-adj, 0px)); font-weight: 700; .pi { font-size: calc(12px + var(--ts-fs-adj, 0px)); } }
+.po-stage { display: flex; align-items: center; gap: 8px; min-width: 0; b { font-weight: 700; } }
+.po-dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+.po-step { color: var(--ts-text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.po-card-body { padding: 12px 14px; display: flex; flex-direction: column; gap: 12px; }
+.po-customer { display: flex; align-items: center; gap: 10px; }
+.po-avatar { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; flex: none; background: var(--po-soft); }
+.po-avatar--sm { width: 20px; height: 20px; margin-left: -4px; border: 1px solid var(--ts-surface); }
+.po-customer-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.po-name { font-size: calc(14px + var(--ts-fs-adj, 0px)); font-weight: 700; line-height: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.po-amount { font-size: calc(12px + var(--ts-fs-adj, 0px)); font-weight: 700; line-height: 16px; }
+.po-due { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; white-space: nowrap;
+  background: color-mix(in srgb, var(--ts-primary-fg) 14%, var(--ts-surface)); color: var(--ts-primary-fg); font-size: calc(12px + var(--ts-fs-adj, 0px)); font-weight: 600; }
+
+.po-people { display: flex; align-items: center; justify-content: space-between; gap: 12px; color: var(--ts-text-secondary); font-size: calc(12px + var(--ts-fs-adj, 0px)); }
+.po-team, .po-owner { display: inline-flex; align-items: center; gap: 6px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.po-stack { flex: none; display: inline-flex; align-items: center; padding-left: 4px; }
+.po-more { margin-left: -4px; min-width: 20px; height: 20px; padding: 0 4px; display: inline-grid; place-items: center; border-radius: 999px; background: var(--po-soft); color: var(--ts-text-secondary); font-size: calc(10px + var(--ts-fs-adj, 0px)); font-weight: 600; }
+
+.po-card-foot { flex: 1 1 auto; margin: 0 14px; padding: 12px 0 14px; border-top: 1px solid var(--ts-border); display: flex; flex-direction: column; gap: 8px; color: var(--ts-text-secondary); font-size: calc(12px + var(--ts-fs-adj, 0px)); }
+.po-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.po-row-item { display: inline-flex; align-items: center; gap: 6px; min-width: 0; }
+.po-card-foot .pi, .po-people .pi { font-size: calc(12px + var(--ts-fs-adj, 0px)); color: var(--ts-text-muted); }
+/* the need (the description) is at most two lines; the full text is the tooltip */
+.po-need { display: flex; align-items: flex-start; gap: 6px; min-width: 0;
+  span { min-width: 0; overflow-wrap: anywhere; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
+  .pi { margin-top: 2px; flex: none; } }
+/* the tags sit at the bottom of the card whatever the height of the others in the row */
+.po-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 4px; }
+.po-tag { padding: 2px 10px; border-radius: 999px; background: var(--po-soft); color: var(--ts-text); font-size: calc(11px + var(--ts-fs-adj, 0px)); font-weight: 500; }
+
+@media (max-width: 1100px) { .po-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 700px) { .po-grid { grid-template-columns: 1fr; } .po-stats { gap: 20px; } .po-stat + .po-stat { padding-left: 20px; } }

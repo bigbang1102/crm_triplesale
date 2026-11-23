@@ -1,0 +1,59 @@
+{
+  "/tps-api": {
+    "target": "https://dev-tps.acecloud.co.th",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": { "^/tps-api": "" },
+    "logLevel": "warn"
+  },
+  "/triplesale-auth": {
+    "target": "https://uattriplesaleo2o.acecloud.co.th",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "warn"
+  },
+  "/dashboard-triplesale-service": {
+    "target": "https://uattriplesaleo2o.acecloud.co.th",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "warn"
+  },
+  "/ts-files": {
+    "target": "https://uattriplesaleo2o.acecloud.co.th",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": { "^/ts-files": "" },
+    "logLevel": "warn"
+  },
+  "/mockup-idp": {
+    "target": "http://127.0.0.1:4310",
+    "secure": false,
+    "changeOrigin": false,
+    "logLevel": "warn"
+  },
+  "/mockup-tps": {
+    "target": "http://127.0.0.1:4310",
+    "secure": false,
+    "changeOrigin": false,
+    "logLevel": "warn"
+  },
+  "/mockup-api": {
+    "target": "http://127.0.0.1:4310",
+    "secure": false,
+    "changeOrigin": false,
+    "logLevel": "warn"
+  },
+  "/master-service": {
+    "target": "http://localhost:8085",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/master-service": ""
+    },
+    "headers": {
+      "X-Roles": "SCONF",
+      "X-Entity-Ids": "*"
+    },
+    "logLevel": "warn"
+  }
+}

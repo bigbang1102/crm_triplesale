@@ -1,0 +1,72 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.in {
+  width: 100%;
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid var(--ts-border);
+  border-radius: 10px;
+  background: var(--ts-input-bg);
+  color: var(--ts-text);
+  font: inherit;
+  transition: border-color 0.15s, box-shadow 0.15s;
+
+  &:hover:not(:disabled) {
+    border-color: var(--ts-primary);
+  }
+  &:focus {
+    outline: 0;
+    border-color: var(--ts-primary);
+    box-shadow: 0 0 0 0.2em var(--ts-accent-focus);
+  }
+  &.bad {
+    border-color: var(--ts-danger);
+  }
+}
+:host(.compact) .in {
+  height: 36px;
+}
+:host(.ro) {
+  .in {
+    background: var(--ts-surface-hover);
+    color: var(--ts-text);
+    opacity: 1;
+  }
+  .rad label {
+    cursor: default;
+  }
+}
+.file {
+  padding: 6px 8px;
+  height: auto;
+}
+
+.rad {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 20px;
+  min-height: 42px;
+
+  label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+  }
+  input {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--ts-primary);
+  }
+}
+
+.chk {
+  width: 18px;
+  height: 18px;
+  margin: 12px 0;
+  accent-color: var(--ts-primary);
+}

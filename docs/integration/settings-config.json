@@ -1,0 +1,2540 @@
+{
+  "version": "2026-11-03.1",
+  "nodes": [
+    {
+      "id": "p0",
+      "name": {
+        "th": "ข้อมูลตั้งต้น (ACE)",
+        "en": "Initial data (ACE)"
+      },
+      "children": [
+        {
+          "id": "entity",
+          "name": {
+            "th": "นิติบุคคล",
+            "en": "Legal entity"
+          },
+          "goLive": true,
+          "deps": [],
+          "note": {
+            "th": "สกุลเงินและที่อยู่ของนิติบุคคลกรอกทีหลังได้",
+            "en": "Currency and address of the legal entity can be filled in later"
+          },
+          "children": [
+            {
+              "id": "entitygroup",
+              "name": {
+                "th": "กลุ่มนิติบุคคล",
+                "en": "Entity group"
+              },
+              "table": {
+                "name": "entitygroup",
+                "scope": "system",
+                "listColumns": [
+                  {
+                    "name": "entitykey",
+                    "label": {
+                      "th": "key นิติบุคคล",
+                      "en": "Legal entity key"
+                    },
+                    "type": "String"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "businessentity",
+              "name": {
+                "th": "นิติบุคคล",
+                "en": "Legal entity"
+              },
+              "table": {
+                "name": "businessentity",
+                "scope": "system",
+                "listColumns": [
+                  {
+                    "name": "subdistrict",
+                    "label": {
+                      "th": "ตำบล/แขวง",
+                      "en": "Subdistrict"
+                    },
+                    "type": "Reference",
+                    "ref": "subdistrict"
+                  },
+                  {
+                    "name": "district",
+                    "label": {
+                      "th": "อำเภอ",
+                      "en": "District"
+                    },
+                    "type": "Reference",
+                    "ref": "district"
+                  },
+                  {
+                    "name": "province",
+                    "label": {
+                      "th": "จังหวัด",
+                      "en": "Province"
+                    },
+                    "type": "Reference",
+                    "ref": "province"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "systemname",
+          "name": {
+            "th": "ระบบที่ใช้งาน",
+            "en": "Systems in use"
+          },
+          "goLive": true,
+          "deps": [],
+          "table": {
+            "name": "systemname",
+            "scope": "system",
+            "listColumns": [
+              {
+                "name": "url",
+                "label": {
+                  "th": "URL",
+                  "en": "URL"
+                },
+                "type": "String",
+                "required": true
+              }
+            ]
+          }
+        },
+        {
+          "id": "channel",
+          "name": {
+            "th": "ช่องทางและเอกสาร",
+            "en": "Channels & documents"
+          },
+          "goLive": true,
+          "deps": [
+            "entity"
+          ],
+          "children": [
+            {
+              "id": "communicationtype",
+              "name": {
+                "th": "ช่องทางที่สะดวก",
+                "en": "Preferred channel"
+              },
+              "table": {
+                "name": "communicationtype",
+                "scope": "entity",
+                "listColumns": []
+              }
+            },
+            {
+              "id": "contacttype",
+              "name": {
+                "th": "ประเภทการติดต่อ",
+                "en": "Contact type"
+              },
+              "table": {
+                "name": "contacttype",
+                "scope": "entity",
+                "listColumns": []
+              }
+            },
+            {
+              "id": "attachfiletype",
+              "name": {
+                "th": "ประเภทไฟล์แนบ",
+                "en": "Attachment type"
+              },
+              "table": {
+                "name": "attachfiletype",
+                "scope": "entity",
+                "listColumns": []
+              }
+            },
+            {
+              "id": "documentcategory",
+              "name": {
+                "th": "ประเภทงานเอกสาร",
+                "en": "Document category"
+              },
+              "table": {
+                "name": "documentcategory",
+                "scope": "entity",
+                "listColumns": []
+              }
+            },
+            {
+              "id": "datamoduletype",
+              "name": {
+                "th": "กลุ่ม Master",
+                "en": "Master group"
+              },
+              "optional": true,
+              "table": {
+                "name": "datamoduletype",
+                "scope": "entity",
+                "listColumns": []
+              }
+            }
+          ]
+        },
+        {
+          "id": "movementtype",
+          "name": {
+            "th": "ประเภทรายการ",
+            "en": "Transaction types"
+          },
+          "goLive": true,
+          "deps": [
+            "entity"
+          ],
+          "table": {
+            "name": "movementtype",
+            "scope": "entity",
+            "listColumns": [
+              {
+                "name": "name_en",
+                "label": {
+                  "th": "ชื่อ (EN)",
+                  "en": "Name (EN)"
+                },
+                "type": "String"
+              },
+              {
+                "name": "name_l3",
+                "label": {
+                  "th": "ชื่อ (L3)",
+                  "en": "Name (L3)"
+                },
+                "type": "String"
+              },
+              {
+                "name": "name_l4",
+                "label": {
+                  "th": "ชื่อ (L4)",
+                  "en": "Name (L4)"
+                },
+                "type": "String"
+              }
+            ]
+          }
+        },
+        {
+          "id": "typeset",
+          "name": {
+            "th": "ประเภทลูกค้าและคู่ค้า",
+            "en": "Customer & partner types"
+          },
+          "goLive": true,
+          "deps": [
+            "entity"
+          ],
+          "note": {
+            "th": "ประเภทร้านค้า → ประเภทลูกค้า",
+            "en": "Store type → Customer type"
+          },
+          "children": [
+            {
+              "id": "companytype",
+              "name": {
+                "th": "ประเภทร้านค้า",
+                "en": "Store type"
+              },
+              "table": {
+                "name": "companytype",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "iscan_use_refcompanycode",
+                    "label": {
+                      "th": "ใช้รหัสร้านค้าอ้างอิงได้",
+                      "en": "Can use referenced company code"
+                    },
+                    "type": "Select:String",
+                    "ref": "Yes,Y|No,N"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "customertype",
+              "name": {
+                "th": "ประเภทลูกค้า",
+                "en": "Customer type"
+              },
+              "table": {
+                "name": "customertype",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "companytype",
+                    "label": {
+                      "th": "ประเภทร้านค้า",
+                      "en": "Store type"
+                    },
+                    "type": "Reference",
+                    "required": true,
+                    "ref": "companytype"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "businesstype",
+              "name": {
+                "th": "ประเภทธุรกิจ",
+                "en": "Business type"
+              },
+              "table": {
+                "name": "businesstype",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "name_en",
+                    "label": {
+                      "th": "ชื่อประเภทธุรกิจ EN",
+                      "en": "Name (EN)"
+                    },
+                    "type": "String",
+                    "required": true
+                  },
+                  {
+                    "name": "name_l3",
+                    "label": {
+                      "th": "ชื่อประเภทธุรกิจ L3",
+                      "en": "Name (L3)"
+                    },
+                    "type": "String"
+                  },
+                  {
+                    "name": "name_l4",
+                    "label": {
+                      "th": "ชื่อประเภทธุรกิจ L4",
+                      "en": "Name (L4)"
+                    },
+                    "type": "String"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "membertype",
+              "name": {
+                "th": "ประเภทสมาชิก",
+                "en": "Member type"
+              },
+              "optional": true,
+              "table": {
+                "name": "membertype",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "name_en",
+                    "label": {
+                      "th": "ชื่อประเภทสมาชิก(EN)",
+                      "en": "Name (EN)"
+                    },
+                    "type": "String"
+                  },
+                  {
+                    "name": "description_en",
+                    "label": {
+                      "th": "คำอธิบาย(EN)",
+                      "en": "Description (EN)"
+                    },
+                    "type": "String"
+                  },
+                  {
+                    "name": "point_level",
+                    "label": {
+                      "th": "ระดับแต้ม",
+                      "en": "Point level"
+                    },
+                    "type": "double"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "businesspartnertype",
+              "name": {
+                "th": "ประเภทคู่ค้า",
+                "en": "Partner type"
+              },
+              "optional": true,
+              "table": {
+                "name": "businesspartnertype",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "partnertype",
+                    "label": {
+                      "th": "ประเภทคู่ค้า",
+                      "en": "Partner type"
+                    },
+                    "type": "Select:String",
+                    "ref": "Regular,R|One-time,O"
+                  },
+                  {
+                    "name": "name_en",
+                    "label": {
+                      "th": "ประเภทบริษัท EN",
+                      "en": "Name (EN)"
+                    },
+                    "type": "String"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "vendortype",
+              "name": {
+                "th": "ประเภทผู้ขาย",
+                "en": "Vendor type"
+              },
+              "optional": true,
+              "table": {
+                "name": "vendortype",
+                "scope": "entity",
+                "listColumns": []
+              }
+            },
+            {
+              "id": "coupontype",
+              "name": {
+                "th": "ประเภทคูปอง",
+                "en": "Coupon type"
+              },
+              "optional": true,
+              "table": {
+                "name": "coupontype",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "name_en",
+                    "label": {
+                      "th": "ชื่อ Coupontype (EN)",
+                      "en": "Name (EN)"
+                    },
+                    "type": "String"
+                  },
+                  {
+                    "name": "descript",
+                    "label": {
+                      "th": "รายละเอียด Coupontype",
+                      "en": "Coupon type description"
+                    },
+                    "type": "String"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "instype",
+          "name": {
+            "th": "ประกันและสินเชื่อ",
+            "en": "Insurance & loans"
+          },
+          "goLive": false,
+          "deps": [
+            "entity"
+          ],
+          "children": [
+            {
+              "id": "insurancetype",
+              "name": {
+                "th": "แผนประกัน",
+                "en": "Insurance plan"
+              },
+              "table": {
+                "name": "insurancetype",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "short_name",
+                    "label": {
+                      "th": "ชื่อย่อ",
+                      "en": "Short name"
+                    },
+                    "type": "String"
+                  },
+                  {
+                    "name": "securityaccesskey",
+                    "label": {
+                      "th": "รหัสเข้าถึง",
+                      "en": "Access key"
+                    },
+                    "type": "String"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "insurancenotificationtype",
+              "name": {
+                "th": "รูปแบบประกันภัย",
+                "en": "Insurance type"
+              },
+              "table": {
+                "name": "insurancenotificationtype",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "short_name",
+                    "label": {
+                      "th": "ชื่อย่อ",
+                      "en": "Short name"
+                    },
+                    "type": "String"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "loantype",
+              "name": {
+                "th": "รูปแบบสินเชื่อ",
+                "en": "Loan type"
+              },
+              "table": {
+                "name": "loantype",
+                "scope": "entity",
+                "listColumns": []
+              }
+            }
+          ]
+        },
+        {
+          "id": "calendartype",
+          "name": {
+            "th": "ประเภทปฏิทิน",
+            "en": "Calendar types"
+          },
+          "goLive": false,
+          "deps": [
+            "entity"
+          ],
+          "table": {
+            "name": "calendartype",
+            "scope": "entity",
+            "listColumns": []
+          }
+        }
+      ]
+    },
+    {
+      "id": "p1",
+      "name": {
+        "th": "องค์กรและคน",
+        "en": "Organization & people"
+      },
+      "children": [
+        {
+          "id": "branch",
+          "name": {
+            "th": "สาขา",
+            "en": "Branches"
+          },
+          "goLive": true,
+          "deps": [
+            "entity"
+          ],
+          "table": {
+            "name": "branch",
+            "scope": "entity",
+            "listColumns": [
+              {
+                "name": "address",
+                "label": {
+                  "th": "ที่อยู่",
+                  "en": "Address"
+                },
+                "type": "String",
+                "required": true
+              },
+              {
+                "name": "tel",
+                "label": {
+                  "th": "เบอร์โทรศัพท์",
+                  "en": "Phone number"
+                },
+                "type": "String"
+              }
+            ]
+          }
+        },
+        {
+          "id": "role",
+          "name": {
+            "th": "Role สิทธิ์",
+            "en": "Roles & permissions"
+          },
+          "goLive": true,
+          "deps": [
+            "entity"
+          ],
+          "note": {
+            "th": "จัดกลุ่ม Permission เป็น Role → ใส่ Role ในตำแหน่งงาน → พนักงานในตำแหน่งได้ Permission ชุดเดียวกันพร้อมกัน",
+            "en": "Group permissions into Roles → put Roles on positions → everyone in the position gets the same permissions at once"
+          },
+          "table": {
+            "name": "role",
+            "scope": "entity",
+            "listColumns": []
+          }
+        },
+        {
+          "id": "org",
+          "name": {
+            "th": "โครงสร้างองค์กร",
+            "en": "Organization structure"
+          },
+          "goLive": true,
+          "deps": [
+            "branch"
+          ],
+          "note": {
+            "th": "หน่วยงาน → แผนก → ตำแหน่งงาน · สร้างตำแหน่งให้ครบทุกตำแหน่ง (P01–P16) ก่อน แล้วกลับมาใส่ผู้บังคับบัญชาและอัตรากำลังของแผนก",
+            "en": "Department → Section → Position · Create every position (P01–P16) first, then return to add the supervisor and headcount of each section"
+          },
+          "children": [
+            {
+              "id": "department",
+              "name": {
+                "th": "หน่วยงาน",
+                "en": "Department"
+              },
+              "table": {
+                "name": "department",
+                "scope": "entity",
+                "listColumns": []
+              }
+            },
+            {
+              "id": "positionorganize",
+              "name": {
+                "th": "แผนก",
+                "en": "Section"
+              },
+              "optional": true,
+              "table": {
+                "name": "positionorganize",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "departmenttype",
+                    "label": {
+                      "th": "กลุ่มค่าใช้จ่าย",
+                      "en": "Expense group"
+                    },
+                    "type": "Select:String",
+                    "required": true,
+                    "ref": "บริหาร,A|ขาย,S"
+                  },
+                  {
+                    "name": "subsidiaryof",
+                    "label": {
+                      "th": "ภายใต้แผนก",
+                      "en": "Under department"
+                    },
+                    "type": "Reference",
+                    "ref": "positionorganize"
+                  },
+                  {
+                    "name": "manpower",
+                    "label": {
+                      "th": "จำนวนคนในหน่วยงาน",
+                      "en": "Headcount"
+                    },
+                    "type": "int"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "position",
+              "name": {
+                "th": "ตำแหน่งงาน",
+                "en": "Position"
+              },
+              "table": {
+                "name": "position",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "employee_level",
+                    "label": {
+                      "th": "พนักงานระดับ",
+                      "en": "Employee level"
+                    },
+                    "type": "Select:String",
+                    "ref": "ระดับปฏิบัติการ,Operation|ระดับจัดการ,Supervise|บริหารระดับต้น,Management|บริหารระดับสูง,Executive"
+                  },
+                  {
+                    "name": "positionorganize",
+                    "label": {
+                      "th": "แผนก",
+                      "en": "Section"
+                    },
+                    "type": "Reference",
+                    "ref": "positionorganize"
+                  },
+                  {
+                    "name": "commander_position1",
+                    "label": {
+                      "th": "ผู้บังคับบัญชาโดยตรง",
+                      "en": "Direct supervisor"
+                    },
+                    "type": "Reference",
+                    "ref": "position"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "employee",
+          "name": {
+            "th": "พนักงาน",
+            "en": "Employees"
+          },
+          "goLive": true,
+          "deps": [
+            "systemname",
+            "org"
+          ],
+          "note": {
+            "th": "พนักงานทุกคนต้องผูกระบบที่ใช้อย่างน้อย 1 ระบบ และมีตำแหน่งหลัก 1 ตำแหน่ง",
+            "en": "Every employee must be linked to at least 1 system and have 1 main position"
+          },
+          "children": [
+            {
+              "id": "prefix",
+              "name": {
+                "th": "คำนำหน้า",
+                "en": "Prefix"
+              },
+              "optional": true,
+              "table": {
+                "name": "prefix",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "prefix_name_th",
+                    "label": {
+                      "th": "ชื่อคำนำหน้า (TH)",
+                      "en": "Prefix name (TH)"
+                    },
+                    "type": "String",
+                    "required": true
+                  },
+                  {
+                    "name": "prefix_name_en",
+                    "label": {
+                      "th": "ชื่อคำนำหน้า (EN)",
+                      "en": "Prefix name (EN)"
+                    },
+                    "type": "String",
+                    "required": true
+                  }
+                ]
+              }
+            },
+            {
+              "id": "employee",
+              "name": {
+                "th": "พนักงาน",
+                "en": "Employee"
+              },
+              "table": {
+                "name": "employee",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "department",
+                    "label": {
+                      "th": "แผนก",
+                      "en": "Department"
+                    },
+                    "type": "Reference",
+                    "ref": "department"
+                  },
+                  {
+                    "name": "prefix",
+                    "label": {
+                      "th": "คำนำหน้า",
+                      "en": "Prefix"
+                    },
+                    "type": "Reference",
+                    "ref": "prefix"
+                  },
+                  {
+                    "name": "province",
+                    "label": {
+                      "th": "จังหวัด",
+                      "en": "Province"
+                    },
+                    "type": "Reference",
+                    "ref": "province"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "salesteam",
+          "name": {
+            "th": "ทีมขาย",
+            "en": "Sales team"
+          },
+          "goLive": true,
+          "deps": [
+            "branch",
+            "employee"
+          ],
+          "note": {
+            "th": "กลุ่มการขาย → พนักงานขาย",
+            "en": "Sales group → Salesperson"
+          },
+          "children": [
+            {
+              "id": "salegroup",
+              "name": {
+                "th": "กลุ่มการขาย",
+                "en": "Sales group"
+              },
+              "table": {
+                "name": "salegroup",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "branch",
+                    "label": {
+                      "th": "สาขา",
+                      "en": "Branch"
+                    },
+                    "type": "Reference",
+                    "ref": "branch"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "saleperson",
+              "name": {
+                "th": "พนักงานขาย",
+                "en": "Salesperson"
+              },
+              "table": {
+                "name": "saleperson",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "employee",
+                    "label": {
+                      "th": "ข้อมูลพนักงาน",
+                      "en": "Employee"
+                    },
+                    "type": "Reference",
+                    "required": true,
+                    "ref": "employee"
+                  },
+                  {
+                    "name": "phone",
+                    "label": {
+                      "th": "เบอร์โทรศัพท์",
+                      "en": "Phone number"
+                    },
+                    "type": "String"
+                  },
+                  {
+                    "name": "email",
+                    "label": {
+                      "th": "อีเมล",
+                      "en": "Email"
+                    },
+                    "type": "String"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p2",
+      "name": {
+        "th": "ขั้นตอนการขาย",
+        "en": "Sales process"
+      },
+      "children": [
+        {
+          "id": "actstatus",
+          "name": {
+            "th": "สถานะกิจกรรม",
+            "en": "Activity statuses"
+          },
+          "goLive": true,
+          "deps": [
+            "org"
+          ],
+          "children": [
+            {
+              "id": "activitystatus",
+              "name": {
+                "th": "สถานะกิจกรรม",
+                "en": "Activity status"
+              },
+              "table": {
+                "name": "activitystatus",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "department",
+                    "label": {
+                      "th": "หน่วยงาน",
+                      "en": "Department"
+                    },
+                    "type": "Reference",
+                    "ref": "department"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "keyactivitytype",
+              "name": {
+                "th": "ประเภทกิจกรรมหลัก",
+                "en": "Key activity type"
+              },
+              "optional": true,
+              "table": {
+                "name": "keyactivitytype",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "KPI",
+                    "label": {
+                      "th": "KPI",
+                      "en": "KPI"
+                    },
+                    "type": "Reference",
+                    "ref": "kpiunit"
+                  },
+                  {
+                    "name": "slastart",
+                    "label": {
+                      "th": "จุดเริ่มต้นของsla",
+                      "en": "SLA start point"
+                    },
+                    "type": "Select:String",
+                    "ref": "yes,Y|no,N"
+                  },
+                  {
+                    "name": "slaend",
+                    "label": {
+                      "th": "จุดสิ้นสุดsla",
+                      "en": "SLA end point"
+                    },
+                    "type": "Select:String",
+                    "ref": "yes,Y|no,N"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "flow",
+          "name": {
+            "th": "ขั้นตอนการขาย",
+            "en": "Sales steps"
+          },
+          "goLive": true,
+          "deps": [
+            "movementtype",
+            "org"
+          ],
+          "note": {
+            "th": "กลุ่มขั้นตอน → ขั้นตอน · ค่าเงื่อนไขพิเศษของกลุ่มขั้นตอนอ้างถึงขั้นตอน ปล่อยว่างไว้ก่อนแล้วกลับมาเติม",
+            "en": "Step group → Step · The special condition value of a step group refers to a step; leave it empty first and fill it in later"
+          },
+          "children": [
+            {
+              "id": "activitygroup",
+              "name": {
+                "th": "กลุ่มขั้นตอน",
+                "en": "Step group"
+              },
+              "table": {
+                "name": "activitygroup",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "department",
+                    "label": {
+                      "th": "หน่วยงาน",
+                      "en": "Department"
+                    },
+                    "type": "Reference",
+                    "ref": "department"
+                  },
+                  {
+                    "name": "special_condition",
+                    "label": {
+                      "th": "เงื่อนไขพิเศษ",
+                      "en": "Special condition"
+                    },
+                    "type": "Select:String",
+                    "ref": "N,n|Y,y"
+                  },
+                  {
+                    "name": "conditionvalue",
+                    "label": {
+                      "th": "ค่าเงื่อนไขพิเศษ",
+                      "en": "Special condition value"
+                    },
+                    "type": "Reference",
+                    "ref": "activitystep"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "activity",
+              "name": {
+                "th": "ขั้นตอน",
+                "en": "Step"
+              },
+              "table": {
+                "name": "activity",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "keyactivitytype",
+                    "label": {
+                      "th": "อ้างอิง keyactivitytype",
+                      "en": "Key activity type"
+                    },
+                    "type": "Reference",
+                    "ref": "keyactivitytype"
+                  },
+                  {
+                    "name": "department",
+                    "label": {
+                      "th": "หน่วยงาน",
+                      "en": "Department"
+                    },
+                    "type": "Reference",
+                    "ref": "department"
+                  },
+                  {
+                    "name": "activitygroup",
+                    "label": {
+                      "th": "กลุ่มขั้นตอน",
+                      "en": "Step group"
+                    },
+                    "type": "Reference",
+                    "ref": "activitygroup"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "activityconfig",
+              "name": {
+                "th": "กฎเปลี่ยนขั้นตอน",
+                "en": "Step transition rules"
+              },
+              "optional": true,
+              "table": {
+                "name": "activityconfig",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "workflowsteptype",
+                    "label": {
+                      "th": "ประเภทขั้นตอน Workflow",
+                      "en": "Workflow step type"
+                    },
+                    "type": "Reference",
+                    "ref": "workflowsteptype"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "activityinapp",
+              "name": {
+                "th": "ขั้นตอนใน App",
+                "en": "Steps in app"
+              },
+              "optional": true,
+              "table": {
+                "name": "activityinapp",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "activitygroup",
+                    "label": {
+                      "th": "กลุ่มขั้นตอน",
+                      "en": "Step group"
+                    },
+                    "type": "Reference",
+                    "ref": "activitygroup"
+                  },
+                  {
+                    "name": "stepchange_date",
+                    "label": {
+                      "th": "วันที่เปลี่ยนขั้นตอน",
+                      "en": "Step change date"
+                    },
+                    "type": "Date"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "oppsharinggroup",
+          "name": {
+            "th": "กลุ่มแชร์ OPP",
+            "en": "OPP sharing groups"
+          },
+          "goLive": true,
+          "deps": [
+            "org",
+            "employee"
+          ],
+          "table": {
+            "name": "oppsharinggroup",
+            "scope": "entity",
+            "listColumns": []
+          }
+        },
+        {
+          "id": "opportunityconfig",
+          "name": {
+            "th": "Pipeline OPP",
+            "en": "OPP pipeline"
+          },
+          "goLive": true,
+          "deps": [
+            "flow",
+            "oppsharinggroup"
+          ],
+          "table": {
+            "name": "opportunityconfig",
+            "scope": "entity",
+            "listColumns": [
+              {
+                "name": "pipelinetype",
+                "label": {
+                  "th": "ประเภท Pipeline",
+                  "en": "Pipeline type"
+                },
+                "type": "Select:String",
+                "ref": "single,single|multiple,multiple"
+              }
+            ]
+          }
+        },
+        {
+          "id": "waitlist",
+          "name": {
+            "th": "Waitlist",
+            "en": "Waitlist"
+          },
+          "goLive": false,
+          "deps": [
+            "oppsharinggroup"
+          ],
+          "children": [
+            {
+              "id": "waitlisttype",
+              "name": {
+                "th": "ประเภท Waitlist",
+                "en": "Waitlist type"
+              },
+              "table": {
+                "name": "waitlisttype",
+                "scope": "entity",
+                "listColumns": []
+              }
+            },
+            {
+              "id": "waitlistsharinggroup",
+              "name": {
+                "th": "กลุ่มแชร์ Waitlist",
+                "en": "Waitlist sharing group"
+              },
+              "table": {
+                "name": "waitlistsharinggroup",
+                "scope": "entity",
+                "listColumns": []
+              }
+            },
+            {
+              "id": "waitlist",
+              "name": {
+                "th": "Waitlist",
+                "en": "Waitlist"
+              },
+              "table": {
+                "name": "waitlist",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "waitlisttype",
+                    "label": {
+                      "th": "ประเภท waitlist",
+                      "en": "Waitlist type"
+                    },
+                    "type": "Reference",
+                    "ref": "waitlisttype"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "workflowsteptype",
+          "name": {
+            "th": "Workflowsteptype",
+            "en": "Workflow step type"
+          },
+          "goLive": false,
+          "deps": [],
+          "table": {
+            "name": "workflowsteptype",
+            "scope": "entity",
+            "listColumns": []
+          }
+        },
+        {
+          "id": "workflowstepconfig",
+          "name": {
+            "th": "WorkflowStepConfig",
+            "en": "Workflow step config"
+          },
+          "goLive": false,
+          "deps": [
+            "workflowsteptype"
+          ],
+          "table": {
+            "name": "workflowstepconfig",
+            "scope": "entity",
+            "listColumns": [
+              {
+                "name": "workflowsteptype",
+                "label": {
+                  "th": "ประเภทขั้นตอน Workflow",
+                  "en": "Workflow step type"
+                },
+                "type": "Reference",
+                "required": true,
+                "ref": "workflowsteptype"
+              },
+              {
+                "name": "pipelinetype",
+                "label": {
+                  "th": "ประเภท Pipeline",
+                  "en": "Pipeline type"
+                },
+                "type": "Select:String",
+                "ref": "single,single|multiple,multiple"
+              },
+              {
+                "name": "default_permission_opp",
+                "label": {
+                  "th": "default สิทธิของ OPP",
+                  "en": "Default OPP permission"
+                },
+                "type": "Select:String",
+                "ref": "Private,private|LatestPerson,latestperson|Related Public,related_public"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "p3",
+      "name": {
+        "th": "ลูกค้าและการตลาด",
+        "en": "Customers & marketing"
+      },
+      "children": [
+        {
+          "id": "leadstatus",
+          "name": {
+            "th": "สถานะ Lead",
+            "en": "Lead statuses"
+          },
+          "goLive": true,
+          "deps": [
+            "entity"
+          ],
+          "note": {
+            "th": "ต้องมีอย่างน้อย 1 สถานะที่ convert เป็น Prospect ได้",
+            "en": "At least 1 status must be convertible to a Prospect"
+          },
+          "table": {
+            "name": "leadstatus",
+            "scope": "entity",
+            "listColumns": [
+              {
+                "name": "is_convert",
+                "label": {
+                  "th": "สถานะสำหรับ convert เป็น prospect",
+                  "en": "Can convert to prospect"
+                },
+                "type": "Select:String",
+                "ref": "No,no|Yes,yes"
+              }
+            ]
+          }
+        },
+        {
+          "id": "customergroup",
+          "name": {
+            "th": "กลุ่มลูกค้า",
+            "en": "Customer groups"
+          },
+          "goLive": false,
+          "deps": [
+            "typeset"
+          ],
+          "table": {
+            "name": "customergroup",
+            "scope": "entity",
+            "listColumns": [
+              {
+                "name": "customertype",
+                "label": {
+                  "th": "ประเภทลูกค้า",
+                  "en": "Customer type"
+                },
+                "type": "Reference",
+                "required": true,
+                "ref": "customertype"
+              }
+            ]
+          }
+        },
+        {
+          "id": "marketing",
+          "name": {
+            "th": "การตลาด",
+            "en": "Marketing"
+          },
+          "goLive": true,
+          "deps": [
+            "entity"
+          ],
+          "note": {
+            "th": "กลุ่มการตลาด → ช่องทางการตลาด",
+            "en": "Marketing group → Marketing channel"
+          },
+          "children": [
+            {
+              "id": "marketinggroup",
+              "name": {
+                "th": "กลุ่มการตลาด",
+                "en": "Marketing group"
+              },
+              "table": {
+                "name": "marketinggroup",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "short_name",
+                    "label": {
+                      "th": "ชื่อย่อ",
+                      "en": "Short name"
+                    },
+                    "type": "String"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "marketingchanel",
+              "name": {
+                "th": "ช่องทางการตลาด",
+                "en": "Marketing channel"
+              },
+              "table": {
+                "name": "marketingchanel",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "marketinggroup",
+                    "label": {
+                      "th": "กลุ่มการตลาด",
+                      "en": "Marketing group"
+                    },
+                    "type": "Reference",
+                    "ref": "marketinggroup"
+                  },
+                  {
+                    "name": "short_name",
+                    "label": {
+                      "th": "ชื่อย่อ",
+                      "en": "Short name"
+                    },
+                    "type": "String"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "custlists",
+          "name": {
+            "th": "อาชีพและ Tag",
+            "en": "Occupations & tags"
+          },
+          "goLive": false,
+          "deps": [
+            "entity"
+          ],
+          "children": [
+            {
+              "id": "occupation",
+              "name": {
+                "th": "อาชีพ",
+                "en": "Occupation"
+              },
+              "table": {
+                "name": "occupation",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "name_en",
+                    "label": {
+                      "th": "ชื่ออาชีพ EN",
+                      "en": "Name (EN)"
+                    },
+                    "type": "String",
+                    "required": true
+                  },
+                  {
+                    "name": "name_l3",
+                    "label": {
+                      "th": "ชื่ออาชีพ L3",
+                      "en": "Name (L3)"
+                    },
+                    "type": "String"
+                  },
+                  {
+                    "name": "name_l4",
+                    "label": {
+                      "th": "ชื่ออาชีพ L4",
+                      "en": "Name (L4)"
+                    },
+                    "type": "String"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "tag",
+              "name": {
+                "th": "Tag",
+                "en": "Tag"
+              },
+              "table": {
+                "name": "tag",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "color_code",
+                    "label": {
+                      "th": "รหัสสี",
+                      "en": "Color code"
+                    },
+                    "type": "String"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "pdpa",
+          "name": {
+            "th": "ฟิลด์ข้อมูลส่วนบุคคล",
+            "en": "Personal data fields"
+          },
+          "goLive": true,
+          "deps": [
+            "entity"
+          ],
+          "note": {
+            "th": "เลือกชื่อฟิลด์จากรายการ ไม่พิมพ์เอง",
+            "en": "Choose field names from the list; do not type them"
+          },
+          "table": {
+            "name": "dataattributeroleconfig",
+            "scope": "entity",
+            "listColumns": [
+              {
+                "name": "table_name",
+                "label": {
+                  "th": "ชื่อ Master",
+                  "en": "Master name"
+                },
+                "type": "String"
+              }
+            ]
+          }
+        },
+        {
+          "id": "defperm",
+          "name": {
+            "th": "สิทธิ์เริ่มต้น Lead / Prospect",
+            "en": "Default Lead / Prospect permissions"
+          },
+          "goLive": true,
+          "deps": [
+            "opportunityconfig",
+            "leadstatus"
+          ],
+          "permFields": [
+            "default_permission_lead",
+            "default_permission_prospect",
+            "customer_pdpa",
+            "customer_critical",
+            "company_financial",
+            "company_strategic"
+          ]
+        },
+        {
+          "id": "lead",
+          "name": {
+            "th": "Lead",
+            "en": "Lead"
+          },
+          "goLive": false,
+          "deps": [],
+          "table": {
+            "name": "lead",
+            "scope": "entity",
+            "listColumns": [
+              {
+                "name": "status",
+                "label": {
+                  "th": "สถานะ Lead",
+                  "en": "Lead status"
+                },
+                "type": "Reference",
+                "ref": "leadstatus"
+              },
+              {
+                "name": "create_employee",
+                "label": {
+                  "th": "ผู้บันทึก",
+                  "en": "Recorded by"
+                },
+                "type": "Reference",
+                "ref": "employee"
+              },
+              {
+                "name": "res_employee",
+                "label": {
+                  "th": "ผู้ดูแล Lead",
+                  "en": "Lead owner"
+                },
+                "type": "Reference",
+                "ref": "employee"
+              }
+            ]
+          }
+        },
+        {
+          "id": "prospect",
+          "name": {
+            "th": "Prospect",
+            "en": "Prospect"
+          },
+          "goLive": false,
+          "deps": [],
+          "table": {
+            "name": "prospect",
+            "scope": "entity",
+            "listColumns": [
+              {
+                "name": "customertype",
+                "label": {
+                  "th": "บุคคลธรรมดา/นิติบุคคล",
+                  "en": "Customer type"
+                },
+                "type": "Radio:String",
+                "ref": "บุคคลธรรมดา,person|นิติบุคคล,juristic"
+              },
+              {
+                "name": "contact_back",
+                "label": {
+                  "th": "วิธีที่สะดวกให้ติดต่อ",
+                  "en": "Preferred contact method"
+                },
+                "type": "Reference",
+                "ref": "communicationtype"
+              },
+              {
+                "name": "employee",
+                "label": {
+                  "th": "ผู้บันทึก",
+                  "en": "Employee"
+                },
+                "type": "Reference",
+                "ref": "employee"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "p4",
+      "name": {
+        "th": "การเงินและทั่วไป",
+        "en": "Finance & general"
+      },
+      "children": [
+        {
+          "id": "address",
+          "name": {
+            "th": "ที่อยู่",
+            "en": "Addresses"
+          },
+          "goLive": true,
+          "deps": [],
+          "note": {
+            "th": "ข้อมูลกลางใช้ร่วมทุกนิติบุคคล · จังหวัด → อำเภอ → ตำบล",
+            "en": "Central data shared by all legal entities · Province → District → Subdistrict"
+          },
+          "children": [
+            {
+              "id": "country",
+              "name": {
+                "th": "ประเทศ",
+                "en": "Country"
+              },
+              "table": {
+                "name": "country",
+                "scope": "system",
+                "listColumns": [
+                  {
+                    "name": "name_th",
+                    "label": {
+                      "th": "ชื่อประเทศ (TH)",
+                      "en": "Country name (TH)"
+                    },
+                    "type": "String"
+                  },
+                  {
+                    "name": "name_l3",
+                    "label": {
+                      "th": "ชื่อประเทศ (L3)",
+                      "en": "Name (L3)"
+                    },
+                    "type": "String"
+                  },
+                  {
+                    "name": "name_l4",
+                    "label": {
+                      "th": "ชื่อประเทศ (L4)",
+                      "en": "Name (L4)"
+                    },
+                    "type": "String"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "province",
+              "name": {
+                "th": "จังหวัด",
+                "en": "Province"
+              },
+              "table": {
+                "name": "province",
+                "scope": "system",
+                "listColumns": [
+                  {
+                    "name": "name_en",
+                    "label": {
+                      "th": "ชื่อจังหวัด (EN)",
+                      "en": "Name (EN)"
+                    },
+                    "type": "String"
+                  },
+                  {
+                    "name": "name_l3",
+                    "label": {
+                      "th": "ชื่อจังหวัด (L3)",
+                      "en": "Name (L3)"
+                    },
+                    "type": "String"
+                  },
+                  {
+                    "name": "name_l4",
+                    "label": {
+                      "th": "ชื่อจังหวัด (L4)",
+                      "en": "Name (L4)"
+                    },
+                    "type": "String"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "district",
+              "name": {
+                "th": "อำเภอ",
+                "en": "District"
+              },
+              "table": {
+                "name": "district",
+                "scope": "system",
+                "listColumns": [
+                  {
+                    "name": "ms_province_",
+                    "label": {
+                      "th": "จังหวัด",
+                      "en": "Province"
+                    },
+                    "type": "Reference",
+                    "required": true,
+                    "ref": "province"
+                  },
+                  {
+                    "name": "name_en",
+                    "label": {
+                      "th": "ชื่ออำเภอ (EN)",
+                      "en": "Name (EN)"
+                    },
+                    "type": "String"
+                  },
+                  {
+                    "name": "name_l3",
+                    "label": {
+                      "th": "ชื่ออำเภอ (L3)",
+                      "en": "Name (L3)"
+                    },
+                    "type": "String"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "subdistrict",
+              "name": {
+                "th": "ตำบล",
+                "en": "Subdistrict"
+              },
+              "table": {
+                "name": "subdistrict",
+                "scope": "system",
+                "listColumns": [
+                  {
+                    "name": "ms_district_",
+                    "label": {
+                      "th": "อำเภอ",
+                      "en": "District"
+                    },
+                    "type": "Reference",
+                    "ref": "district"
+                  },
+                  {
+                    "name": "post_code",
+                    "label": {
+                      "th": "รหัสไปรษณีย์",
+                      "en": "Postal code"
+                    },
+                    "type": "String"
+                  },
+                  {
+                    "name": "name_en",
+                    "label": {
+                      "th": "ชื่อตำบล (EN)",
+                      "en": "Name (EN)"
+                    },
+                    "type": "String"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "currency",
+          "name": {
+            "th": "สกุลเงิน",
+            "en": "Currencies"
+          },
+          "goLive": true,
+          "deps": [
+            "entity"
+          ],
+          "children": [
+            {
+              "id": "currency",
+              "name": {
+                "th": "สกุลเงิน",
+                "en": "Currency"
+              },
+              "table": {
+                "name": "currency",
+                "scope": "entity",
+                "listColumns": []
+              }
+            },
+            {
+              "id": "exchangerate",
+              "name": {
+                "th": "อัตราแลกเปลี่ยน",
+                "en": "Exchange rate"
+              },
+              "optional": true,
+              "table": {
+                "name": "exchangerate",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "currency",
+                    "label": {
+                      "th": "สกุลเงิน",
+                      "en": "Currency"
+                    },
+                    "type": "Reference",
+                    "required": true,
+                    "ref": "currency"
+                  },
+                  {
+                    "name": "createtime",
+                    "label": {
+                      "th": "เวลาที่สร้าง",
+                      "en": "Created time"
+                    },
+                    "type": "Timestamp"
+                  },
+                  {
+                    "name": "exchangerate",
+                    "label": {
+                      "th": "อัตราแลกเปลี่ยน",
+                      "en": "Exchange rate"
+                    },
+                    "type": "double"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "fiscalyears",
+          "name": {
+            "th": "ปีบัญชี",
+            "en": "Fiscal years"
+          },
+          "goLive": true,
+          "deps": [
+            "entity"
+          ],
+          "table": {
+            "name": "fiscalyears",
+            "scope": "entity",
+            "listColumns": [
+              {
+                "name": "effectivedate",
+                "label": {
+                  "th": "วันที่เริ่มใช้",
+                  "en": "Effective date"
+                },
+                "type": "Date"
+              },
+              {
+                "name": "yearvalue",
+                "label": {
+                  "th": "ปี",
+                  "en": "Year"
+                },
+                "type": "int"
+              }
+            ]
+          }
+        },
+        {
+          "id": "payment",
+          "name": {
+            "th": "บัญชีและการรับจ่าย",
+            "en": "Accounts & payments"
+          },
+          "goLive": false,
+          "deps": [
+            "entity"
+          ],
+          "children": [
+            {
+              "id": "bankbook",
+              "name": {
+                "th": "บัญชีธนาคาร",
+                "en": "Bank account"
+              },
+              "table": {
+                "name": "bankbook",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "booktype",
+                    "label": {
+                      "th": "ประเภทบัญชี",
+                      "en": "Account type"
+                    },
+                    "type": "Select:String",
+                    "ref": "Saving,Saving|Checking,Checking|Fixed,Fixed"
+                  },
+                  {
+                    "name": "is_online",
+                    "label": {
+                      "th": "Online",
+                      "en": "Online"
+                    },
+                    "type": "Select:String",
+                    "ref": "Y,Y|N,N"
+                  },
+                  {
+                    "name": "is_qr",
+                    "label": {
+                      "th": "QR",
+                      "en": "QR"
+                    },
+                    "type": "Select:String",
+                    "ref": "Y,Y|N,N"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "paymentmethod",
+              "name": {
+                "th": "วิธีจ่ายเงิน",
+                "en": "Payment method"
+              },
+              "optional": true,
+              "table": {
+                "name": "paymentmethod",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "show_in_statement",
+                    "label": {
+                      "th": "แสดงใน Bank STMT",
+                      "en": "Show in bank statement"
+                    },
+                    "type": "Select:String",
+                    "ref": "No,N|Yes,Y"
+                  },
+                  {
+                    "name": "bankbook",
+                    "label": {
+                      "th": "บัญชีธนาคาร",
+                      "en": "Bank account"
+                    },
+                    "type": "Reference",
+                    "ref": "bankbook"
+                  },
+                  {
+                    "name": "is_check",
+                    "label": {
+                      "th": "รับเป็นเช็ค",
+                      "en": "Received by cheque"
+                    },
+                    "type": "Select:String",
+                    "ref": "No,N|Yes,Y"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "receivemethod",
+              "name": {
+                "th": "วิธีรับเงิน",
+                "en": "Receive method"
+              },
+              "optional": true,
+              "table": {
+                "name": "receivemethod",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "show_in_statement",
+                    "label": {
+                      "th": "แสดงใน Bank STMT",
+                      "en": "Show in bank statement"
+                    },
+                    "type": "Select:String",
+                    "ref": "No,N|Yes,Y"
+                  },
+                  {
+                    "name": "bankbook",
+                    "label": {
+                      "th": "บัญชีธนาคาร",
+                      "en": "Bank account"
+                    },
+                    "type": "Reference",
+                    "ref": "bankbook"
+                  },
+                  {
+                    "name": "is_check",
+                    "label": {
+                      "th": "รับเป็นเช็ค",
+                      "en": "Received by cheque"
+                    },
+                    "type": "Select:String",
+                    "ref": "No,N|Yes,Y"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "product",
+          "name": {
+            "th": "สินค้า",
+            "en": "Products"
+          },
+          "goLive": false,
+          "deps": [
+            "entity"
+          ],
+          "note": {
+            "th": "หน่วยนับ → กลุ่มสินค้า → สินค้า",
+            "en": "Unit of measure → Material group → Material"
+          },
+          "children": [
+            {
+              "id": "unitofmeasure",
+              "name": {
+                "th": "หน่วยนับ",
+                "en": "Unit of measure"
+              },
+              "table": {
+                "name": "unitofmeasure",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "dimension",
+                    "label": {
+                      "th": "ชนิดหน่วยนับ",
+                      "en": "Unit dimension"
+                    },
+                    "type": "Select:String",
+                    "ref": "จำนวน,QUANTITY|น้ำหนัก,WEIGHT|ความยาว,LENGTH|ขนาด,SIZE|ปริมาตร,VOLUME|พื้นที่,AREA|กำลังผลิต,CAPACITY|เวลา,TIME|อื่นๆ,OTHER"
+                  },
+                  {
+                    "name": "name_en",
+                    "label": {
+                      "th": "ชื่อหน่วยนับ (EN)",
+                      "en": "Name (EN)"
+                    },
+                    "type": "String"
+                  },
+                  {
+                    "name": "name_l3",
+                    "label": {
+                      "th": "ชื่อหน่วยนับ (L3)",
+                      "en": "Name (L3)"
+                    },
+                    "type": "String"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "materialgroup",
+              "name": {
+                "th": "กลุ่มสินค้า",
+                "en": "Material group"
+              },
+              "table": {
+                "name": "materialgroup",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "vat_rate",
+                    "label": {
+                      "th": "อัตราภาษีมูลค่าเพิ่ม",
+                      "en": "VAT rate"
+                    },
+                    "type": "double",
+                    "required": true
+                  }
+                ]
+              }
+            },
+            {
+              "id": "material",
+              "name": {
+                "th": "สินค้า",
+                "en": "Material"
+              },
+              "table": {
+                "name": "material",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "materialgroup",
+                    "label": {
+                      "th": "กลุ่มสินค้า",
+                      "en": "Material group"
+                    },
+                    "type": "Reference",
+                    "required": true,
+                    "ref": "materialgroup"
+                  },
+                  {
+                    "name": "baseunit",
+                    "label": {
+                      "th": "หน่วยนับหลัก",
+                      "en": "Base unit"
+                    },
+                    "type": "Reference",
+                    "required": true,
+                    "ref": "unitofmeasure"
+                  },
+                  {
+                    "name": "weightunit",
+                    "label": {
+                      "th": "หน่วยนับน้ำหนัก",
+                      "en": "Weight unit"
+                    },
+                    "type": "Reference",
+                    "ref": "unitofmeasure"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p5",
+      "name": {
+        "th": "โมดูลเสริม",
+        "en": "Add-on modules"
+      },
+      "children": [
+        {
+          "id": "partner",
+          "name": {
+            "th": "คู่ค้า",
+            "en": "Partners"
+          },
+          "goLive": false,
+          "deps": [
+            "typeset"
+          ],
+          "children": [
+            {
+              "id": "vendorgroup",
+              "name": {
+                "th": "กลุ่มผู้ขาย",
+                "en": "Vendor group"
+              },
+              "table": {
+                "name": "vendorgroup",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "vendortype",
+                    "label": {
+                      "th": "ประเภทผู้ขาย",
+                      "en": "Vendor type"
+                    },
+                    "type": "Reference",
+                    "required": true,
+                    "ref": "vendortype"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "businesspartner",
+              "name": {
+                "th": "คู่ค้า",
+                "en": "Business partner"
+              },
+              "table": {
+                "name": "businesspartner",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "taxid",
+                    "label": {
+                      "th": "เลขประจำตัวผู้เสียภาษีอากร",
+                      "en": "Tax ID"
+                    },
+                    "type": "String",
+                    "required": true
+                  },
+                  {
+                    "name": "address",
+                    "label": {
+                      "th": "ที่อยู่",
+                      "en": "Address"
+                    },
+                    "type": "String",
+                    "required": true
+                  },
+                  {
+                    "name": "zipcode",
+                    "label": {
+                      "th": "รหัสไปรษณีย์",
+                      "en": "Postal code"
+                    },
+                    "type": "String",
+                    "required": true
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "coupon",
+          "name": {
+            "th": "โปรโมชั่นและคูปอง",
+            "en": "Promotions & coupons"
+          },
+          "goLive": false,
+          "deps": [
+            "typeset"
+          ],
+          "children": [
+            {
+              "id": "promotion",
+              "name": {
+                "th": "โปรโมชั่น",
+                "en": "Promotion"
+              },
+              "table": {
+                "name": "promotion",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "active",
+                    "label": {
+                      "th": "Active",
+                      "en": "Active"
+                    },
+                    "type": "Select:String",
+                    "ref": "Y,Y|N,N"
+                  },
+                  {
+                    "name": "version",
+                    "label": {
+                      "th": "Version",
+                      "en": "Version"
+                    },
+                    "type": "int"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "coupon",
+              "name": {
+                "th": "คูปอง",
+                "en": "Coupon"
+              },
+              "table": {
+                "name": "coupon",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "branch",
+                    "label": {
+                      "th": "สาขา",
+                      "en": "Branch"
+                    },
+                    "type": "Reference",
+                    "ref": "branch"
+                  },
+                  {
+                    "name": "limited",
+                    "label": {
+                      "th": "จำกัดจำนวน",
+                      "en": "Limited quantity"
+                    },
+                    "type": "Select:String",
+                    "required": true,
+                    "ref": "จำกัดจำนวน,Y|ไม่จำกัดจำนวน,N"
+                  },
+                  {
+                    "name": "couponcompany",
+                    "label": {
+                      "th": "คูปองของร้าน",
+                      "en": "Coupon store"
+                    },
+                    "type": "Reference",
+                    "ref": "businesspartner"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "calendar",
+          "name": {
+            "th": "ปฏิทิน",
+            "en": "Calendar"
+          },
+          "goLive": false,
+          "deps": [
+            "calendartype",
+            "employee"
+          ],
+          "table": {
+            "name": "calendar",
+            "scope": "entity",
+            "listColumns": [
+              {
+                "name": "calendartype",
+                "label": {
+                  "th": "ประเภท Calender",
+                  "en": "Calendar type"
+                },
+                "type": "Reference",
+                "ref": "calendartype"
+              },
+              {
+                "name": "employee",
+                "label": {
+                  "th": "ชื่อพนักงาน",
+                  "en": "Employee"
+                },
+                "type": "Reference",
+                "ref": "employee"
+              }
+            ]
+          }
+        },
+        {
+          "id": "kpi",
+          "name": {
+            "th": "KPI (SUN)",
+            "en": "KPI (SUN)"
+          },
+          "goLive": false,
+          "deps": [
+            "entity"
+          ],
+          "note": {
+            "th": "ใช้สำหรับ SUN GATEWAY เท่านั้น",
+            "en": "For SUN GATEWAY only"
+          },
+          "children": [
+            {
+              "id": "kpiunit",
+              "name": {
+                "th": "หน่วยวัด",
+                "en": "Measurement unit"
+              },
+              "table": {
+                "name": "kpiunit",
+                "scope": "entity",
+                "listColumns": []
+              }
+            },
+            {
+              "id": "kpitasktype",
+              "name": {
+                "th": "ประเภทงาน KPI",
+                "en": "KPI task type"
+              },
+              "table": {
+                "name": "kpitasktype",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "tasktype",
+                    "label": {
+                      "th": "ชนิดของงาน",
+                      "en": "Task type"
+                    },
+                    "type": "Select:String",
+                    "ref": "บันทึกข้อมูล,record|ติดตามสถานะ,tracking|บันทึกข้อมูล KPI,recordkpi|ติดตามสถานะแบบมีกำหนดแล้วเสร็จ,trackingsetdate"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "kpilevel",
+              "name": {
+                "th": "ระดับ KPI",
+                "en": "KPI level"
+              },
+              "table": {
+                "name": "kpilevel",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "kpi_unit",
+                    "label": {
+                      "th": "หน่วยวัด KPI",
+                      "en": "KPI unit"
+                    },
+                    "type": "Reference",
+                    "ref": "kpiunit"
+                  },
+                  {
+                    "name": "sla",
+                    "label": {
+                      "th": "กำหนดระยะเวลา",
+                      "en": "SLA"
+                    },
+                    "type": "double"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "kpiproduct",
+              "name": {
+                "th": "สินค้า KPI",
+                "en": "KPI product"
+              },
+              "table": {
+                "name": "kpiproduct",
+                "scope": "entity",
+                "listColumns": []
+              }
+            },
+            {
+              "id": "kpicontact",
+              "name": {
+                "th": "ช่องทาง KPI",
+                "en": "KPI channel"
+              },
+              "table": {
+                "name": "kpicontact",
+                "scope": "entity",
+                "listColumns": []
+              }
+            },
+            {
+              "id": "kpipillar",
+              "name": {
+                "th": "เสา KPI",
+                "en": "KPI pillar"
+              },
+              "table": {
+                "name": "kpipillar",
+                "scope": "entity",
+                "listColumns": []
+              }
+            },
+            {
+              "id": "kpitask",
+              "name": {
+                "th": "KPI",
+                "en": "KPI"
+              },
+              "table": {
+                "name": "kpitask",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "target_operator",
+                    "label": {
+                      "th": "ตัวดำเนินการเปรียบเทียบ",
+                      "en": "Comparison operator"
+                    },
+                    "type": "Select:String",
+                    "ref": "Equal to,equalto|Not equal to,notequalto|Greater than,greaterthan|Less than,lessthan|Greater than or equal to,greaterthanorequalto|Less than or equal to,lessthanorequalto|Between,between"
+                  },
+                  {
+                    "name": "kpi_unit",
+                    "label": {
+                      "th": "หน่วยวัด KPI",
+                      "en": "KPI unit"
+                    },
+                    "type": "Reference",
+                    "ref": "kpiunit"
+                  },
+                  {
+                    "name": "target_detail",
+                    "label": {
+                      "th": "เป้าหมาย",
+                      "en": "Target"
+                    },
+                    "type": "String"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "kpipillartask",
+              "name": {
+                "th": "หัวข้องาน KPI",
+                "en": "KPI pillar task"
+              },
+              "table": {
+                "name": "kpipillartask",
+                "scope": "entity",
+                "listColumns": [
+                  {
+                    "name": "owner",
+                    "label": {
+                      "th": "คนที่รับผิดชอบ",
+                      "en": "Owner"
+                    },
+                    "type": "Select:String",
+                    "ref": "Trader,trader|Marketing,marketing|Business Development,bd|Compliant,compliant|National Growth Team,national_growth_team|Customer Experience Assurance (CXAT),cxat|Product Owner Team,product_owner_team|Industry Standard Team,industry_standard_team|Brand Reputation Team,brand_reputation_team|Account Performance Team,account_performance_team"
+                  },
+                  {
+                    "name": "kpitasktype",
+                    "label": {
+                      "th": "ประเภทงาน",
+                      "en": "Task type"
+                    },
+                    "type": "Reference",
+                    "ref": "kpitasktype"
+                  },
+                  {
+                    "name": "pillar",
+                    "label": {
+                      "th": "เสา",
+                      "en": "Pillar"
+                    },
+                    "type": "Reference",
+                    "ref": "kpipillar"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

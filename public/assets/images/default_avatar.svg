@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <!-- the default picture of a person without one (the whole system): a SQUARE picture — blue-grey background to the edges, white head and shoulders. No ring / circle: where it shows round, the page's own CSS (border-radius) does that -->
+  <rect width="256" height="256" fill="#CFD8DC"/>
+  <g fill="#FFFFFF">
+    <circle cx="128" cy="100" r="38"/>
+    <path d="M128 158c-54 0-92 30-98 98h196c-6-68-44-98-98-98z"/>
+  </g>
+</svg>

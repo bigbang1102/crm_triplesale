@@ -1,0 +1,119 @@
+@if (form(); as f) {
+  <!-- ฟอร์ม สร้าง / แก้ไข / ดู เป็นหน้าเต็ม (กรอบของหน้าซ่อนแท็บหมวดและแถบขั้นตอน) -->
+  <ts-master-form
+    [table]="f.table"
+    [mode]="f.mode"
+    [intent]="f.intent"
+    [entityId]="entityId()"
+    [recordId]="f.id"
+    [copyFrom]="f.copyFrom"
+    [stepTitle]="stepTitle()"
+    [tableTitle]="title()"
+    [refStep]="refStep"
+    (saved)="onSaved($event)"
+    (deleted)="onDeleted($event)"
+    (toBlocked)="onBlocked($event)"
+    (copy)="copyFromView()"
+    (closed)="closeForm()"
+    (edit)="switchToEdit()"
+    (goStep)="formGoStep($event)"
+  />
+} @else {
+  @if (failure(); as fail) {
+    <div class="note err" role="alert">
+      <span>{{ failureText(fail) }}</span>
+      <button type="button" class="ts-btn ts-btn--ghost" (click)="reload()">{{ t('app.settings.live.retry') }}</button>
+    </div>
+  }
+
+  <div class="tools">
+    <div class="search">
+      <ts-icon name="search" [size]="16" />
+      <input class="ts-input" [placeholder]="t('app.settings.search')" [attr.aria-label]="t('app.settings.search')" [value]="typed()" (input)="onSearch($any($event.target).value)" />
+    </div>
+    <span class="sp"></span>
+    <button type="button" class="ts-btn ts-btn--ghost" (click)="pending()"><ts-icon name="upload" [size]="17" />{{ t('app.settings.import') }}</button>
+    <button type="button" class="ts-btn" [disabled]="!entityId() || !table()" (click)="create()"><ts-icon name="plus" [size]="17" />{{ t('app.settings.create') }}</button>
+  </div>
+
+  <div class="tw">
+    <table class="lt" [style.min-width.px]="minWidth()" (mouseover)="onTableOver($event)" (mouseleave)="tip.set(null)">
+      <colgroup>
+        @for (c of columns(); track c.field; let i = $index) {
+          <col [style.width.px]="widthOf(c, i)" />
+        }
+        <col />
+        <col style="width: 160px" />
+      </colgroup>
+      <thead>
+        <tr>
+          @for (c of columns(); track c.field) {
+            @if (c.sortable) {
+              <th
+                class="sth"
+                tabindex="0"
+                [class.on]="isSorted(c)"
+                [attr.aria-sort]="ariaSort(c)"
+                (click)="toggleSort(c)"
+                (keydown.enter)="toggleSort(c)"
+              >{{ c.label }} @if (c.required) { <span class="rq">*</span> }<span class="si" aria-hidden="true">{{ sortMark(c) }}</span></th>
+            } @else {
+              <th>{{ c.label }} @if (c.required) { <span class="rq">*</span> }</th>
+            }
+          }
+          <th class="fill" aria-hidden="true"></th>
+          <th class="actc"><span class="ts-sr-only">{{ t('app.settings.actions') }}</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (r of rows(); track r.id) {
+          <tr (click)="openRow('view', r)">
+            @for (c of columns(); track c.field; let first = $first) {
+              @if (c.field === 'usagestatus') {
+                <td><span [class]="statusBadge(r, c.field).cls">{{ statusBadge(r, c.field).text }}</span></td>
+              } @else {
+                <td [class.code]="first" [class.ref]="c.type === 'reference'">{{ cell(c, r) }}</td>
+              }
+            }
+            <td class="fill"></td>
+            <td class="act">
+              <button type="button" class="icb view" [title]="t('app.settings.view')" [attr.aria-label]="t('app.settings.view')" (click)="openRow('view', r); $event.stopPropagation()"><ts-icon name="eye" [size]="17" /></button>
+              <button type="button" class="icb copy" [title]="t('app.settings.copy')" [attr.aria-label]="t('app.settings.copy')" (click)="copyRow(r); $event.stopPropagation()"><ts-icon name="copy" [size]="17" /></button>
+              <button type="button" class="icb edit" [title]="t('app.settings.edit')" [attr.aria-label]="t('app.settings.edit')" (click)="openRow('edit', r); $event.stopPropagation()"><ts-icon name="pencil" [size]="17" /></button>
+              <button type="button" class="icb del" [title]="t('app.settings.delete')" [attr.aria-label]="t('app.settings.delete')" (click)="remove(r); $event.stopPropagation()"><ts-icon name="trash" [size]="17" /></button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+    @if (busy()) {
+      <div class="empty" role="status">{{ t('app.settings.live.loading') }}</div>
+    } @else if (failure() && !columns().length) {
+      <div class="empty">{{ t('app.settings.live.noColumns') }}</div>
+    } @else if (!hasEntity()) {
+      <div class="empty">{{ t('app.settings.live.pickEntity') }}</div>
+    } @else if (!rows().length && !failure()) {
+      <div class="empty">{{ searched() ? t('app.settings.noMatch') : t('app.settings.empty') + ' ' + title() }}</div>
+    }
+
+    @if (pageInfo(); as p) {
+      <div class="pager">
+        <span class="info">{{ t('app.settings.live.pageInfo', p.from, p.to, p.total, p.perPage) }}</span>
+        <span class="sp"></span>
+        <button type="button" class="pgb" [disabled]="!p.hasPrev" [attr.aria-label]="t('app.settings.live.prev')" (click)="goPage(-1)">‹</button>
+        @for (n of pages(); track $index) {
+          @if (n === 0) {
+            <span class="dots" aria-hidden="true">…</span>
+          } @else {
+            <button type="button" class="pgb" [class.on]="n === p.page" [attr.aria-current]="n === p.page ? 'page' : null" (click)="setPage(n)">{{ n }}</button>
+          }
+        }
+        <button type="button" class="pgb" [disabled]="!p.hasNext" [attr.aria-label]="t('app.settings.live.next')" (click)="goPage(1)">›</button>
+      </div>
+    }
+  </div>
+
+  @if (tip(); as tp) {
+    <div class="ctip" role="tooltip" [style.left.px]="tp.left" [style.top.px]="tp.top">{{ tp.text }}</div>
+  }
+}
